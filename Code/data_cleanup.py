@@ -4,7 +4,7 @@ import numpy as np
 
 data = readdata.crash_all
 
-crash = pd.DataFrame(data, columns=['CRIMEID','REPORTDATE','LATITUDE', 'LONGITUDE', 'WARD', 'MAJORINJURIES_BICYCLIST',
+data = pd.DataFrame(data, columns=['CRIMEID','REPORTDATE','LATITUDE', 'LONGITUDE', 'WARD', 'MAJORINJURIES_BICYCLIST',
                                     'MINORINJURIES_BICYCLIST', 'FATAL_BICYCLIST','AGE',
                                     'MAJORINJURIES_DRIVER', 'MINORINJURIES_DRIVER','FATAL_DRIVER',
                                     'MAJORINJURIES_PEDESTRIAN', 'MINORINJURIES_PEDESTRIAN','FATAL_PEDESTRIAN',
@@ -15,15 +15,22 @@ crash = pd.DataFrame(data, columns=['CRIMEID','REPORTDATE','LATITUDE', 'LONGITUD
                                     ])
 
 # Add YEAR, MONTH, DAY columns based on REPORTDATE
+print("Convert REPORTDATE into YEAR, MONTH, DAY")
+data['REPORTDATE'] = pd.to_datetime(data['REPORTDATE'])
+data['YEAR'], data['MONTH'], data['DAY'] = data['REPORTDATE'].dt.year, data['REPORTDATE'].dt.month, data['REPORTDATE'].dt.day
+# data['YEAR'] = data['REPORTDATE'].str[0:4]
+# data['MONTH'] = data['REPORTDATE'].str[5:7]
+# data['DAY'] = data['REPORTDATE'].str[8:10]
 
-crash['YEAR'] = crash['REPORTDATE'].str[0:4]
-crash['MONTH'] = crash['REPORTDATE'].str[5:7]
-crash['DAY'] = crash['REPORTDATE'].str[8:10]
+# Remove data older than 2000
+data = data[data.YEAR > 1999]
 
 # Add a new column FATALMAJORINJURIES if any of the following columns = 1
+data['FATALMAJORINJURIES'] = np.where(((data.MAJORINJURIES_BICYCLIST > 0) | (data.FATAL_BICYCLIST > 0) | (data.MAJORINJURIES_DRIVER > 0) | (data.FATAL_DRIVER > 0) | (data.MAJORINJURIES_PEDESTRIAN > 0) | (data.FATAL_PEDESTRIAN > 0) | (data.MAJORINJURIESPASSENGER > 0) | (data.FATALPASSENGER > 0)), 1, 0)
+data['FATALMAJORINJURIES_TOTAL'] =  data['MAJORINJURIES_BICYCLIST'] + data['FATAL_BICYCLIST'] + data['MAJORINJURIES_DRIVER'] + data['FATAL_DRIVER'] + data['MAJORINJURIES_PEDESTRIAN'] + data['FATAL_PEDESTRIAN'] + data['MAJORINJURIESPASSENGER'] + data['FATALPASSENGER']
 
-crash['FATALMAJORINJURIES'] = np.where(((crash.MAJORINJURIES_BICYCLIST == 1) | (crash.FATAL_BICYCLIST == 1) | (crash.MAJORINJURIES_DRIVER == 1) | (crash.FATAL_DRIVER == 1 ) | (crash.MAJORINJURIES_PEDESTRIAN == 1) | (crash.FATAL_PEDESTRIAN == 1 )), 1, 0)
+# After EDA, we can drop any unnecessary columns, for now keep Major/Minor/Fatal columns
 
-print(crash.shape)
-print(crash.dtypes)
-crash.to_csv("crash.csv")
+print(data.shape)
+print(data.dtypes)
+data.to_csv("crash_ver1.csv")

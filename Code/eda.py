@@ -3,6 +3,11 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 data = data_cleanup.crash
+print("Dropping Major Injuries/Fatal duplicate columns")
+print("#Total columns", crash.shape[1])
+duplicate_columns = ['MAJORINJURIES_BICYCLIST', 'FATAL_BICYCLIST', 'MAJORINJURIES_DRIVER', 'FATAL_DRIVER', 'MAJORINJURIES_PEDESTRIAN','FATAL_PEDESTRIAN','MAJORINJURIESPASSENGER', 'FATALPASSENGER']
+data.drop(columns=duplicate_columns, inplace=True)
+print("After dropping 6 columns, total: ", crash.shape[1])
 
 fatalcrashes = data[( data['FATAL_BICYCLIST'] > 0) | ( data['FATAL_DRIVER'] > 0) | ( data['FATAL_PEDESTRIAN'] > 0)]
 majorcrashes = data[(data['MAJORINJURIES_BICYCLIST'] > 0) | (data['MAJORINJURIES_DRIVER'] > 0) | (data['MAJORINJURIES_PEDESTRIAN'] > 0)]
