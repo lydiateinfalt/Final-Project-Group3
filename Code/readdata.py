@@ -39,43 +39,41 @@ print("Total number of rows in data set: ", crash_all.shape[0])
 print(crash_all.head(10))
 print(crash_all.tail(10))
 
-# Add YEAR, MONTH, DAY columns based on REPORTDATE
 
-crash_all['YEAR'] = crash_all['REPORTDATE'].str[0:4]
-crash_all['MONTH'] = crash_all['REPORTDATE'].str[5:7]
-crash_all['DAY'] = crash_all['REPORTDATE'].str[8:10]
-print()
+# =================================================================
+# Analysis of impaired columns
 
-fatalcrashes = crash_all[( crash_all['FATAL_BICYCLIST'] > 0) | ( crash_all['FATAL_DRIVER'] > 0) | ( crash_all['FATAL_PEDESTRIAN'] > 0)]
-majorcrashes = crash_all[(crash_all['MAJORINJURIES_BICYCLIST'] > 0) | (crash_all['MAJORINJURIES_DRIVER'] > 0) | (crash_all['MAJORINJURIES_PEDESTRIAN'] > 0)]
+impaired = pd.DataFrame(crash_all,columns=['IMPAIRED', 'PEDESTRIANSIMPAIRED', 'BICYCLISTSIMPAIRED','DRIVERSIMPAIRED'])
+impaired['IMPAIRED_NUMBER'] = impaired['PEDESTRIANSIMPAIRED'] + impaired['BICYCLISTSIMPAIRED'] + impaired['DRIVERSIMPAIRED']
+print(impaired[['PEDESTRIANSIMPAIRED','BICYCLISTSIMPAIRED','DRIVERSIMPAIRED']].aggregate(np.sum))
+impaired['IMPAIRED'] = impaired['IMPAIRED'].map({'Y': 1, 'N':0})
+df = pd.DataFrame(impaired[impaired['IMPAIRED'] != impaired['IMPAIRED_NUMBER']])
+print("Number of rows impaired data discrepancy", df.shape[0])
+#df.to_csv("impaired.csv")
 
-f = pd.DataFrame(fatalcrashes.groupby(['YEAR']).size())
-m = pd.DataFrame(majorcrashes.groupby(['YEAR']).size())
-t= m + f
+# =================================================================
+# Analysis of  speeding columns
 
-# plot number of accidents per year
-fig, ax = plt.subplots()
-fig.set_size_inches(12,10)
-ax.bar(m.index, m[0], color = "blue")
-ax.bar(f.index, f[0], color = "red")
+speeding = pd.DataFrame(crash_all, columns=['SPEEDING', 'SPEEDING_INVOLVED'])
+speeding['SPEEDING'] = speeding['SPEEDING'].map({'Y': 1, 'N':0})
+df2 = pd.DataFrame(speeding[speeding['SPEEDING'] != speeding['SPEEDING_INVOLVED']])
+print("Number of rows with speeding data discrepancy", df2.shape[0])
+#df2.to_csv("speeding.csv")
 
-labels = ("Major Injuries", "Fatalities")
-ax.set_xlabel('Year')
-ax.set_title('Number of Crashes in DC Resulting in Fatalities/Major Injuries')
-ax.legend(labels)
-plt.show()
+# =================================================================
+# Analysis of Unknown Injuries Columns
 
+data = crash_all
+print("#Total rows", data.shape[0])
+data = data[data.UNKNOWNINJURIES_DRIVER == 0]
+print("# Rows after removing unknown drivers", data.shape[0])
+data = data[data.UNKNOWNINJURIES_BICYCLIST == 0]
+print("# Rows after removing unknown bicyclist", data.shape[0])
+data = data[data.UNKNOWNINJURIES_PEDESTRIAN == 0]
+print("# Rows after removing unknown pedestrian", data.shape[0])
+data = data[data.UNKNOWNINJURIESPASSENGER == 0]
+print("# Rows after removing unknown passenger", data.shape[0])
+print("Total number of columns", data.shape[1])
+data = data.drop(columns = ['UNKNOWNINJURIES_DRIVER', 'UNKNOWNINJURIES_BICYCLIST','UNKNOWNINJURIES_PEDESTRIAN','UNKNOWNINJURIESPASSENGER'], axis = 1)
+print("After dropping 4 columns, total: ", data.shape[1])
 
-# No fatality, no major crashes
-no_fatal_crashes = crash_all[(crash_all['FATAL_BICYCLIST'] == 0) | (crash_all['FATAL_DRIVER'] == 0) | (crash_all['FATAL_PEDESTRIAN'] == 0)]
-no_major_crashes = crash_all[(crash_all['MAJORINJURIES_BICYCLIST'] == 0 ) | (crash_all['MAJORINJURIES_DRIVER'] == 0) | (crash_all['MAJORINJURIES_PEDESTRIAN'] == 0)]
-
-f0 = pd.DataFrame(no_fatal_crashes.groupby(['YEAR']).size())
-m0 = pd.DataFrame(no_major_crashes.groupby(['YEAR']).size())
-t0 = m0 + f0
-fig, ax = plt.subplots()
-fig.set_size_inches(16,12)
-ax.bar(t0.index, f0[0], color = "green")
-ax.set_xlabel('Year')
-ax.set_title('Number of Crashes Without Fatalities')
-plt.show()
