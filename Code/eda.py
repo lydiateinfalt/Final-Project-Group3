@@ -6,8 +6,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 import geopandas as gpd
-from shapely.geometry import Point, Polygon
-from scipy import stats
+#from shapely.geometry import Point, Polygon
+#from scipy import stats
 import researchpy as rp
 
 # to call from my directory RR 2 lines, 2 myself
@@ -98,7 +98,8 @@ plt.show()
 dc_shape = gpd.read_file("Washington_DC_Boundary.shp")
 # Make Geoplot of Fatal and NonFatal car crashes in DC - RR 11 copied and modified, 5 wrote own
 crs = {'init':'epsg:4326'}
-geometry = [Point(xy) for xy in zip(crash["LONGITUDE"],crash['LATITUDE'])]
+geometry=gpd.points_from_xy(crash.LONGITUDE, crash.LATITUDE)
+#geometry = [Point(xy) for xy in zip(crash["LONGITUDE"],crash['LATITUDE'])]
 gdf = gpd.GeoDataFrame(crash, crs=crs, geometry=geometry)
 #print(gdf.head())
 fig,ax = plt.subplots(figsize = (15,15))
