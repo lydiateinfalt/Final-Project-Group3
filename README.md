@@ -8,7 +8,12 @@ District Department of Transportation, Metropolitan Police Department, Crashes i
 
 District Department of Transportation, Metropolitan Police Department, Crashes Details Table, Open Data DC, (District of Columbia): Vision Zero Data Planning Work Group, 2020. Accessed on: Mar. 14, 2020. [online]. Available: https://opendata.dc.gov/datasets/crash-details-table
 
-Packages used in this project: numpy, pandas, geopandas.
+Packages required to run this project: numpy, pandas, geopandas.
 To install geopandas on Windows machine:
   1. Open Anaconda CMD.exe prompt
-  2. Type "conda install --channel conda-forge geopandas"
+  2. Type the following to create a new environment geo_env:
+  3. conda create -n geo_env
+  4. conda activate geo_env
+  5. conda config --env --add channels conda-forge
+  6. conda config --env --set channel_priority strict
+  7. conda install python=3 geopandas
