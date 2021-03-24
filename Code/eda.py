@@ -2,6 +2,7 @@
 # RyeAnne Ricker
 
 # import libraries
+import data_cleanup
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
@@ -10,10 +11,11 @@ import geopandas as gpd
 #from scipy import stats
 import researchpy as rp
 
+
 # to call from my directory RR 2 lines, 2 myself
 #crash = pd.read_csv('/Users/RyeAnne/Documents/School/Spring2021/DataMining/Group Project/crash_ver1.csv') # load data
 # may use the following line to call it from class instead
-crash = data_cleanup.crash
+crash = data_cleanup.data
 print(crash.columns)
 
 ### ------------------------------------------------------------------------------------------
@@ -51,6 +53,7 @@ fig, ax = plt.subplots()
 crash["YEAR"].plot.hist(ax=ax, bins = [2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025], edgecolor='black')
 plt.xlim(xmin=2000, xmax = 2025)
 labels = [2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025]
+#labels1 = np.arange(2000,2026)
 ax.set_xticks(labels)#.tolist()
 ax.set_xticklabels(labels, rotation=90)
 ax.set_xlabel("Year")
@@ -94,19 +97,19 @@ plt.show()
 
 # Make geomap to plot where crashes occurred - RR  12 lines, 5 copied, 7 myself
 # change this to directory for boundary file in directory
-#dc_shape = gpd.read_file('/Users/RyeAnne/Documents/School/Spring2021/DataMining/Group Project/Washington_DC_Boundary.shp')
+# dc_shape = gpd.read_file('/Users/RyeAnne/Documents/School/Spring2021/DataMining/Group Project/Washington_DC_Boundary.shp')
 dc_shape = gpd.read_file("Washington_DC_Boundary.shp")
-# Make Geoplot of Fatal and NonFatal car crashes in DC - RR 11 copied and modified, 5 wrote own
+# # Make Geoplot of Fatal and NonFatal car crashes in DC - RR 11 copied and modified, 5 wrote own
 crs = {'init':'epsg:4326'}
 geometry=gpd.points_from_xy(crash.LONGITUDE, crash.LATITUDE)
 #geometry = [Point(xy) for xy in zip(crash["LONGITUDE"],crash['LATITUDE'])]
 gdf = gpd.GeoDataFrame(crash, crs=crs, geometry=geometry)
-#print(gdf.head())
+# #print(gdf.head())
 fig,ax = plt.subplots(figsize = (15,15))
 dc_shape.plot(ax=ax, color = 'grey',alpha=0.5,zorder=1)
 #plt.show()
 gdf[gdf['FATALMAJORINJURIES'] == 1].plot(ax = ax, markersize = 10, color = 'red', marker = '*',label='Fatal/Major Injury',zorder=2)
-# plot specifications
+# # plot specifications
 plt.title('Crash Fatalities and Major Injuries by GeoLocation')
 plt.legend(bbox_to_anchor=(1.0, .5), prop={'size': 8})
 plt.xlabel('Longitude')
