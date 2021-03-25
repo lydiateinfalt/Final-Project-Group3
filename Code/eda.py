@@ -10,6 +10,7 @@ import geopandas as gpd
 #from shapely.geometry import Point, Polygon
 #from scipy import stats
 import researchpy as rp
+import seaborn as sb
 
 
 # to call from my directory RR 2 lines, 2 myself
@@ -87,6 +88,15 @@ ax.set_ylabel("Number of Crashes")
 ax.set_title('Crashes by Month')
 plt.show()
 
+# Heatmap of crashes - LNT
+df = pd.DataFrame(crash, columns=['MONTH', 'YEAR','FATALMAJORINJURIES'])
+df = df[df.FATALMAJORINJURIES == 1]
+# group by month and year
+df = df.groupby(['MONTH', 'YEAR']).count()
+df = df.unstack(level=0)
+fig, ax = plt.subplots(figsize=(11, 9))
+sb.heatmap(df)
+plt.show()
 
 # Citation: "Matplotlib.axes.Axes.set_xticks() in Python". GeeksforGeeks. April 19, 2020. https://www.geeksforgeeks.org/matplotlib-axes-axes-set_xticks-in-python/
 
