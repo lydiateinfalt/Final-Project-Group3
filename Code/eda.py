@@ -11,7 +11,7 @@ import geopandas as gpd
 #from scipy import stats
 import researchpy as rp
 import seaborn as sb
-
+import seaborn as sns
 
 # to call from my directory RR 2 lines, 2 myself
 #crash = pd.read_csv('/Users/RyeAnne/Documents/School/Spring2021/DataMining/Group Project/crash_ver1.csv') # load data
@@ -40,28 +40,23 @@ print(crash.columns)
 #ax.set_title('Crashes by Year')
 #plt.show()
 
-# Use this to make sure you incorporate all years contained within the data - there are some odd years
+# Use this to make sure you incorporate all months contained within the data  and to check for any oddities
 # Get the total number of crashes per year, visually - RR 6 lines, 6 myself
-year_counts = crash["YEAR"].value_counts() # get total counts of fatal/majorinjury and none/minorinjury
-year_proportions = crash["YEAR"].value_counts(normalize=True)  # get the proportions
-print('The number of crashes in DC per year are:')
+year_counts = crash["MONTH"].value_counts() # get total counts of fatal/majorinjury and none/minorinjury
+year_proportions = crash["MONTH"].value_counts(normalize=True)  # get the proportions
+print('The number of crashes in DC per month are:')
 print(year_counts)  # print total numbers
-print('The proportion of crashes in DC by year are:')
+print('The proportion of crashes in DC by month are:')
 print(year_proportions)  # print proportions
 
-# Plot crashes by year - RR 10 copied, 7 copied, 5 modified, 3 my own
-fig, ax = plt.subplots()
-crash["YEAR"].plot.hist(ax=ax, bins = [2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025], edgecolor='black')
-plt.xlim(xmin=2000, xmax = 2025)
-labels = [2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025]
-#labels1 = np.arange(2000,2026)
-ax.set_xticks(labels)#.tolist()
-ax.set_xticklabels(labels, rotation=90)
-ax.set_xlabel("Year")
-ax.set_ylabel("Number of Crashes")
-ax.set_title('Crashes by Year')
+# Plot crashes by year - RR 4 copied, 4 modified, 3 my own
+year_count = sns.countplot(data=crash, x='YEAR', hue='FATALMAJORINJURIES', dodge=False, palette="Paired")
+year_count.set_xticklabels(year_count.get_xticklabels(), rotation=70)
+year_count.set_xlabel("Year")
+year_count.set_ylabel("Number of Crashes")
+year_count.set_title('Crashes by Year')
+year_count.legend(bbox_to_anchor=(0.1, 0.9), loc=2, borderaxespad=0.)
 plt.show()
-
 
 # Use this to make sure you incorporate all months contained within the data  and to check for any oddities
 # Get the total number of crashes per year, visually - RR 6 lines, 6 myself
@@ -72,21 +67,17 @@ print(year_counts)  # print total numbers
 print('The proportion of crashes in DC by month are:')
 print(year_proportions)  # print proportions
 
-
-# Plot crashes by month - RR 10 copied, 7 copied, 5 modified, 3 my own
-fig, ax = plt.subplots()
-crash["MONTH"].astype(np.int64).plot.hist(ax=ax, bins = [1,2,3,4,5,6,7,8,9,10,11,12,13], color = 'orange', edgecolor='black')
-plt.xlim(xmin= 1, xmax = 13)
-labels_month = [1,2,3,4,5,6,7,8,9,10,11,12]
-ax.set_xticks(labels_month)#.tolist()
-ax.set_xticklabels(labels_month, rotation=90)
-#labels = ax.get_xticks().tolist()
-#labels = pd.to_datetime(labels)
-#ax.set_xticklabels(labels, rotation=45)
-ax.set_xlabel("Month")
-ax.set_ylabel("Number of Crashes")
-ax.set_title('Crashes by Month')
+# Plot crashes by month - RR 4 copied, 4 modified, 3 my own
+month_count = sns.countplot(data=crash, x='MONTH', hue='FATALMAJORINJURIES', dodge=False,palette="Paired")
+month_count.set_xticklabels(month_count.get_xticklabels(), rotation=70)
+month_count.set_xlabel("Month")
+month_count.set_ylabel("Number of Crashes")
+month_count.set_title('Crashes by Month')
+month_count.legend(bbox_to_anchor=(0.95, 1), loc=2, borderaxespad=0.)
 plt.show()
+
+# Citation: "Visualizing Distributions of Data". Seaborn. [Accesed Online: Mar 25, 2021]. https://seaborn.pydata.org/tutorial/distributions.html
+
 
 # Heatmap of crashes - LNT
 # Reference: https://towardsdatascience.com/heatmap-basics-with-pythons-seaborn-fb92ea280a6c
@@ -117,7 +108,7 @@ plt.show()
 
 ### ------------------------------------------------------------------------------------------
 ###
-### This plot displays a map of DC with fatal/majorinjyr crashes overlaid
+### This plot displays a map of DC with fatal/majorinjury crashes overlaid
 ###
 
 # Make geomap to plot where crashes occurred - RR  12 lines, 5 copied, 7 myself
