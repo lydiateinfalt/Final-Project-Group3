@@ -253,9 +253,10 @@ print('The Chi-Squared test results for the relationship between Fatal/Major Inj
 
 # Arianna Start.
 
-# Getting major injuries and fatalities by ward. 2/2 lines written by me
+# Getting major injuries and fatalities by ward. 3/3 lines written by me
 ward_mf = crash.groupby('WARD').agg({'FATALMAJORINJURIES_TOTAL':'sum'})
-print (f"Major injuries and fatalities by ward: {ward_mf}")
+print ("Major injuries and fatalities by ward: ")
+print(ward_mf)
 
 # Getting a bar graph of the results. 5/5 lines written by me.
 ward_mf_bar = ward_mf.plot.bar(figsize=(20, 10))
@@ -266,9 +267,10 @@ plt.show()
 # A note about the results: ward two has the most major injuries and fatalities
 
 
-# Getting summary stats for age. 2/2 lines written by me
+# Getting summary stats for age. 3/3 lines written by me
 age_stats = crash['AGE'].describe()
-print(f"The summary statistics for age are: {age_stats}")
+print("The summary statistics for age are: ")
+print(age_stats)
 
 # Based on the results of this, this column needs some cleaning (before cleaning max was 237 and min was -7990)
 # Deleting rows where age > 122 and where age < 0
@@ -278,13 +280,14 @@ crash = crash.where(~age_filter)
 
 
 # Printing sum stats again to compare. 2/2 line written by me
-print(f"The summary statistics for age(cleaned) are:")
+print("The summary statistics for age(cleaned) are:")
 print(crash['AGE'].describe())
 
 # Getting average age and whether or not the accident resulted in major injury or fatality
-# to see if there's any discrepancy from total average. 2/2 lines written by me
+# to see if there's any discrepancy from total average. 3/3 lines written by me
 mf_age = crash.groupby('FATALMAJORINJURIES').agg({'AGE': 'mean'})
-print(f"Average age involved in accidents with fatalities and major injuries: {mf_age}")
+print("Average age involved in accidents with fatalities and major injuries: ")
+print(mf_age)
 
 # Note about results: about the same
 
@@ -305,7 +308,8 @@ plt.show()
 
 # Getting the count of crashes with major/fatal per state. 2/2 by me
 states = crash.groupby('LICENSEPLATESTATE').agg({'FATALMAJORINJURIES':'sum'})
-print(f"Crashes per License Plate State:{states}.")
+print("Crashes per License Plate State:")
+print(states)
 
 # Counting total number of crashes from someone with a plate in the DMV and not in the DMV. 13/13 by me
 dmv_crash = 0
@@ -322,8 +326,10 @@ for i in crash['LICENSEPLATESTATE']:
         no_plate =+ 1
     else:
         non_dmv_crash += 1
-print(f"Number of crashes from DMV plate: {dmv_crash}")
-print(f"Number of crahses from non-DMV Plate: {non_dmv_crash}")
+print("Number of crashes from DMV plate: ")
+print(dmv_crash)
+print("Number of crahses from non-DMV Plate: ")
+print(non_dmv_crash)
 
 # Counting total number of crashes from someone with a plate in the DMV and not in the DMV resulting in major/fatal.
 # the first 15 lines were remixed and the remainder were all written by me
@@ -349,7 +355,8 @@ md_mf = ((crash['LICENSEPLATESTATE'] == 'MD')
             .reset_index(name='count'))
 
 dmv_mf = dc_mf.loc[1] + va_mf.loc[1] + md_mf.loc[1]
-print(f"The total number of accidents with DMV plates resulting in fatalities or major injuries is: {dmv_mf.loc['count']}")
+print("The total number of accidents with DMV plates resulting in fatalities or major injuries is: ")
+print(dmv_mf.loc['count'])
 
 fatalmajor = 0
 for row in crash['FATALMAJORINJURIES']:
@@ -358,4 +365,5 @@ for row in crash['FATALMAJORINJURIES']:
     else:
         continue
 non_dmv_mf = fatalmajor - dmv_mf.loc['count'] - no_plate
-print(f"The total number of accident with plates outside of the DMV resulting in fatalities or major injuries is: {non_dmv_mf}")
+print("The total number of accident with plates outside of the DMV resulting in fatalities or major injuries is: ")
+print(non_dmv_mf)
