@@ -241,3 +241,111 @@ print('The Chi-Squared test results for the relationship between Fatal/Major Inj
 crosstab, test_results, expected = rp.crosstab(crash["FATALMAJORINJURIES"], crash["MONTH"],test= "chi-square",expected_freqs= True,prop= "cell")
 print('The Chi-Squared test results for the relationship between Fatal/Major Injuries and Month are:',test_results)
 
+# Arianna Start.
+
+# Getting major injuries and fatalities by ward. 2/2 lines written by me
+ward_mf = crash.groupby('WARD').agg({'FATALMAJORINJURIES_TOTAL':'sum'})
+print (f"Major injuries and fatalities by ward: {ward_mf}")
+
+# Getting a bar graph of the results. 5/5 lines written by me.
+ward_mf_bar = ward_mf.plot.bar(figsize=(20, 10))
+plt.ylabel('Major Injuries and Fatalities')
+plt.xlabel('Ward')
+plt.title('Major Injuries and Fatalities by Ward')
+plt.show()
+# A note about the results: ward two has the most major injuries and fatalities
+
+
+# Getting summary stats for age. 2/2 lines written by me
+age_stats = crash['AGE'].describe()
+print(f"The summary statistics for age are: {age_stats}")
+
+# Based on the results of this, this column needs some cleaning (before cleaning max was 237 and min was -7990)
+# Deleting rows where age > 122 and where age < 0
+# I'm picking 122 as the max because that's the oldest age on record. 2/2 lines written by me
+age_filter = (crash.AGE > 122.0) | (crash.AGE < 0.0)
+crash = crash.where(~age_filter)
+
+
+# Printing sum stats again to compare. 2/2 line written by me
+print(f"The summary statistics for age(cleaned) are:")
+print(crash['AGE'].describe())
+
+# Getting average age and whether or not the accident resulted in major injury or fatality
+# to see if there's any discrepancy from total average. 2/2 lines written by me
+mf_age = crash.groupby('FATALMAJORINJURIES').agg({'AGE': 'mean'})
+print(f"Average age involved in accidents with fatalities and major injuries: {mf_age}")
+
+# Note about results: about the same
+
+# Getting a histogram of age 5/5 lines written by me
+age_hist = plt.hist(crash['AGE'])
+plt.ylabel('Count')
+plt.xlabel('Age')
+plt.title('Age of People Involved in Traffic Accidents')
+plt.show()
+
+# Getting a histogram of age and accidents with fatality/major injury. 7/7 lines written by me
+mf_filter = crash[crash.FATALMAJORINJURIES.eq(1.0)]
+age_mf_hist = plt.hist(mf_filter['AGE'])
+plt.ylabel('Count')
+plt.xlabel('Age')
+plt.title('Age of People Involved in Traffic Accidents with Fatalities or Major Injuries')
+plt.show()
+
+# Getting the count of crashes with major/fatal per state. 2/2 by me
+states = crash.groupby('LICENSEPLATESTATE').agg({'FATALMAJORINJURIES':'sum'})
+print(f"Crashes per License Plate State:{states}.")
+
+# Counting total number of crashes from someone with a plate in the DMV and not in the DMV. 13/13 by me
+dmv_crash = 0
+non_dmv_crash = 0
+no_plate = 0
+for i in crash['LICENSEPLATESTATE']:
+    if i == 'DC':
+        dmv_crash += 1
+    elif i == 'VA':
+        dmv_crash += 1
+    elif i == 'MD':
+        dmv_crash += 1
+    elif i == 'None':
+        no_plate =+ 1
+    else:
+        non_dmv_crash += 1
+print(f"Number of crashes from DMV plate: {dmv_crash}")
+print(f"Number of crahses from non-DMV Plate: {non_dmv_crash}")
+
+# Counting total number of crashes from someone with a plate in the DMV and not in the DMV resulting in major/fatal.
+# the first 15 lines were remixed and the remainder were all written by me
+# Link for remixed code:
+# https://stackoverflow.com/questions/53153703/groupby-count-only-when-a-certain-value-is-present-in-one-of-the-column-in-panda
+dc_mf = ((crash['LICENSEPLATESTATE'] == 'DC')
+            .groupby([crash['FATALMAJORINJURIES']])
+            .sum()
+            .astype(int)
+            .reset_index(name='count'))
+
+
+va_mf = ((crash['LICENSEPLATESTATE'] == 'VA')
+            .groupby([crash['FATALMAJORINJURIES']])
+            .sum()
+            .astype(int)
+            .reset_index(name='count'))
+
+md_mf = ((crash['LICENSEPLATESTATE'] == 'MD')
+            .groupby([crash['FATALMAJORINJURIES']])
+            .sum()
+            .astype(int)
+            .reset_index(name='count'))
+
+dmv_mf = dc_mf.loc[1] + va_mf.loc[1] + md_mf.loc[1]
+print(f"The total number of accidents with DMV plates resulting in fatalities or major injuries is: {dmv_mf.loc['count']}")
+
+fatalmajor = 0
+for row in crash['FATALMAJORINJURIES']:
+    if row == 1:
+        fatalmajor += 1
+    else:
+        continue
+non_dmv_mf = fatalmajor - dmv_mf.loc['count'] - no_plate
+print(f"The total number of accident with plates outside of the DMV resulting in fatalities or major injuries is: {non_dmv_mf}")
