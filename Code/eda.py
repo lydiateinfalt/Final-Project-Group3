@@ -40,7 +40,7 @@ print(crash.columns)
 #ax.set_title('Crashes by Year')
 #plt.show()
 
-# Use this to make sure you incorporate all months contained within the data  and to check for any oddities
+# Use this to make sure you incorporate all years contained within the data  and to check for any oddities
 # Get the total number of crashes per year, visually - RR 6 lines, 6 myself
 year_counts = crash["MONTH"].value_counts() # get total counts of fatal/majorinjury and none/minorinjury
 year_proportions = crash["MONTH"].value_counts(normalize=True)  # get the proportions
