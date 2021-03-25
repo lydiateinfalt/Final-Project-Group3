@@ -89,13 +89,28 @@ ax.set_title('Crashes by Month')
 plt.show()
 
 # Heatmap of crashes - LNT
-df = pd.DataFrame(crash, columns=['MONTH', 'YEAR','FATALMAJORINJURIES'])
+# Reference: https://towardsdatascience.com/heatmap-basics-with-pythons-seaborn-fb92ea280a6c
+df = pd.DataFrame(crash, columns=['REPORTDATE','FATALMAJORINJURIES'])
+df['REPORTDATE'] = pd.to_datetime(df['REPORTDATE'])
+df.set_index(['REPORTDATE'], inplace=True)
 df = df[df.FATALMAJORINJURIES == 1]
+df['MONTH'] = [i.month for i in df.index]
+df['YEAR'] = [i.year for i in df.index]
 # group by month and year
 df = df.groupby(['MONTH', 'YEAR']).count()
 df = df.unstack(level=0)
+
 fig, ax = plt.subplots(figsize=(11, 9))
-sb.heatmap(df)
+sb.heatmap(df,cmap="Blues",linewidth=0.3)
+
+ax.xaxis.tick_top()
+labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+plt.xticks(np.arange(12) + .5, labels=labels)
+
+plt.xlabel('')
+plt.ylabel('')
+plt.title('Fatal/Major Injuries Traffic Accidents in Washington DC from 2000-2021')
 plt.show()
 
 # Citation: "Matplotlib.axes.Axes.set_xticks() in Python". GeeksforGeeks. April 19, 2020. https://www.geeksforgeeks.org/matplotlib-axes-axes-set_xticks-in-python/

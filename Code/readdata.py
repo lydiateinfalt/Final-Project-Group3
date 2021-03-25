@@ -16,7 +16,7 @@ import numpy as np
 
 # All crashes reported in DC
 # Reference: https://opendata.dc.gov/datasets/crashes-in-dc?geometry=13.108%2C-75.996%2C-10.798%2C89.827
-crash_dc = pd.read_csv("Crashes_in_DC.csv")
+crash_dc = pd.read_csv("Crashes_in_DC.csv", parse_dates=['REPORTDATE'])
 columns1 = crash_dc.dtypes
 
 # Detailed crash report join with above table using CRIMEID
