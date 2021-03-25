@@ -17,10 +17,7 @@ data = pd.DataFrame(data, columns=['CRIMEID','REPORTDATE','LATITUDE', 'LONGITUDE
 # Add YEAR, MONTH, DAY columns based on REPORTDATE
 print("Convert REPORTDATE into YEAR, MONTH, DAY")
 data['REPORTDATE'] = pd.to_datetime(data['REPORTDATE'])
-data['YEAR'], data['MONTH'], data['DAY'] = data['REPORTDATE'].dt.year, data['REPORTDATE'].dt.month, data['REPORTDATE'].dt.day
-# data['YEAR'] = data['REPORTDATE'].str[0:4]
-# data['MONTH'] = data['REPORTDATE'].str[5:7]
-# data['DAY'] = data['REPORTDATE'].str[8:10]
+data['YEAR'], data['MONTH'], data['DAY'], data['HOUR'] = data['REPORTDATE'].dt.year, data['REPORTDATE'].dt.month, data['REPORTDATE'].dt.day, data['REPORTDATE'].dt.hour
 
 # Remove data older than 2000
 data = data[data.YEAR > 1999]
