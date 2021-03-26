@@ -30,8 +30,8 @@ crash = crash.where(~age_filter)
 print(crash['AGE'].describe())
 
 # Dropping state abbreviations that do not exist (Ot, ou, vi, pu, un)
-plate_filter = (crash.LICENSEPLATESTATE != 'OT') | (crash.LICENSEPLATESTATE != 'OU') | (crash.LICENSEPLATESTATE != 'VI') | (crash.LICENSEPLATESTATE != 'PU') | (crash.LICENSEPLATESTATE != 'UN')
-crash = crash.where(plate_filter)
+crash = crash.drop(crash[(crash.LICENSEPLATESTATE == 'Ot') | (crash.LICENSEPLATESTATE == 'Ou') | (crash.LICENSEPLATESTATE == 'Vi') | (crash.LICENSEPLATESTATE == 'Pu') | (crash.LICENSEPLATESTATE == 'Un') | (crash.LICENSEPLATESTATE == 'Am') | (crash.LICENSEPLATESTATE == 'Di')].index)
+
 
 
 
