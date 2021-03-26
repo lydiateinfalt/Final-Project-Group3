@@ -28,6 +28,10 @@ columns2 = crash_dc_det.dtypes
 print("Total number of rows in data set (crashes_in_dc): ", crash_dc.shape[0])
 
 print("Total number of rows in data set (crashes_in_dc): ", crash_dc_det.shape[0])
+
+# Drop any duplicate CRIMEID
+crash_dc.drop_duplicates(subset=['CRIMEID'])
+
 # Join two data sets and create a new df called crashAll "inner" is by default on
 crash_all = pd.merge(crash_dc, crash_dc_det, on="CRIMEID")
 

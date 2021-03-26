@@ -11,7 +11,7 @@ data = pd.DataFrame(data, columns=['CRIMEID','REPORTDATE','LATITUDE', 'LONGITUDE
                                     'TOTAL_VEHICLES','TOTAL_BICYCLES','TOTAL_PEDESTRIANS','DRIVERSIMPAIRED',
                                     'PEDESTRIANSIMPAIRED','BICYCLISTSIMPAIRED','OFFINTERSECTION','MINORINJURIESPASSENGER',
                                     'FATALPASSENGER','MAJORINJURIESPASSENGER', 'INVEHICLETYPE','TICKETISSUED','LICENSEPLATESTATE',
-                                    'IMPAIRED', 'SPEEDING'
+                                    'IMPAIRED', 'SPEEDING', 'ROUTEID'
                                     ])
 
 # Add YEAR, MONTH, DAY columns based on REPORTDATE
