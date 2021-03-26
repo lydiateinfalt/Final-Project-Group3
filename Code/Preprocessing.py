@@ -20,4 +20,4 @@ crash = crash.where(~age_filter)
 plate_filter = (crash.LICENSEPLATESTATE == 'OT') | (crash.LICENSEPLATESTATE == 'OU') | (crash.LICENSEPLATESTATE == 'VI') | (crash.LICENSEPLATESTATE == 'PU') | (crash.LICENSEPLATESTATE == 'UN')
 crash = crash.where(plate_filter)
 
-# Arianna end (all code written by me)
+# Arianna end (all above code written by Arianna)
