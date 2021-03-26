@@ -113,7 +113,28 @@ df_time['TIME'] = [i.hour for i in df_time.index]
 df_time = df_time[(df_time.TIME != 5)]
 df_time=df_time.groupby(['TIME']).count()
 df_time.reset_index(inplace=True)
-sb.barplot(x='TIME', y='FATALMAJORINJURIES', data=df_time).set_title('Crashes by Time of Day*');
+sb.barplot(x='TIME', y='FATALMAJORINJURIES', data=df_time).set_title('Crashes by Time of Day*')
+plt.show()
+# Crashes by day of the week
+df_time = pd.DataFrame(crash, columns=['REPORTDATE','FATALMAJORINJURIES'])
+df_time['REPORTDATE'] = pd.to_datetime(df_time['REPORTDATE'])
+df_time.set_index(['REPORTDATE'], inplace=True)
+df_time = df_time[(df_time.FATALMAJORINJURIES == 1)]
+df_time['TIME'] = [i.hour for i in df_time.index]
+df_time = df_time[(df_time.TIME != 5)]
+df_time=df_time.groupby(['TIME']).count()
+df_time.reset_index(inplace=True)
+sb.barplot(x='TIME', y='FATALMAJORINJURIES', data=df_time).set_title('Crashes by Time of Day*')
+
+days = [ 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+df_time = pd.DataFrame(crash, columns=['REPORTDATE','FATALMAJORINJURIES'])
+df_time['REPORTDATE'] = pd.to_datetime(df_time['REPORTDATE'])
+df_time['WEEKDAY'] = df_time['REPORTDATE'].dt.day_name()
+df_time.set_index(['REPORTDATE'], inplace=True)
+df_time = df_time[(df_time.FATALMAJORINJURIES == 1)]
+df1= pd.DataFrame(df_time.groupby('WEEKDAY').count().reindex(days))
+sb.barplot(y=df1.index, x='FATALMAJORINJURIES', data=df1).set_title('Crashes by Day of Week*');
+plt.show()
 
 # Citation: "Matplotlib.axes.Axes.set_xticks() in Python". GeeksforGeeks. April 19, 2020. https://www.geeksforgeeks.org/matplotlib-axes-axes-set_xticks-in-python/
 
