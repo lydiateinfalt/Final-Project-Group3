@@ -144,7 +144,20 @@ sb.barplot(y=df1.index, x='FATALMAJORINJURIES', data=df1,palette=np.array(pal[::
 plt.show()
 
 # Citation: "Matplotlib.axes.Axes.set_xticks() in Python". GeeksforGeeks. April 19, 2020. https://www.geeksforgeeks.org/matplotlib-axes-axes-set_xticks-in-python/
-
+# Top 10 most dangerous days - LNT
+df3 = pd.DataFrame(crash, columns=['REPORTDATE','FATALMAJORINJURIES'])
+df3['REPORTDATE'] = pd.to_datetime(df3['REPORTDATE'])
+df3.set_index(['REPORTDATE'], inplace=True)
+df3['YEAR'] = [i.year for i in df3.index]
+df3['DAYOFYEAR'] = [i.dayofyear for i in df3.index]
+df3 = df3[(df3.FATALMAJORINJURIES == 1)]
+import datetime
+df1= df3.groupby(['DAYOFYEAR','YEAR'],as_index=False).sum()
+df1['DT']=df1.apply(lambda x: datetime.date(int(x.YEAR),1,1)+pd.to_timedelta(x.DAYOFYEAR), axis=1)
+df1 = df1.nlargest(10,'FATALMAJORINJURIES')
+df1=df1[['YEAR', 'DT', 'FATALMAJORINJURIES']].reset_index()
+df1=df1[['YEAR', 'DT', 'FATALMAJORINJURIES']]
+print(df1[['YEAR', 'DT', 'FATALMAJORINJURIES']])
 ### ------------------------------------------------------------------------------------------
 ###
 ### This plot displays a map of DC with fatal/majorinjury crashes overlaid
