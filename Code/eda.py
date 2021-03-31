@@ -105,8 +105,6 @@ plt.title('Fatal/Major Injuries Traffic Accidents in Washington DC from 2000-202
 plt.show()
 
 # Crashes by time of day, ignoring 5 AM because it appears to be default time for REPORTDATE - LNT
-
-
 df_time = pd.DataFrame(crash, columns=['REPORTDATE','FATALMAJORINJURIES'])
 df_time['REPORTDATE'] = pd.to_datetime(df_time['REPORTDATE'])
 df_time.set_index(['REPORTDATE'], inplace=True)
@@ -120,18 +118,7 @@ df_time['TIME'] = df_time['TIME'] + 1
 sb.barplot(x='TIME', y='FATALMAJORINJURIES', data=df_time,palette=np.array(pal1[::-1])).set_title('Crashes by Time of Day*')
 plt.show()
 
-# # Crashes by day of the week - LNT
-# df_time = pd.DataFrame(crash, columns=['REPORTDATE','FATALMAJORINJURIES'])
-# df_time['REPORTDATE'] = pd.to_datetime(df_time['REPORTDATE'])
-# df_time.set_index(['REPORTDATE'], inplace=True)
-# df_time = df_time[(df_time.FATALMAJORINJURIES == 1)]
-# df_time['TIME'] = [i.hour for i in df_time.index]
-# df_time = df_time[(df_time.TIME != 5)]
-# df_time=df_time.groupby(['TIME']).count()
-# df_time.reset_index(inplace=True)
-# sb.barplot(x='TIME', y='FATALMAJORINJURIES', data=df_time).set_title('Crashes by Time of Day*')
-
-
+# Crashes by days of the week
 days = [ 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 df_time = pd.DataFrame(crash, columns=['REPORTDATE','FATALMAJORINJURIES'])
 df_time['REPORTDATE'] = pd.to_datetime(df_time['REPORTDATE'])
