@@ -32,5 +32,28 @@ print(crash['AGE'].describe())
 crash = crash.drop(crash[(crash.LICENSEPLATESTATE == 'Ot') | (crash.LICENSEPLATESTATE == 'Ou') | (crash.LICENSEPLATESTATE == 'Vi') | (crash.LICENSEPLATESTATE == 'Pu') | (crash.LICENSEPLATESTATE == 'Un') | (crash.LICENSEPLATESTATE == 'Am') | (crash.LICENSEPLATESTATE == 'Di')].index)
 
 
+###
+# RR - Create Feature Matrix and Fill/Drop NANs
+###
+# Create Matrix with only the feature rows we want and the target
+print(crash.columns) # view columns
+# drop redundent/unnecessary columns
+crash_fm = crash.drop(['CRIMEID', 'REPORTDATE','MAJORINJURIES_BICYCLIST','MINORINJURIES_BICYCLIST','FATAL_BICYCLIST','MAJORINJURIES_DRIVER',
+            'MINORINJURIES_DRIVER','FATAL_DRIVER','MAJORINJURIES_PEDESTRIAN','MINORINJURIES_PEDESTRIAN',
+            'FATAL_PEDESTRIAN','MAJORINJURIESPASSENGER','FATALPASSENGER','MAJORINJURIESPASSENGER','IMPAIRED',
+            'ROUTEID','DAY','HOUR','FATALMAJORINJURIES_TOTAL'], axis=1)
+print(crash_fm.columns) # check the columns again
+
+# Fill in missing data
+print(crash_fm.isnull().sum()) # get missing values
+crash_fm_age = crash_fm.drop(['AGE'], axis=1) # use to view rows with missind data, except age
+null_data = crash_fm_age[crash_fm_age.isnull().any(axis=1)] # view rows with missing data
+print(null_data.head(50)) # view the null data rows
+print(crash_fm.head(20)) # view the head of the feature matrix
+# it appears that there are simply 321 rows of empty data
+ # delete rows with completely empty data
+crash_fm.dropna(subset = ["LATITUDE"], inplace=True) # drop all that don't have a lat/long - empty rows/correct values necessary for Lydia
+print(crash_fm.isnull().sum()) # check to see if there are any more NANs, beside AGE - Result: 3 NAN in Ward, 159,253 NAN in Age
+
 
 
