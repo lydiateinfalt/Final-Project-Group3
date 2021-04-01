@@ -54,6 +54,6 @@ null_data = crash_fm_age[crash_fm_age.isnull().any(axis=1)] # view rows with mis
 # delete rows with completely empty data
 crash_fm.dropna(subset = ["LATITUDE"], inplace=True) # drop all that don't have a lat/long - empty rows/correct values necessary for Lydia
 print(crash_fm.isnull().sum()) # check to see if there are any more NANs, beside AGE - Result: 3 NAN in Ward, 159,253 NAN in Age
-
+crash_fm.to_csv("fm.csv")
 
 
