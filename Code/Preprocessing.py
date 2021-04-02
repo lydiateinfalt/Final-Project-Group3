@@ -36,24 +36,42 @@ crash = crash.drop(crash[(crash.LICENSEPLATESTATE == 'Ot') | (crash.LICENSEPLATE
 # RR - Create Feature Matrix and Fill/Drop NANs
 ###
 # Create Matrix with only the feature rows we want and the target
+print('The list of columns before dropping any include')
 print(crash.columns) # view columns
 # drop redundent/unnecessary columns
 crash_fm = crash.drop(['CRIMEID', 'REPORTDATE','MAJORINJURIES_BICYCLIST','MINORINJURIES_BICYCLIST','FATAL_BICYCLIST','MAJORINJURIES_DRIVER',
             'MINORINJURIES_DRIVER','FATAL_DRIVER','MAJORINJURIES_PEDESTRIAN','MINORINJURIES_PEDESTRIAN',
             'FATAL_PEDESTRIAN','MAJORINJURIESPASSENGER','FATALPASSENGER','MAJORINJURIESPASSENGER','IMPAIRED',
-            'ROUTEID','DAY','HOUR','FATALMAJORINJURIES_TOTAL'], axis=1)
+            'ROUTEID','DAY','HOUR','MINORINJURIESPASSENGER','FATALMAJORINJURIES_TOTAL'], axis=1)
+print('The list of columns after keeping only those that we want to use as features include')
 print(crash_fm.columns) # check the columns again
 
-# Fill in missing data
+# Check data types of variables to make sure they are correct
+print('The data types of each of the features is') # change offintersection to categorical
+print(crash_fm.dtypes)
+crash_fm["OFFINTERSECTION"].astype('category') # change intersection to a categorical variable
+
+
+# Fill in missing data/drop
+print('The number of empty values per column is')
 print(crash_fm.isnull().sum()) # get missing values
 crash_fm_age = crash_fm.drop(['AGE'], axis=1) # use to view rows with missing data, except age
 null_data = crash_fm_age[crash_fm_age.isnull().any(axis=1)] # view rows with missing data
-#print(null_data.head(50)) # view the null data rows
-#print(crash_fm.head(20)) # view the head of the feature matrix
-# it appears that there are simply 321 rows of empty data
-# delete rows with completely empty data
-crash_fm.dropna(subset = ["LATITUDE"], inplace=True) # drop all that don't have a lat/long - empty rows/correct values necessary for Lydia
-print(crash_fm.isnull().sum()) # check to see if there are any more NANs, beside AGE - Result: 3 NAN in Ward, 159,253 NAN in Age
+print(null_data.head(50)) # view the null data rows - Weirdly, they are completely empty - get rid of all the ones missing Lat and Ward
+### NOTE: USE IF DR JAFARI THINKS WE SHOULD DROP AGE AS WELL AS THE EMPTY ROWS
+crash_fm.dropna(subset = ["LATITUDE"], inplace=True) # drop Lat and Ward but keep age
+# crash_fm.dropna(subset = ["AGE"], inplace = True) # Use if Dr Jafari says 28% of missing values is too much and tells us to delet ethem
+crash_fm.AGE.fillna(crash_fm.AGE.mean(), inplace=True)  # impute empty age cells with the average value
+ward_replace = crash_fm['WARD'].value_counts().idxmax() # impute empty cells for WARD using the most common category
+crash_fm.WARD.fillna(ward_replace, inplace=True) # impute WARD cells with most common ward
+print('The number of empty values per column after imputation is:')
+print(crash_fm.isnull().sum())  # check to make sure there is no longer empty cells
+
+
+
+
+# write to csv file
 crash_fm.to_csv("fm.csv")
+
 
 
