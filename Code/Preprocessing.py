@@ -49,7 +49,7 @@ print(crash_fm.columns) # check the columns again
 # Check data types of variables to make sure they are correct
 print('The data types of each of the features is') # change offintersection to categorical
 print(crash_fm.dtypes)
-#crash_fm["OFFINTERSECTION"].astype('category') # change intersection to a categorical variable
+crash_fm['OFFINTERSECTION'] = crash_fm["OFFINTERSECTION"].astype(str) # change intersection to a categorical variable
 crash_fm['DRIVERSIMPAIRED'] = crash_fm['DRIVERSIMPAIRED'].map({0:'N' ,1:'Y',2:'Y'})
 crash_fm['PEDESTRIANSIMPAIRED'] = crash_fm['PEDESTRIANSIMPAIRED'].map({0:'N' ,1:'Y',2:'Y'})
 crash_fm['BICYCLISTSIMPAIRED'] = crash_fm['BICYCLISTSIMPAIRED'].map({0:'N' ,1:'Y',2:'Y'})
@@ -79,6 +79,7 @@ crash_fm.to_csv("fm.csv")
 from sklearn.preprocessing import StandardScaler
 cols_to_norm = ['AGE','LATITUDE','LONGITUDE']
 crash_fm[cols_to_norm] = StandardScaler().fit_transform(crash_fm[cols_to_norm])
+# manual normalization
 # normalize age
 # mean_age = crash_fm.AGE.mean()
 # max_age = crash_fm.AGE.max()
