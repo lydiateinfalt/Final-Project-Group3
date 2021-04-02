@@ -33,7 +33,7 @@ crash = crash.drop(crash[(crash.LICENSEPLATESTATE == 'Ot') | (crash.LICENSEPLATE
 
 
 ###
-# RR - Create Feature Matrix and Fill/Drop NANs
+# RR - Create Feature Matrix and Fill/Drop NANs - 29 lines, 17 I wrote, 12 copied, 12 modified
 ###
 # Create Matrix with only the feature rows we want and the target
 print('The list of columns before dropping any include')
