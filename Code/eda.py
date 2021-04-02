@@ -304,7 +304,8 @@ print ("Major injuries and fatalities by ward: ")
 print(ward_mf)
 
 # Getting a bar graph of the results. 5/5 lines written by me.
-ward_mf_bar = ward_mf.plot.bar(figsize=(20, 10))
+teal = '#5ca08e'
+ward_mf_bar = ward_mf.plot.bar(figsize=(20, 10), color=teal)
 plt.ylabel('Major Injuries and Fatalities')
 plt.xlabel('Ward')
 plt.title('Major Injuries and Fatalities by Ward')
@@ -337,18 +338,19 @@ print(mf_age)
 # Note about results: about the same
 
 # Getting a histogram of age 5/5 lines written by me
-age_hist = plt.hist(crash['AGE'])
-plt.ylabel('Count')
-plt.xlabel('Age')
-plt.title('Age of People Involved in Traffic Accidents')
+sns.set_palette('icefire')
+age_hist = sns.histplot(data=crash, x='AGE', binwidth=5)
+age_hist.set_ylabel('Count')
+age_hist.set_xlabel('Age')
+age_hist.set_title('Age of People Involved in Traffic Accidents')
 plt.show()
 
 # Getting a histogram of age and accidents with fatality/major injury. 7/7 lines written by me
 mf_filter = crash[crash.FATALMAJORINJURIES.eq(1.0)]
-age_mf_hist = plt.hist(mf_filter['AGE'])
-plt.ylabel('Count')
-plt.xlabel('Age')
-plt.title('Age of People Involved in Traffic Accidents with Fatalities or Major Injuries')
+age_mf_hist = sns.histplot(data=mf_filter, x='AGE', binwidth=5)
+age_mf_hist.set_ylabel('Count')
+age_mf_hist.set_xlabel('Age')
+age_mf_hist.set_title('Age of People Involved in Traffic Accidents with Fatalities or Major Injuries')
 plt.show()
 
 # Getting the count of crashes with major/fatal per state. 2/2 by me
