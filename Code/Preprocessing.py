@@ -99,6 +99,7 @@ crash_fm[cols_to_norm] = StandardScaler().fit_transform(crash_fm[cols_to_norm])
 
 # final feature matrix to call
 crash_model = crash_fm
+crash_model.to_csv("crash_model.csv")
 ### RR End
 ### The output is the cleaned, filled, and normalized matrix containing only the features and the target
 
