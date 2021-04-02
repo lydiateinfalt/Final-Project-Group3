@@ -49,8 +49,12 @@ print(crash_fm.columns) # check the columns again
 # Check data types of variables to make sure they are correct
 print('The data types of each of the features is') # change offintersection to categorical
 print(crash_fm.dtypes)
-crash_fm["OFFINTERSECTION"].astype('category') # change intersection to a categorical variable
-
+#crash_fm["OFFINTERSECTION"].astype('category') # change intersection to a categorical variable
+crash_fm['DRIVERSIMPAIRED'] = crash_fm['DRIVERSIMPAIRED'].map({0:'N' ,1:'Y',2:'Y'})
+crash_fm['PEDESTRIANSIMPAIRED'] = crash_fm['PEDESTRIANSIMPAIRED'].map({0:'N' ,1:'Y',2:'Y'})
+crash_fm['BICYCLISTSIMPAIRED'] = crash_fm['BICYCLISTSIMPAIRED'].map({0:'N' ,1:'Y',2:'Y'})
+print('The data types of each feature after reassignment is:')
+print(crash_fm.dtypes)
 
 # Fill in missing data/drop
 print('The number of empty values per column is')
@@ -58,7 +62,6 @@ print(crash_fm.isnull().sum()) # get missing values
 crash_fm_age = crash_fm.drop(['AGE'], axis=1) # use to view rows with missing data, except age
 null_data = crash_fm_age[crash_fm_age.isnull().any(axis=1)] # view rows with missing data
 print(null_data.head(50)) # view the null data rows - Weirdly, they are completely empty - get rid of all the ones missing Lat and Ward
-### NOTE: USE IF DR JAFARI THINKS WE SHOULD DROP AGE AS WELL AS THE EMPTY ROWS
 crash_fm.dropna(subset = ["LATITUDE"], inplace=True) # drop Lat and Ward but keep age
 # crash_fm.dropna(subset = ["AGE"], inplace = True) # Use if Dr Jafari says 28% of missing values is too much and tells us to delet ethem
 crash_fm.AGE.fillna(crash_fm.AGE.mean(), inplace=True)  # impute empty age cells with the average value
@@ -67,11 +70,34 @@ crash_fm.WARD.fillna(ward_replace, inplace=True) # impute WARD cells with most c
 print('The number of empty values per column after imputation is:')
 print(crash_fm.isnull().sum())  # check to make sure there is no longer empty cells
 
-
-
-
-# write to csv file
+# write to csv file - this is used for clustering
+# we don't want to normalize the latitude/longitude used for clustering, so this file is extracted before normalization occurs
 crash_fm.to_csv("fm.csv")
 
+# Data Normalization - for use on Age and Lat/Long
+# An alternative to Normalizing Lat/Long would be to cluster. However, there is so much data in a small area that it doesn't appear clustering will work well
+from sklearn.preprocessing import StandardScaler
+cols_to_norm = ['AGE','LATITUDE','LONGITUDE']
+crash_fm[cols_to_norm] = StandardScaler().fit_transform(crash_fm[cols_to_norm])
+# normalize age
+# mean_age = crash_fm.AGE.mean()
+# max_age = crash_fm.AGE.max()
+# min_age = crash_fm.AGE.min()
+# crash_fm['AGE'] = crash_fm['AGE'].apply(lambda x: (x - mean_age ) / (max_age -min_age)) # normalize
+# # normalize latitude
+# mean_lat = crash_fm.LATITUDE.mean()
+# max_lat = crash_fm.LATITUDE.max()
+# min_lat = crash_fm.LATITUDE.min()
+# crash_fm['LATITUDE'] = crash_fm['LATITUDE'].apply(lambda x: (x - mean_lat ) / (max_age -min_lat)) # normalize
+# # normalize longitude
+# mean_long = crash_fm.LONGITUDE.mean()
+# max_long = crash_fm.LONGITUDE.max()
+# min_long = crash_fm.LONGITUDE.min()
+# crash_fm['LONGITUDE'] = crash_fm['LONGITUDE'].apply(lambda x: (x - mean_long ) / (max_age -min_long)) # normalize
+# # Citation: StackOverflow. https://stackoverflow.com/questions/28576540/how-can-i-normalize-the-data-in-a-range-of-columns-in-my-pandas-dataframe/28577480
 
+# final feature matrix to call
+crash_model = crash_fm
+### RR End
+### The output is the cleaned, filled, and normalized matrix containing only the features and the target
 
