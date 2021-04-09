@@ -49,7 +49,7 @@ def main():
     dc_shape = gpd.read_file("Roads.shp")
 
     dfx = pd.DataFrame(crash)
-    dfx = dfx[(dfx.FATALMAJORINJURIES == 1)]
+    #dfx = dfx[(dfx.FATALMAJORINJURIES == 1)]
     coordinates = dfx[['LATITUDE', 'LONGITUDE']].to_numpy()
     #write method for finding optimal epsilon and min_pts
     dc_clusters = dbscan(coordinates)
