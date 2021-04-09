@@ -9,7 +9,7 @@ print("Original data set")
 print("Total number of rows in data set: ", crash.shape[0])
 print("Total number of columns in data set:", crash.shape[1])
 
-crash = pd.DataFrame(crash, columns=['PERSONID', 'PERSONTYPE', 'AGE', 'FATAL', 'MAJORINJURY', 'MINORINJURY', 'VEHICLEID', 'INVEHICLETYPE', 'TICKETISSUED', 'LICENSEPLATESTATE', 'IMPAIRED', 'SPEEDING'])
+crash = pd.DataFrame(crash, columns=['PERSONID', 'PERSONTYPE', 'AGE', 'FATAL', 'MAJORINJURY', 'MINORINJURY', 'INVEHICLETYPE', 'TICKETISSUED', 'LICENSEPLATESTATE', 'IMPAIRED', 'SPEEDING'])
 print("Selecting columns from data set")
 print("Total number of rows in data set: ", crash.shape[0])
 print("Total number of columns in data set:", crash.shape[1])
