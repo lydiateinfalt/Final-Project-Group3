@@ -2,7 +2,7 @@
 # RyeAnne Ricker
 
 # import libraries
-import data_cleanup
+import readdata
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
@@ -16,7 +16,7 @@ import seaborn as sns
 # to call from my directory RR 2 lines, 2 myself
 #crash = pd.read_csv('/Users/RyeAnne/Documents/School/Spring2021/DataMining/Group Project/crash_ver1.csv') # load data
 # may use the following line to call it from class instead
-crash = data_cleanup.data
+crash = readdata.crash
 print(crash.columns)
 
 ### ------------------------------------------------------------------------------------------
@@ -42,135 +42,135 @@ print(crash.columns)
 
 # Use this to make sure you incorporate all years contained within the data  and to check for any oddities
 # Get the total number of crashes per year, visually - RR 6 lines, 6 myself
-year_counts = crash["MONTH"].value_counts() # get total counts of fatal/majorinjury and none/minorinjury
-year_proportions = crash["MONTH"].value_counts(normalize=True)  # get the proportions
-print('The number of crashes in DC per month are:')
-print(year_counts)  # print total numbers
-print('The proportion of crashes in DC by month are:')
-print(year_proportions)  # print proportions
-
-# Plot crashes by year - RR 4 copied, 4 modified, 3 my own
-year_count = sns.countplot(data=crash, x='YEAR', hue='FATALMAJORINJURIES', dodge=False, palette="Paired")
-year_count.set_xticklabels(year_count.get_xticklabels(), rotation=70)
-year_count.set_xlabel("Year")
-year_count.set_ylabel("Number of Crashes")
-year_count.set_title('Crashes by Year')
-year_count.legend(bbox_to_anchor=(0.1, 0.9), loc=2, borderaxespad=0.)
-plt.show()
-
-# Use this to make sure you incorporate all months contained within the data  and to check for any oddities
-# Get the total number of crashes per year, visually - RR 6 lines, 6 myself
-year_counts = crash["MONTH"].value_counts() # get total counts of fatal/majorinjury and none/minorinjury
-year_proportions = crash["MONTH"].value_counts(normalize=True)  # get the proportions
-print('The number of crashes in DC per month are:')
-print(year_counts)  # print total numbers
-print('The proportion of crashes in DC by month are:')
-print(year_proportions)  # print proportions
-
-# Plot crashes by month - RR 4 copied, 4 modified, 3 my own
-month_count = sns.countplot(data=crash, x='MONTH', hue='FATALMAJORINJURIES', dodge=False,palette="Paired")
-month_count.set_xticklabels(month_count.get_xticklabels(), rotation=70)
-month_count.set_xlabel("Month")
-month_count.set_ylabel("Number of Crashes")
-month_count.set_title('Crashes by Month')
-month_count.legend(bbox_to_anchor=(0.95, 1), loc=2, borderaxespad=0.)
-plt.show()
+# year_counts = crash["MONTH"].value_counts() # get total counts of fatal/majorinjury and none/minorinjury
+# year_proportions = crash["MONTH"].value_counts(normalize=True)  # get the proportions
+# print('The number of crashes in DC per month are:')
+# print(year_counts)  # print total numbers
+# print('The proportion of crashes in DC by month are:')
+# print(year_proportions)  # print proportions
+#
+# # Plot crashes by year - RR 4 copied, 4 modified, 3 my own
+# year_count = sns.countplot(data=crash, x='YEAR', hue='FATALMAJORINJURIES', dodge=False, palette="Paired")
+# year_count.set_xticklabels(year_count.get_xticklabels(), rotation=70)
+# year_count.set_xlabel("Year")
+# year_count.set_ylabel("Number of Crashes")
+# year_count.set_title('Crashes by Year')
+# year_count.legend(bbox_to_anchor=(0.1, 0.9), loc=2, borderaxespad=0.)
+# plt.show()
+#
+# # Use this to make sure you incorporate all months contained within the data  and to check for any oddities
+# # Get the total number of crashes per year, visually - RR 6 lines, 6 myself
+# year_counts = crash["MONTH"].value_counts() # get total counts of fatal/majorinjury and none/minorinjury
+# year_proportions = crash["MONTH"].value_counts(normalize=True)  # get the proportions
+# print('The number of crashes in DC per month are:')
+# print(year_counts)  # print total numbers
+# print('The proportion of crashes in DC by month are:')
+# print(year_proportions)  # print proportions
+#
+# # Plot crashes by month - RR 4 copied, 4 modified, 3 my own
+# month_count = sns.countplot(data=crash, x='MONTH', hue='FATALMAJORINJURIES', dodge=False,palette="Paired")
+# month_count.set_xticklabels(month_count.get_xticklabels(), rotation=70)
+# month_count.set_xlabel("Month")
+# month_count.set_ylabel("Number of Crashes")
+# month_count.set_title('Crashes by Month')
+# month_count.legend(bbox_to_anchor=(0.95, 1), loc=2, borderaxespad=0.)
+# plt.show()
 
 # Citation: "Visualizing Distributions of Data". Seaborn. [Accesed Online: Mar 25, 2021]. https://seaborn.pydata.org/tutorial/distributions.html
 
 
 # Heatmap of crashes - LNT
 # Reference: https://towardsdatascience.com/heatmap-basics-with-pythons-seaborn-fb92ea280a6c
-df = pd.DataFrame(crash, columns=['REPORTDATE','FATALMAJORINJURIES'])
-df['REPORTDATE'] = pd.to_datetime(df['REPORTDATE'])
-df.set_index(['REPORTDATE'], inplace=True)
-df = df[df.FATALMAJORINJURIES == 1]
-df['MONTH'] = [i.month for i in df.index]
-df['YEAR'] = [i.year for i in df.index]
-# group by month and year
-df = df.groupby(['MONTH', 'YEAR']).count()
-df = df.unstack(level=0)
+# df = pd.DataFrame(crash, columns=['REPORTDATE','FATALMAJORINJURIES'])
+# df['REPORTDATE'] = pd.to_datetime(df['REPORTDATE'])
+# df.set_index(['REPORTDATE'], inplace=True)
+# df = df[df.FATALMAJORINJURIES == 1]
+# df['MONTH'] = [i.month for i in df.index]
+# df['YEAR'] = [i.year for i in df.index]
+# # group by month and year
+# df = df.groupby(['MONTH', 'YEAR']).count()
+# df = df.unstack(level=0)
+#
+# fig, ax = plt.subplots(figsize=(11, 9))
+# sb.heatmap(df,cmap="Blues",linewidth=0.3)
+#
+# ax.xaxis.tick_top()
+# labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+#                 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+# plt.xticks(np.arange(12) + .5, labels=labels)
+#
+# plt.xlabel('')
+# plt.ylabel('')
+# plt.title('Fatal/Major Injuries Traffic Accidents in Washington DC from 2000-2021')
+# plt.show()
 
-fig, ax = plt.subplots(figsize=(11, 9))
-sb.heatmap(df,cmap="Blues",linewidth=0.3)
-
-ax.xaxis.tick_top()
-labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-                'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-plt.xticks(np.arange(12) + .5, labels=labels)
-
-plt.xlabel('')
-plt.ylabel('')
-plt.title('Fatal/Major Injuries Traffic Accidents in Washington DC from 2000-2021')
-plt.show()
-
-# Crashes by time of day, ignoring 5 AM because it appears to be default time for REPORTDATE - LNT
-df_time = pd.DataFrame(crash, columns=['REPORTDATE','FATALMAJORINJURIES'])
-df_time['REPORTDATE'] = pd.to_datetime(df_time['REPORTDATE'])
-df_time.set_index(['REPORTDATE'], inplace=True)
-df_time = df_time[(df_time.FATALMAJORINJURIES == 1)]
-df_time['TIME'] = [i.hour for i in df_time.index]
-df_time = df_time[(df_time.TIME != 5)]
-df_time=df_time.groupby(['TIME']).count()
-df_time.reset_index(inplace=True)
-pal1 = sb.color_palette("Greens_d", len(df_time.index))
-df_time['TIME'] = df_time['TIME'] + 1
-sb.barplot(x='TIME', y='FATALMAJORINJURIES', data=df_time,palette=np.array(pal1[::-1])).set_title('Crashes by Time of Day*')
-plt.show()
-
-# Crashes by days of the week
-days = [ 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-df_time = pd.DataFrame(crash, columns=['REPORTDATE','FATALMAJORINJURIES'])
-df_time['REPORTDATE'] = pd.to_datetime(df_time['REPORTDATE'])
-df_time['WEEKDAY'] = df_time['REPORTDATE'].dt.day_name()
-df_time.set_index(['REPORTDATE'], inplace=True)
-df_time = df_time[(df_time.FATALMAJORINJURIES == 1)]
-df1= pd.DataFrame(df_time.groupby('WEEKDAY').count().reindex(days))
-pal = sb.color_palette("Greens_d", len(df1.index))
-sb.barplot(y=df1.index, x='FATALMAJORINJURIES', data=df1,palette=np.array(pal[::-1])).set_title('Crashes by Day of Week*');
-plt.show()
-
-# Citation: "Matplotlib.axes.Axes.set_xticks() in Python". GeeksforGeeks. April 19, 2020. https://www.geeksforgeeks.org/matplotlib-axes-axes-set_xticks-in-python/
-# Top 10 most dangerous days - LNT
-df3 = pd.DataFrame(crash, columns=['REPORTDATE','FATALMAJORINJURIES'])
-df3['REPORTDATE'] = pd.to_datetime(df3['REPORTDATE'])
-df3.set_index(['REPORTDATE'], inplace=True)
-df3['YEAR'] = [i.year for i in df3.index]
-df3['DAYOFYEAR'] = [i.dayofyear for i in df3.index]
-df3 = df3[(df3.FATALMAJORINJURIES == 1)]
-import datetime
-df1= df3.groupby(['DAYOFYEAR','YEAR'],as_index=False).sum()
-df1['DT']=df1.apply(lambda x: datetime.date(int(x.YEAR),1,1)+pd.to_timedelta(x.DAYOFYEAR), axis=1)
-df1 = df1.nlargest(10,'FATALMAJORINJURIES')
-df1=df1[['YEAR', 'DT', 'FATALMAJORINJURIES']].reset_index()
-df1=df1[['YEAR', 'DT', 'FATALMAJORINJURIES']]
-print(df1[['YEAR', 'DT', 'FATALMAJORINJURIES']])
-### ------------------------------------------------------------------------------------------
-###
-### This plot displays a map of DC with fatal/majorinjury crashes overlaid
-###
-
-# Make geomap to plot where crashes occurred - RR  12 lines, 5 copied, 7 myself
-# change this to directory for boundary file in directory
-# dc_shape = gpd.read_file('/Users/RyeAnne/Documents/School/Spring2021/DataMining/Group Project/Washington_DC_Boundary.shp')
-dc_shape = gpd.read_file("Washington_DC_Boundary.shp")
-# # Make Geoplot of Fatal and NonFatal car crashes in DC - RR 11 copied and modified, 5 wrote own
-crs = {'init':'epsg:4326'}
-geometry=gpd.points_from_xy(crash.LONGITUDE, crash.LATITUDE)
-#geometry = [Point(xy) for xy in zip(crash["LONGITUDE"],crash['LATITUDE'])]
-gdf = gpd.GeoDataFrame(crash, crs=crs, geometry=geometry)
-# #print(gdf.head())
-fig,ax = plt.subplots(figsize = (15,15))
-dc_shape.plot(ax=ax, color = 'grey',alpha=0.5,zorder=1)
-#plt.show()
-gdf[gdf['FATALMAJORINJURIES'] == 1].plot(ax = ax, markersize = 10, color = 'red', marker = '*',label='Fatal/Major Injury',zorder=2)
-# # plot specifications
-plt.title('Crash Fatalities and Major Injuries by GeoLocation')
-plt.legend(bbox_to_anchor=(1.0, .5), prop={'size': 8})
-plt.xlabel('Longitude')
-plt.ylabel('Latitude')
-plt.show()
-# Citation: Steward, Ryan. "GeoPandas 101: Plot any data with a latitude ad longitude on a map". Oct 31, 2018. https://towardsdatascience.com/geopandas-101-plot-any-data-with-a-latitude-and-longitude-on-a-map-98e01944b972
+# # Crashes by time of day, ignoring 5 AM because it appears to be default time for REPORTDATE - LNT
+# df_time = pd.DataFrame(crash, columns=['REPORTDATE','FATALMAJORINJURIES'])
+# df_time['REPORTDATE'] = pd.to_datetime(df_time['REPORTDATE'])
+# df_time.set_index(['REPORTDATE'], inplace=True)
+# df_time = df_time[(df_time.FATALMAJORINJURIES == 1)]
+# df_time['TIME'] = [i.hour for i in df_time.index]
+# df_time = df_time[(df_time.TIME != 5)]
+# df_time=df_time.groupby(['TIME']).count()
+# df_time.reset_index(inplace=True)
+# pal1 = sb.color_palette("Greens_d", len(df_time.index))
+# df_time['TIME'] = df_time['TIME'] + 1
+# sb.barplot(x='TIME', y='FATALMAJORINJURIES', data=df_time,palette=np.array(pal1[::-1])).set_title('Crashes by Time of Day*')
+# plt.show()
+#
+# # Crashes by days of the week
+# days = [ 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+# df_time = pd.DataFrame(crash, columns=['REPORTDATE','FATALMAJORINJURIES'])
+# df_time['REPORTDATE'] = pd.to_datetime(df_time['REPORTDATE'])
+# df_time['WEEKDAY'] = df_time['REPORTDATE'].dt.day_name()
+# df_time.set_index(['REPORTDATE'], inplace=True)
+# df_time = df_time[(df_time.FATALMAJORINJURIES == 1)]
+# df1= pd.DataFrame(df_time.groupby('WEEKDAY').count().reindex(days))
+# pal = sb.color_palette("Greens_d", len(df1.index))
+# sb.barplot(y=df1.index, x='FATALMAJORINJURIES', data=df1,palette=np.array(pal[::-1])).set_title('Crashes by Day of Week*');
+# plt.show()
+#
+# # Citation: "Matplotlib.axes.Axes.set_xticks() in Python". GeeksforGeeks. April 19, 2020. https://www.geeksforgeeks.org/matplotlib-axes-axes-set_xticks-in-python/
+# # Top 10 most dangerous days - LNT
+# df3 = pd.DataFrame(crash, columns=['REPORTDATE','FATALMAJORINJURIES'])
+# df3['REPORTDATE'] = pd.to_datetime(df3['REPORTDATE'])
+# df3.set_index(['REPORTDATE'], inplace=True)
+# df3['YEAR'] = [i.year for i in df3.index]
+# df3['DAYOFYEAR'] = [i.dayofyear for i in df3.index]
+# df3 = df3[(df3.FATALMAJORINJURIES == 1)]
+# import datetime
+# df1= df3.groupby(['DAYOFYEAR','YEAR'],as_index=False).sum()
+# df1['DT']=df1.apply(lambda x: datetime.date(int(x.YEAR),1,1)+pd.to_timedelta(x.DAYOFYEAR), axis=1)
+# df1 = df1.nlargest(10,'FATALMAJORINJURIES')
+# df1=df1[['YEAR', 'DT', 'FATALMAJORINJURIES']].reset_index()
+# df1=df1[['YEAR', 'DT', 'FATALMAJORINJURIES']]
+# print(df1[['YEAR', 'DT', 'FATALMAJORINJURIES']])
+# ### ------------------------------------------------------------------------------------------
+# ###
+# ### This plot displays a map of DC with fatal/majorinjury crashes overlaid
+# ###
+#
+# # Make geomap to plot where crashes occurred - RR  12 lines, 5 copied, 7 myself
+# # change this to directory for boundary file in directory
+# # dc_shape = gpd.read_file('/Users/RyeAnne/Documents/School/Spring2021/DataMining/Group Project/Washington_DC_Boundary.shp')
+# dc_shape = gpd.read_file("Washington_DC_Boundary.shp")
+# # # Make Geoplot of Fatal and NonFatal car crashes in DC - RR 11 copied and modified, 5 wrote own
+# crs = {'init':'epsg:4326'}
+# geometry=gpd.points_from_xy(crash.LONGITUDE, crash.LATITUDE)
+# #geometry = [Point(xy) for xy in zip(crash["LONGITUDE"],crash['LATITUDE'])]
+# gdf = gpd.GeoDataFrame(crash, crs=crs, geometry=geometry)
+# # #print(gdf.head())
+# fig,ax = plt.subplots(figsize = (15,15))
+# dc_shape.plot(ax=ax, color = 'grey',alpha=0.5,zorder=1)
+# #plt.show()
+# gdf[gdf['FATALMAJORINJURIES'] == 1].plot(ax = ax, markersize = 10, color = 'red', marker = '*',label='Fatal/Major Injury',zorder=2)
+# # # plot specifications
+# plt.title('Crash Fatalities and Major Injuries by GeoLocation')
+# plt.legend(bbox_to_anchor=(1.0, .5), prop={'size': 8})
+# plt.xlabel('Longitude')
+# plt.ylabel('Latitude')
+# plt.show()
+# # Citation: Steward, Ryan. "GeoPandas 101: Plot any data with a latitude ad longitude on a map". Oct 31, 2018. https://towardsdatascience.com/geopandas-101-plot-any-data-with-a-latitude-and-longitude-on-a-map-98e01944b972
 
 # Get total number of major injuries/fatalities and minor injuries/no injuries
 # RR  6 lines, 6 myself
