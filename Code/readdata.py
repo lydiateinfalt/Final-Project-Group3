@@ -1,9 +1,9 @@
 import pandas as pd
-import numpy as np
 
 # Crashes reported in DC
 # Reference: https://opendata.dc.gov/datasets/crash-details-table
 crash = pd.read_csv("Crash_Details_Table.csv")
+crash = pd.DataFrame(crash, columns=['CRIMEID', 'PERSONID', 'PERSONTYPE', 'AGE', 'FATAL', 'MAJORINJURY', 'MINORINJURY', 'VEHICLEID', 'INVEHICLETYPE', 'TICKETISSUED', 'LICENSEPLATESTATE', 'IMPAIRED', 'SPEEDING'])
 
 
 # Analysis of each data set
@@ -24,4 +24,3 @@ print ('-'*80 + '\n')
 # printing the summary statistics of the dataset
 print(crash.describe(include='all'))
 print ('-'*80 + '\n')
-

@@ -2,17 +2,9 @@ import readdata
 import pandas as pd
 import numpy as np
 
-data = readdata.crash_all
+crash = readdata.crash
 
-data = pd.DataFrame(data, columns=['CRIMEID','REPORTDATE','LATITUDE', 'LONGITUDE', 'WARD', 'MAJORINJURIES_BICYCLIST',
-                                    'MINORINJURIES_BICYCLIST', 'FATAL_BICYCLIST','AGE',
-                                    'MAJORINJURIES_DRIVER', 'MINORINJURIES_DRIVER','FATAL_DRIVER',
-                                    'MAJORINJURIES_PEDESTRIAN', 'MINORINJURIES_PEDESTRIAN','FATAL_PEDESTRIAN',
-                                    'TOTAL_VEHICLES','TOTAL_BICYCLES','TOTAL_PEDESTRIANS','DRIVERSIMPAIRED',
-                                    'PEDESTRIANSIMPAIRED','BICYCLISTSIMPAIRED','OFFINTERSECTION','MINORINJURIESPASSENGER',
-                                    'FATALPASSENGER','MAJORINJURIESPASSENGER', 'INVEHICLETYPE','TICKETISSUED','LICENSEPLATESTATE',
-                                    'IMPAIRED', 'SPEEDING', 'ROUTEID'
-                                    ])
+crash = pd.DataFrame(crash, columns=['CRIMEID', 'PERSONID', 'PERSONTYPE', 'AGE', 'FATAL', 'MAJORINJURY', 'MINORINJURY', 'VEHICLEID', 'INVEHICLETYPE', 'TICKETISSUED', 'LICENSEPLATESTATE', 'IMPAIRED', 'SPEEDING'])
 
 # Add YEAR, MONTH, DAY columns based on REPORTDATE
 print("Convert REPORTDATE into YEAR, MONTH, DAY")
@@ -28,6 +20,3 @@ data['FATALMAJORINJURIES_TOTAL'] =  data['MAJORINJURIES_BICYCLIST'] + data['FATA
 
 # After EDA, we can drop any unnecessary columns, for now keep Major/Minor/Fatal columns
 
-print(data.shape)
-print(data.dtypes)
-data.to_csv("crash_ver1.csv")
