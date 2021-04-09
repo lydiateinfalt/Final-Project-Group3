@@ -4,7 +4,7 @@ import readdata
 import researchpy as rp
 import seaborn as sns
 from scipy import stats
-from matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 
 # Arianna Code Start:
 crash = readdata.crash
@@ -15,7 +15,6 @@ print(crash.shape)
 crash.dropna(subset = ["PERSONTYPE"], inplace=True) # rows missing PERSONTYPE-these will delete all of the empty 328 rows
 print('Columns with missing values include:')
 print(crash.isnull().sum()) # Age can be missing values as it is not categorical and thus will not have a chi-squared test on it
-
 
 # This portion determines whether features are independent of crash having a fatality/major injury
 # Chi squared tests are performed on each categorical variables to determine independence
@@ -52,10 +51,10 @@ print(crash.AGE.describe())
 #print('The mode is:',statistics.mode(crash.AGE))
 
 # Look at distributions of the age of drives for those crashes that result in Fatalities/Major Injuries and Not
-fmi = crash.loc[crash['FATALMAJORINJURIES'] == 1] # group 1 is those that had a fatal major injury
-minor = crash.loc[crash['FATALMAJORINJURIES'] == 0] # group 2 is those that did not
-p = stats.ttest_ind(fmi, minor)
-print(p)
+fmi = crash.loc[crash['FATALMAJORINJURIES'] == 1.0] # group 1 is those that had a fatal major injury
+minor = crash.loc[crash['FATALMAJORINJURIES'] == 0.0] # group 2 is those that did not
+print(stats.ttest_ind(fmi, minor))
+
 
 sns.set(style="darkgrid")
 sns.displot(crash, x="AGE", hue="FATALMAJORINJURIES", kind="kde", multiple="stack",palette="Paired")
@@ -73,3 +72,4 @@ sns.displot(crash, x="AGE", hue="FATALMAJORINJURIES", kind="kde", multiple="stac
 plt.legend()
 plt.title('Normalized Age Distributions')
 plt.show()
+
