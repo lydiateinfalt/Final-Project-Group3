@@ -1,10 +1,10 @@
 # Group 3 Preprocessing
 
 # Arianna Code Start:
-import data_cleanup
+import readdata
 # import other libraries below:
 
-crash = data_cleanup.data
+crash = readdata.crash
 print(crash.shape)
 
 # Filter YEAR  < 2008 and YEAR > 2021
