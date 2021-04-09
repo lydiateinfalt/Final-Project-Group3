@@ -65,8 +65,6 @@ print(crash_fm.groupby(by='INVEHICLETYPE').agg('count'))
 print(crash_fm.groupby(by='SPEEDING').agg('count'))
 print(crash_fm.groupby(by='FATALMAJORINJURIES').agg('count'))
 
-
-
 # Label Encoder
 ord_enc = OrdinalEncoder()
 crash_fm["PERSONTYPE"] = ord_enc.fit_transform(crash_fm[["PERSONTYPE"]])
