@@ -1,5 +1,5 @@
 # DC Crash Data EDA
-# RyeAnne Ricker
+# Group 3: Arianna Dunham, RyeAnne Ricker, Lydia Teinfalt
 
 # import libraries
 import readdata
@@ -190,33 +190,33 @@ print(fatal_proportions)  # print proportions
 print('The columns of the file are:')
 print(crash.columns)
 
-# Feature - Ward
-ward_counts = crash["WARD"].value_counts()
-print(ward_counts)
-# Feature - Age
+# # Feature - Ward
+# ward_counts = crash["WARD"].value_counts()
+# print(ward_counts)
+# # Feature - Age
 age_counts = crash["AGE"].value_counts()
 print(age_counts)
 # Feature - Total_Vehicles
-vehicle_counts = crash["TOTAL_VEHICLES"].value_counts()
-print(vehicle_counts)
+# vehicle_counts = crash["TOTAL_VEHICLES"].value_counts()
+# print(vehicle_counts)
 # Feature -  Total_Bicycles
-bicycle_counts = crash["TOTAL_BICYCLES"].value_counts()
-print(bicycle_counts)
-# Feature - Total_Pedestrians
-pedestrian_counts = crash["TOTAL_PEDESTRIANS"].value_counts()
-print(pedestrian_counts)
-# Feature - DriversImpaired
-driversimpaired_counts = crash["DRIVERSIMPAIRED"].value_counts()
-print(driversimpaired_counts)
-# Feature - PedestriansImpaired
-pedestriansimpaired_counts = crash["PEDESTRIANSIMPAIRED"].value_counts()
-print(pedestriansimpaired_counts)
-# Feature - BicyclistsImpaired
-bicyclistsimpaired_counts = crash["BICYCLISTSIMPAIRED"].value_counts()
-print(bicyclistsimpaired_counts)
+# bicycle_counts = crash["TOTAL_BICYCLES"].value_counts()
+# print(bicycle_counts)
+# # Feature - Total_Pedestrians
+# pedestrian_counts = crash["TOTAL_PEDESTRIANS"].value_counts()
+# print(pedestrian_counts)
+# # Feature - DriversImpaired
+# driversimpaired_counts = crash["DRIVERSIMPAIRED"].value_counts()
+# print(driversimpaired_counts)
+# # Feature - PedestriansImpaired
+# pedestriansimpaired_counts = crash["PEDESTRIANSIMPAIRED"].value_counts()
+# print(pedestriansimpaired_counts)
+# # Feature - BicyclistsImpaired
+# bicyclistsimpaired_counts = crash["BICYCLISTSIMPAIRED"].value_counts()
+# print(bicyclistsimpaired_counts)
 # Feature - OffIntersection
-offintersection_counts = crash["OFFINTERSECTION"].value_counts()
-print(offintersection_counts)
+# offintersection_counts = crash["OFFINTERSECTION"].value_counts()
+# print(offintersection_counts)
 # Feature - InVehicleType
 vehicletype_counts = crash["INVEHICLETYPE"].value_counts()
 print(vehicletype_counts)
@@ -232,12 +232,12 @@ print(impaired_counts)
 # Feature - Speeding
 speeding_counts = crash["SPEEDING"].value_counts()
 print(speeding_counts)
-# Feature - YEAR
-year_counts = crash["YEAR"].value_counts()
-print(year_counts)
-# Feature - MONTH
-month_counts = crash["MONTH"].value_counts()
-print(month_counts)
+# # Feature - YEAR
+# year_counts = crash["YEAR"].value_counts()
+# print(year_counts)
+# # Feature - MONTH
+# month_counts = crash["MONTH"].value_counts()
+# print(month_counts)
 
 # In the Data PreProcessing, we need to decide what to do with the weird ages
 # get rid of the 2025 data (2 data points)
@@ -298,18 +298,18 @@ print(month_counts)
 
 # Arianna Start.
 
-# Getting major injuries and fatalities by ward. 3/3 lines written by me
-ward_mf = crash.groupby('WARD').agg({'FATALMAJORINJURIES_TOTAL':'sum'})
-print ("Major injuries and fatalities by ward: ")
-print(ward_mf)
-
-# Getting a bar graph of the results. 5/5 lines written by me.
-teal = '#5ca08e'
-ward_mf_bar = ward_mf.plot.bar(figsize=(20, 10), color=teal)
-plt.ylabel('Major Injuries and Fatalities')
-plt.xlabel('Ward')
-plt.title('Major Injuries and Fatalities by Ward')
-plt.show()
+# # Getting major injuries and fatalities by ward. 3/3 lines written by me
+# ward_mf = crash.groupby('WARD').agg({'FATALMAJORINJURIES_TOTAL':'sum'})
+# print ("Major injuries and fatalities by ward: ")
+# print(ward_mf)
+#
+# # Getting a bar graph of the results. 5/5 lines written by me.
+# teal = '#5ca08e'
+# ward_mf_bar = ward_mf.plot.bar(figsize=(20, 10), color=teal)
+# plt.ylabel('Major Injuries and Fatalities')
+# plt.xlabel('Ward')
+# plt.title('Major Injuries and Fatalities by Ward')
+# plt.show()
 # A note about the results: ward two has the most major injuries and fatalities
 
 
@@ -375,7 +375,7 @@ for i in crash['LICENSEPLATESTATE']:
         non_dmv_crash += 1
 print("Number of crashes from DMV plate: ")
 print(dmv_crash)
-print("Number of crahses from non-DMV Plate: ")
+print("Number of crashes from non-DMV Plate: ")
 print(non_dmv_crash)
 
 # Counting total number of crashes from someone with a plate in the DMV and not in the DMV resulting in major/fatal.
