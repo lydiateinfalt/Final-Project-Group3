@@ -9,7 +9,7 @@ import numpy as np
 import geopandas as gpd
 #from shapely.geometry import Point, Polygon
 #from scipy import stats
-import researchpy as rp
+#import researchpy as rp
 import seaborn as sb
 import seaborn as sns
 
@@ -414,3 +414,81 @@ for row in crash['FATALMAJORINJURIES']:
 non_dmv_mf = fatalmajor - dmv_mf.loc['count'] - no_plate
 print("The total number of accident with plates outside of the DMV resulting in fatalities or major injuries is: ")
 print(non_dmv_mf)
+
+
+# Checking for duplicates in PersonID column (dropping nulls before
+# I do so to ensure those aren't counted. Duplicates indicate the same person
+# being involved in multiple accidents. 5/5 written by Arianna
+person_dup = crash.dropna().loc[crash['PERSONID'].duplicated()]
+print("Total number of duplicate PersonIDs: ")
+print(len(person_dup)) # 10
+print("List of duplicate PersonIDs: ")
+print(person_dup)
+
+# Getting summary stats for duplicate persons. 2/2 written by Arianna
+print("Summary statistics of duplicate PersonIds: ")
+print(person_dup.describe())
+# Notes on results: all resulted in a fatality or major injury. Average age is 34.3
+# Although two of the drivers are listed as 0, which can't be correct. We should drop all
+# rows where someone is listed as a driver and has an unreasonably young age listed.
+
+
+# Getting person type counts. 3/3 written by Arianna
+person_type = crash.groupby('PERSONTYPE').agg({'PERSONTYPE': 'count'})
+print("Person type counts: ")
+print(person_type)
+
+# Creating bar graph of person type counts.  6/6 written by Arianna
+teal = '#5ca08e'
+person_type_bar = person_type.plot.bar(figsize=(20, 10), color=teal)
+plt.ylabel('Count')
+plt.xlabel('Person Type')
+plt.title('Person Type Counts')
+plt.show()
+
+# Getting inury counts of person type. 3/3 written by Arianna
+person_injury = crash.groupby('PERSONTYPE').agg({'FATALMAJORINJURIES': 'sum', 'MINORINJURY': 'count'})
+print("Injury counts by person type: ")
+print(person_injury)
+
+# Creating bar graph to show injury type counts by person. 5/5 written by Arianna
+#person_injury_bar = crash.plot.bar(x='PERSONTYPE', y=['FATALMAJORINJURIES', 'MINORINJURY'],figsize=(20, 10), color=teal)
+#plt.ylabel('Count')
+#plt.xlabel('Person Type')
+#plt.title('Injury by Person Type')
+#plt.show()
+
+
+# Getting counts for accidents involving speeding. 3/3 written by Arianna
+speeding = crash.groupby('SPEEDING').agg({'FATALMAJORINJURIES': 'sum', 'MINORINJURY': 'count'})
+print('Injury counts for accidents involving speeding: ')
+print(speeding)
+
+# Getting counts for accidents involving impairment. 3/3 written by Arianna
+impaired = crash.groupby('IMPAIRED').agg({'FATALMAJORINJURIES': 'sum', 'MINORINJURY': 'count'})
+print('Injury counts for accidents involving speeding: ')
+print(impaired)
+
+# Creating bar chart to show count of accidents with injuries/fatalities based on
+# impairment, speeding, and neither
+#speed_impaired =
+#speed_impaired_bar = crash.plot(x=['SPEEDING', 'IMPAIRED', 'NONE'])
+# df.plot(x="X", y=["A", "B", "C"], kind="bar")
+
+# Getting counts for accidents where ticket was issued. 3/3 written by Arianna
+ticket = crash.groupby('TICKETISSUED').agg({'FATALMAJORINJURIES': 'sum', 'MINORINJURY': 'count'})
+print('Injury counts for accidents where a ticket was issued: ')
+print(ticket)
+
+
+# Getting injury counts based on vehicle type. 3/3 written by Arianna
+vehicle = crash.groupby('INVEHICLETYPE').agg({'FATALMAJORINJURIES': 'sum', 'MINORINJURY': 'count'})
+print("Injury counts by vehicle type: ")
+print(vehicle)
+
+# Getting pie chart to show vehicle type break down
+vehicle_counts = crash.groupby('INVEHICLETYPE').agg({'INVEHICLETYPE': 'count'})
+vehicle_chart = vehicle_counts.plot.pie(y='INVEHICLETYPE', figsize=(20,20))
+plt.ylabel('Vehicle Type')
+plt.title('Types of Vehicles Involved in Accidents')
+plt.show()
