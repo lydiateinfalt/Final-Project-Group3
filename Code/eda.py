@@ -298,12 +298,12 @@ print(speeding_counts)
 
 # Arianna Start.
 
-# # Getting major injuries and fatalities by ward. 3/3 lines written by me
+# # Getting major injuries and fatalities by ward. 3/3 lines written by Arianna
 # ward_mf = crash.groupby('WARD').agg({'FATALMAJORINJURIES_TOTAL':'sum'})
 # print ("Major injuries and fatalities by ward: ")
 # print(ward_mf)
 #
-# # Getting a bar graph of the results. 5/5 lines written by me.
+# # Getting a bar graph of the results. 5/5 lines written by Arianna.
 # teal = '#5ca08e'
 # ward_mf_bar = ward_mf.plot.bar(figsize=(20, 10), color=teal)
 # plt.ylabel('Major Injuries and Fatalities')
@@ -313,31 +313,40 @@ print(speeding_counts)
 # A note about the results: ward two has the most major injuries and fatalities
 
 
-# Getting summary stats for age. 3/3 lines written by me
+# Getting summary stats for age. 3/3 lines written by Arianna
 age_stats = crash['AGE'].describe()
 print("The summary statistics for age are: ")
 print(age_stats)
 
 # Based on the results of this, this column needs some cleaning (before cleaning max was 237 and min was -7990)
 # Deleting rows where age > 122 and where age < 0
-# I'm picking 122 as the max because that's the oldest age on record. 2/2 lines written by me
+# I'm picking 122 as the max because that's the oldest age on record. 2/2 lines written by Arianna
 age_filter = (crash.AGE > 122.0) | (crash.AGE < 0.0)
 crash = crash.where(~age_filter)
 
-
-# Printing sum stats again to compare. 2/2 line written by me
+# Printing sum stats again to compare. 2/2 line written by Arianna
 print("The summary statistics for age(cleaned) are:")
 print(crash['AGE'].describe())
 
+# Dropping all rows where a person is listed as a driver
+# and is under the age of 10, which seems to be an unreasonable age. 2/2 written by Arianna
+age_filter_2 = (crash.PERSONTYPE == 'Driver') & (crash.AGE < 10.0)
+crash = crash.where(~age_filter_2)
+
+# Checking results to ensure above code worked. 2/2 written by Arianna
+print("Minimum AGE by person type: ")
+print(crash.groupby('PERSONTYPE').agg({'AGE': 'min'}))
+
+
 # Getting average age and whether or not the accident resulted in major injury or fatality
-# to see if there's any discrepancy from total average. 3/3 lines written by me
+# to see if there's any discrepancy from total average. 3/3 lines written by Arianna
 mf_age = crash.groupby('FATALMAJORINJURIES').agg({'AGE': 'mean'})
 print("Average age involved in accidents with fatalities and major injuries: ")
 print(mf_age)
 
 # Note about results: about the same
 
-# Getting a histogram of age 5/5 lines written by me
+# Getting a histogram of age 5/5 lines written by Arianna
 sns.set_palette('icefire')
 age_hist = sns.histplot(data=crash, x='AGE', binwidth=5)
 age_hist.set_ylabel('Count')
@@ -345,7 +354,7 @@ age_hist.set_xlabel('Age')
 age_hist.set_title('Age of People Involved in Traffic Accidents')
 plt.show()
 
-# Getting a histogram of age and accidents with fatality/major injury. 7/7 lines written by me
+# Getting a histogram of age and accidents with fatality/major injury. 7/7 lines written by Arianna
 mf_filter = crash[crash.FATALMAJORINJURIES.eq(1.0)]
 age_mf_hist = sns.histplot(data=mf_filter, x='AGE', binwidth=5)
 age_mf_hist.set_ylabel('Count')
@@ -353,12 +362,12 @@ age_mf_hist.set_xlabel('Age')
 age_mf_hist.set_title('Age of People Involved in Traffic Accidents with Fatalities or Major Injuries')
 plt.show()
 
-# Getting the count of crashes with major/fatal per state. 2/2 by me
+# Getting the count of crashes with major/fatal per state. 2/2 by Arianna
 states = crash.groupby('LICENSEPLATESTATE').agg({'FATALMAJORINJURIES':'sum'})
 print("Crashes per License Plate State:")
 print(states)
 
-# Counting total number of crashes from someone with a plate in the DMV and not in the DMV. 13/13 by me
+# Counting total number of crashes from someone with a plate in the DMV and not in the DMV. 13/13 by Arianna
 dmv_crash = 0
 non_dmv_crash = 0
 no_plate = 0
@@ -379,7 +388,7 @@ print("Number of crashes from non-DMV Plate: ")
 print(non_dmv_crash)
 
 # Counting total number of crashes from someone with a plate in the DMV and not in the DMV resulting in major/fatal.
-# the first 15 lines were remixed and the remainder were all written by me
+# the first 15 lines were remixed and the remainder were all written by Arianna
 # Link for remixed code:
 # https://stackoverflow.com/questions/53153703/groupby-count-only-when-a-certain-value-is-present-in-one-of-the-column-in-panda
 dc_mf = ((crash['LICENSEPLATESTATE'] == 'DC')
