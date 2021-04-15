@@ -32,6 +32,7 @@ crash = crash.where(~age_filter)
 
 print(crash['AGE'].describe())
 
+
 # Dropping state abbreviations that do not exist (Ot, ou, vi, pu, un)
 crash = crash.drop(crash[(crash.LICENSEPLATESTATE == 'Ot') | (crash.LICENSEPLATESTATE == 'Ou') | (crash.LICENSEPLATESTATE == 'Vi') | (crash.LICENSEPLATESTATE == 'Pu') | (crash.LICENSEPLATESTATE == 'Un') | (crash.LICENSEPLATESTATE == 'Am') | (crash.LICENSEPLATESTATE == 'Di')].index)
 
@@ -46,6 +47,13 @@ print(crash.columns) # view columns
 crash_fm = crash.drop(['PERSONID','FATAL','MAJORINJURY','MINORINJURY'], axis=1)
 print('The list of columns after keeping only those that we want to use as features include:')
 print(crash_fm.columns) # check the columns again
+
+
+# Drop drivers under the age of 10 - as that doesn't make sense to have drivers under 10
+print('Rows prior to dropping young drivers is:',crash_fm.shape[0])
+young_drivers = crash_fm[ (crash_fm['AGE'] < 10) & (crash_fm['PERSONTYPE'] == 'Driver')].index
+crash_fm.drop(young_drivers, inplace = True)
+print('Rows after dropping young drivers is:', crash_fm.shape[0])
 
 # Fill in missing data
 print('The number of empty values per column is')

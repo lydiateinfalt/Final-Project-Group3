@@ -46,6 +46,8 @@ print('The Chi-Squared test results for the relationship between Fatal/Major Inj
 # First remove weird ages (<0 and >100)
 age_filter = (crash.AGE > 100.0) | (crash.AGE < 0.0)
 crash = crash.where(~age_filter)
+young_drivers = crash[ (crash['AGE'] < 10) & (crash['PERSONTYPE'] == 'Driver')].index
+crash.drop(young_drivers, inplace = True)
 print('Summary Age statistics are:')
 print(crash.AGE.describe())
 #print('The mode is:',statistics.mode(crash.AGE))
