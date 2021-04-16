@@ -503,12 +503,12 @@ max_vehicle = vehicle_mf.nlargest(10, 'FATALMAJORINJURIES')
 print("Top 10 dangerous vehicles: ")
 print(max_vehicle)
 
-# creating a bar graph depicting top 10 most dangerous vehicles
+# creating a bar graph depicting top 10 most dangerous vehicles (still working on this)
 teal = '#5ca08e'
-max_vehicle_bar = sns.barplot(x='INVEHICLETYPE', y='FATLAMAJORINJURIES', data=max_vehicle, color=teal)
-plt.ylabel('Fatality and Major Injury Count')
-plt.xlabel('Vehicle Type')
-plt.title('Top 10 Most Dangerous Vehicles')
-plt.show()
+#max_vehicle_bar = sns.barplot(x='INVEHICLETYPE', y='FATLAMAJORINJURIES', data=max_vehicle, color=teal)
+#plt.ylabel('Fatality and Major Injury Count')
+#plt.xlabel('Vehicle Type')
+#plt.title('Top 10 Most Dangerous Vehicles')
+#plt.show()
 
 
