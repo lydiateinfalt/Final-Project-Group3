@@ -1,4 +1,9 @@
 # RR
+import webbrowser
+
+from pydotplus import graph_from_dot_data
+from sklearn.tree import export_graphviz
+
 import Preprocessing
 from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import StratifiedShuffleSplit
@@ -9,6 +14,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import pandas as pd
 from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.metrics import roc_auc_score
 
 
 model = Preprocessing.crash_model
@@ -17,33 +23,28 @@ model = Preprocessing.crash_model
 class gboost:  # class
     def __init__(self, data):  # to call self
         # data is the entire data matrix
-        self.x = data.iloc[:,:-1]
-        self.y = data.iloc[:,-1]
+        self.xtrain = data.iloc[:,:-1]
+        self.ytrain = data.iloc[:,-1]
 
 
     def accuracy(self):  # this makes the model and finds the accuracy, confusion matrix, and prints the decision tree
-        s = StratifiedShuffleSplit(n_splits=5, random_state=10)  # way to split data
-        scoring = {"Accuracy": 'accuracy', "AUC": 'roc_auc'} # have accuracy for both AUC and overall accuracy used
-        params = {'n_estimators': [50,100,500],
-                    'learning_rate': [0.001, 0.01, 0.1, 1],
-                    'max_depth':[3,4,5,6],
-                    'min_samples_split': [2,4,6],
-                    'min_samples_leaf': [1,2]
-                 }
-        gb_search = GridSearchCV(GradientBoostingClassifier(random_state = 10),  # make grid to find highest accuracy
-                                  params, cv=s.split(self.x, self.y), scoring=scoring, refit='AUC')  # use borth scoring but refit by the user choise
-        gb_search.fit(self.x, self.y)  # fit model
-        print('The best parameters of the model are:', gb_search.best_params_)
 
-        clf = GradientBoostingClassifier(params = gb_search.best_params_, scoring = 'roc_auc')
-        X_train, X_test, y_train, y_test = train_test_split(self.x, self.y, test_size=0.3, random_state=100)
+        clf = GradientBoostingClassifier(n_estimators=1000,
+                                        learning_rate=0.05,
+                                        max_depth=10,
+                                        min_samples_split=2,
+                                        min_samples_leaf=2,
+                                        random_state = 50)
+        X_train, X_test, y_train, y_test = train_test_split(self.xtrain, self.ytrain, test_size=0.3, random_state=100)
         clf.fit(X_train, y_train)
         y_pred = clf.predict(X_test)
+        self.roc = roc_auc_score(y_test, clf.predict_proba(X_test)[:, 1]) # get AUC value
         self.acc = accuracy_score(y_test, y_pred) * 100  # get the accuracy of the model
-        print("Accuracy of the model: ", self.acc)
+        print('The AUC of the model is:', self.roc)
+        print('The classification accuracy is:', self.acc)
 
         conf_matrix = confusion_matrix(y_test, y_pred)
-        class_names = self.y.unique()
+        class_names = self.ytrain.unique()
         df_cm = pd.DataFrame(conf_matrix, index=class_names, columns=class_names)
 
         plt.figure(figsize=(5, 5))
@@ -57,13 +58,13 @@ class gboost:  # class
         plt.show()
 
         # dot_data = export_graphviz(clf, filled=True, rounded=True, class_names=class_names,
-        #                            feature_names=self.x.iloc[:, :].columns, out_file=None)
+        #                            feature_names=self.xtrain.iloc[:, :].columns, out_file=None)
         #
         # graph = graph_from_dot_data(dot_data)
-        # graph.write_pdf("decision_tree_gini.pdf")
-        # webbrowser.open_new(r'decision_tree_gini.pdf')
+        # graph.write_pdf("GBoost Decision Tree")
+        # webbrowser.open_new(r'GBoost Decision Tree')
 
-        return gb_search.best_score_ # return the accuracy
+        return self.roc  # return the accuracy
 
-m = gboost(model)  # set your roman numeral
-
+m = gboost(model)
+m.accuracy()
