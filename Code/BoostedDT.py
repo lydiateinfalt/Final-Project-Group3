@@ -14,6 +14,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.metrics import roc_auc_score
+import xgboost as xgb
 
 
 model = Preprocessing.crash_model
@@ -28,12 +29,15 @@ class gboost:  # class
 
     def accuracy(self):  # this makes the model and finds the accuracy, confusion matrix, and prints the decision tree
         # 13 lines of code - 4 copied, 1 modified, 9 myself
-        clf = GradientBoostingClassifier(n_estimators=500, # these are the parameters - were adjusted
-                                        learning_rate=0.01,
-                                        max_depth=10,
-                                        min_samples_split=2,
-                                        min_samples_leaf=1,
-                                         warm_start=True)
+        clf = xgb.XGBClassifier(n_estimators=500, # these are the parameters - were adjusted
+                                learning_rate=0.01,
+                                max_depth=10,
+                                min_samples_split=2,
+                                min_samples_leaf=1,
+                                #warm_start=True,
+                                reg_lambda = 10,
+                                reg_alpha = 10
+                                       )
         X_train, X_test, y_train, y_test = train_test_split(self.xtrain, self.ytrain, test_size=0.3, random_state=100) # split data up
         clf.fit(X_train, y_train) # fit model to training data
         y_pred = clf.predict(X_test)  # predict testing data
@@ -61,7 +65,7 @@ class gboost:  # class
         hm.xaxis.set_ticklabels(hm.xaxis.get_ticklabels(), rotation=0, ha='right', fontsize=20)
         plt.ylabel('True label', fontsize=20)
         plt.xlabel('Predicted label', fontsize=20)
-        plt.title('Gradien Boosted DT Confusion Matrix')
+        plt.title('Extreme Gradient Boosted DT Confusion Matrix')
         plt.tight_layout()
         plt.show()
 
@@ -76,6 +80,6 @@ class gboost:  # class
         # 1 line myself
         return self.roc  # return the accuracy
 
-# 2 lines muself
+# 2 lines myself
 m = gboost(model) # put model into class
 m.accuracy() # run
