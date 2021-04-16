@@ -354,10 +354,6 @@ age_hist.set_xlabel('Age')
 age_hist.set_title('Age of People Involved in Traffic Accidents')
 plt.show()
 
-# Creating a column that lists injury type to use for graphs
-crash['INJURYTYPE'] = np.where((crash['FATALMAJORINJURIES'].eq(1.0) | crash['MINORINJURY'].eq('Y')), 'Fatal/Major', 'Minor')
-print("New Injury Type column: ")
-print(crash['INJURYTYPE'])
 
 # Getting a histogram of age and accidents with fatality/major injury. 7/7 lines written by Arianna
 mf_filter = crash[crash.FATALMAJORINJURIES.eq(1.0)]
@@ -366,6 +362,18 @@ age_mf_hist.set_ylabel('Count')
 age_mf_hist.set_xlabel('Age')
 age_mf_hist.set_title('Age of People Involved in Traffic Accidents with Fatalities or Major Injuries')
 plt.show()
+
+# Creating a column that lists injury type to use for graphs. 3/3 written by Arianna
+crash['INJURYTYPE'] = np.where((crash['FATALMAJORINJURIES'].eq(1.0) | crash['MINORINJURY'].eq('Y')), 'Fatal/Major', 'Minor')
+print("New Injury Type column: ")
+print(crash['INJURYTYPE'])
+
+# Creating a bar chart showing age and injury type. 5/5 written by Arianna
+#age_injury_bar = sns.catplot(x='AGE', hue='INJURYTYPE', kind='bar', data=crash)
+#age_injury_bar.set_ylabel('Count')
+#age_injury_bar.set_xlabel('Age')
+#age_injury_bar.set_title('Age and Injury Type')
+#plt.show()
 
 # Getting the count of crashes with major/fatal per state. 2/2 by Arianna
 states = crash.groupby('LICENSEPLATESTATE').agg({'FATALMAJORINJURIES':'sum'})
@@ -503,12 +511,10 @@ max_vehicle = vehicle_mf.nlargest(10, 'FATALMAJORINJURIES')
 print("Top 10 dangerous vehicles: ")
 print(max_vehicle)
 
-# creating a bar graph depicting top 10 most dangerous vehicles (still working on this)
-teal = '#5ca08e'
-#max_vehicle_bar = sns.barplot(x='INVEHICLETYPE', y='FATLAMAJORINJURIES', data=max_vehicle, color=teal)
-#plt.ylabel('Fatality and Major Injury Count')
-#plt.xlabel('Vehicle Type')
-#plt.title('Top 10 Most Dangerous Vehicles')
-#plt.show()
-
-
+# creating a bar graph depicting top 10 most dangerous vehicles. 6/6 written by Arianna
+max_vehicle.plot.bar()
+plt.ylabel('Fatality and Major Injury Count')
+plt.xlabel('Vehicle Type')
+plt.title('Top 10 Most Dangerous Vehicles')
+plt.tight_layout()
+plt.show()
