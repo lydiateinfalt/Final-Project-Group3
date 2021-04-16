@@ -1,6 +1,5 @@
 # RR
 import webbrowser
-
 from pydotplus import graph_from_dot_data
 from sklearn.tree import export_graphviz
 
@@ -28,25 +27,33 @@ class gboost:  # class
 
 
     def accuracy(self):  # this makes the model and finds the accuracy, confusion matrix, and prints the decision tree
-
-        clf = GradientBoostingClassifier(n_estimators=1000,
-                                        learning_rate=0.05,
+        # 13 lines of code - 4 copied, 1 modified, 9 myself
+        clf = GradientBoostingClassifier(n_estimators=500, # these are the parameters - were adjusted
+                                        learning_rate=0.01,
                                         max_depth=10,
                                         min_samples_split=2,
-                                        min_samples_leaf=2,
-                                        random_state = 50)
-        X_train, X_test, y_train, y_test = train_test_split(self.xtrain, self.ytrain, test_size=0.3, random_state=100)
-        clf.fit(X_train, y_train)
-        y_pred = clf.predict(X_test)
+                                        min_samples_leaf=1,
+                                         warm_start=True)
+        X_train, X_test, y_train, y_test = train_test_split(self.xtrain, self.ytrain, test_size=0.3, random_state=100) # split data up
+        clf.fit(X_train, y_train) # fit model to training data
+        y_pred = clf.predict(X_test)  # predict testing data
         self.roc = roc_auc_score(y_test, clf.predict_proba(X_test)[:, 1]) # get AUC value
         self.acc = accuracy_score(y_test, y_pred) * 100  # get the accuracy of the model
         print('The AUC of the model is:', self.roc)
         print('The classification accuracy is:', self.acc)
 
-        conf_matrix = confusion_matrix(y_test, y_pred)
-        class_names = self.ytrain.unique()
+        # Dr. Jafari code - 3 copied, not modified
+        conf_matrix = confusion_matrix(y_test, y_pred) # make confusion matrix
+        class_names = self.ytrain.unique()  # get the class names
         df_cm = pd.DataFrame(conf_matrix, index=class_names, columns=class_names)
 
+        # sensitivity and specificity - 4 copied and modified RR
+        sensitivity = conf_matrix[0, 0] / (conf_matrix[0, 0] + conf_matrix[0, 1])  # calculate sensitivity
+        print('Sensitivity : ', sensitivity)
+        specificity = conf_matrix[1, 1] / (conf_matrix[1, 0] + conf_matrix[1, 1])  # calculate specificity
+        print('Specificity : ', specificity)
+
+        # Dr. Jafari Code - 9 copied, not modified, 1 line myself
         plt.figure(figsize=(5, 5))
         hm = sns.heatmap(df_cm, cbar=False, annot=True, square=True, fmt='d', annot_kws={'size': 20},
                          yticklabels=df_cm.columns, xticklabels=df_cm.columns)
@@ -54,9 +61,11 @@ class gboost:  # class
         hm.xaxis.set_ticklabels(hm.xaxis.get_ticklabels(), rotation=0, ha='right', fontsize=20)
         plt.ylabel('True label', fontsize=20)
         plt.xlabel('Predicted label', fontsize=20)
+        plt.title('Gradien Boosted DT Confusion Matrix')
         plt.tight_layout()
         plt.show()
 
+        # Dr. Jafari - 5 lines copied not modified
         # dot_data = export_graphviz(clf, filled=True, rounded=True, class_names=class_names,
         #                            feature_names=self.xtrain.iloc[:, :].columns, out_file=None)
         #
@@ -64,7 +73,9 @@ class gboost:  # class
         # graph.write_pdf("GBoost Decision Tree")
         # webbrowser.open_new(r'GBoost Decision Tree')
 
+        # 1 line myself
         return self.roc  # return the accuracy
 
-m = gboost(model)
-m.accuracy()
+# 2 lines muself
+m = gboost(model) # put model into class
+m.accuracy() # run
