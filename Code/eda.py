@@ -354,6 +354,11 @@ age_hist.set_xlabel('Age')
 age_hist.set_title('Age of People Involved in Traffic Accidents')
 plt.show()
 
+# Creating a column that lists injury type to use for graphs
+crash['INJURYTYPE'] = np.where((crash['FATALMAJORINJURIES'].eq(1.0) | crash['MINORINJURY'].eq('Y')), 'Fatal/Major', 'Minor')
+print("New Injury Type column: ")
+print(crash['INJURYTYPE'])
+
 # Getting a histogram of age and accidents with fatality/major injury. 7/7 lines written by Arianna
 mf_filter = crash[crash.FATALMAJORINJURIES.eq(1.0)]
 age_mf_hist = sns.histplot(data=mf_filter, x='AGE', binwidth=5)
@@ -382,9 +387,9 @@ for i in crash['LICENSEPLATESTATE']:
         no_plate =+ 1
     else:
         non_dmv_crash += 1
-print("Number of crashes from DMV plate: ")
+print("Number of crashes from DMV plate: ") #468593
 print(dmv_crash)
-print("Number of crashes from non-DMV Plate: ")
+print("Number of crashes from non-DMV Plate: ") #125949
 print(non_dmv_crash)
 
 # Counting total number of crashes from someone with a plate in the DMV and not in the DMV resulting in major/fatal.
@@ -412,7 +417,7 @@ md_mf = ((crash['LICENSEPLATESTATE'] == 'MD')
 
 dmv_mf = dc_mf.loc[1] + va_mf.loc[1] + md_mf.loc[1]
 print("The total number of accidents with DMV plates resulting in fatalities or major injuries is: ")
-print(dmv_mf.loc['count'])
+print(dmv_mf.loc['count']) #14149.0
 
 fatalmajor = 0
 for row in crash['FATALMAJORINJURIES']:
@@ -422,7 +427,7 @@ for row in crash['FATALMAJORINJURIES']:
         continue
 non_dmv_mf = fatalmajor - dmv_mf.loc['count'] - no_plate
 print("The total number of accident with plates outside of the DMV resulting in fatalities or major injuries is: ")
-print(non_dmv_mf)
+print(non_dmv_mf) #7596.0
 
 
 # Checking for duplicates in PersonID column (dropping nulls before
@@ -447,7 +452,7 @@ person_type = crash.groupby('PERSONTYPE').agg({'PERSONTYPE': 'count'})
 print("Person type counts: ")
 print(person_type)
 
-# Creating bar graph of person type counts.  6/6 written by Arianna
+# Creating pie chart of person type counts.  6/6 written by Arianna
 person_counts = crash.groupby('PERSONTYPE').agg({'PERSONTYPE': 'count'})
 person_chart = person_counts.plot.pie(y='PERSONTYPE', labeldistance=None, figsize=(20,20))
 plt.ylabel('Count')
@@ -483,11 +488,27 @@ vehicle = crash.groupby('INVEHICLETYPE').agg({'FATALMAJORINJURIES': 'sum', 'MINO
 print("Injury counts by vehicle type: ")
 print(vehicle)
 
-# Getting pie chart to show vehicle type break down
+# Getting pie chart to show vehicle type break down. 6/6 written by Arianna
 vehicle_counts = crash.groupby('INVEHICLETYPE').agg({'INVEHICLETYPE': 'count'})
 vehicle_chart = vehicle_counts.plot.pie(y='INVEHICLETYPE', labeldistance=None, figsize=(20,20))
 plt.ylabel('Vehicle Type')
 plt.title('Types of Vehicles Involved in Accidents')
 plt.legend(bbox_to_anchor=(0.85,1.025),loc="upper left")
 plt.show()
+
+# Getting a list of the top 10 most dangerous vehicles
+# (Vehicles with most fatalities and major injuries). 4/4 written by Arianna
+vehicle_mf = crash.groupby('INVEHICLETYPE').agg({'FATALMAJORINJURIES': 'sum'})
+max_vehicle = vehicle_mf.nlargest(10, 'FATALMAJORINJURIES')
+print("Top 10 dangerous vehicles: ")
+print(max_vehicle)
+
+# creating a bar graph depicting top 10 most dangerous vehicles
+teal = '#5ca08e'
+max_vehicle_bar = sns.barplot(x='INVEHICLETYPE', y='FATLAMAJORINJURIES', data=max_vehicle, color=teal)
+plt.ylabel('Fatality and Major Injury Count')
+plt.xlabel('Vehicle Type')
+plt.title('Top 10 Most Dangerous Vehicles')
+plt.show()
+
 
