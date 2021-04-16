@@ -9,6 +9,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import pandas as pd
 from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.metrics import roc_auc_score
 
 
 model = Preprocessing.crash_model
@@ -23,19 +24,19 @@ class gboost:  # class
 
     def accuracy(self):  # this makes the model and finds the accuracy, confusion matrix, and prints the decision tree
 
-        params = {'n_estimators': [500],
-                  'learning_rate': [0.1],
-                  'max_depth': [5],
-                  'min_samples_split': [2],
-                  'min_samples_leaf': [2]
-        }
-
-        clf = GradientBoostingClassifier(params = params, scoring = 'roc_auc')
+        clf = GradientBoostingClassifier(n_estimators=50,
+                                        learning_rate=0.05,
+                                        max_depth=7,
+                                        min_samples_split=2,
+                                        min_samples_leaf=2,
+                                        random_state = 50)
         X_train, X_test, y_train, y_test = train_test_split(self.xtrain, self.ytrain, test_size=0.3, random_state=100)
         clf.fit(X_train, y_train)
         y_pred = clf.predict(X_test)
+        self.roc = roc_auc_score(y_test, clf.predict_proba(X_test)[:, 1])
         self.acc = accuracy_score(y_test, y_pred) * 100  # get the accuracy of the model
-        print("Accuracy of the model: ", self.acc)
+        print('The AUC of the model is:', self.roc)
+        print('The classification accuracy is:', self.acc)
 
         conf_matrix = confusion_matrix(y_test, y_pred)
         class_names = self.ytrain.unique()
@@ -51,13 +52,14 @@ class gboost:  # class
         plt.tight_layout()
         plt.show()
 
-        # dot_data = export_graphviz(clf, filled=True, rounded=True, class_names=class_names,
-        #                            feature_names=self.x.iloc[:, :].columns, out_file=None)
-        #
-        # graph = graph_from_dot_data(dot_data)
-        # graph.write_pdf("decision_tree_gini.pdf")
-        # webbrowser.open_new(r'decision_tree_gini.pdf')
+        dot_data = export_graphviz(clf, filled=True, rounded=True, class_names=class_names,
+                                   feature_names=self.x.iloc[:, :].columns, out_file=None)
+
+        graph = graph_from_dot_data(dot_data)
+        graph.write_pdf("decision_tree_gini.pdf")
+        webbrowser.open_new(r'decision_tree_gini.pdf')
 
         return self.acc# return the accuracy
 
 m = gboost(model)  # set your roman numeral
+m.accuracy()
