@@ -448,8 +448,8 @@ print("Person type counts: ")
 print(person_type)
 
 # Creating bar graph of person type counts.  6/6 written by Arianna
-teal = '#5ca08e'
-person_type_bar = person_type.plot.bar(figsize=(20, 10), color=teal)
+person_counts = crash.groupby('PERSONTYPE').agg({'PERSONTYPE': 'count'})
+person_chart = person_counts.plot.pie(y='PERSONTYPE', labeldistance=None, figsize=(20,20))
 plt.ylabel('Count')
 plt.xlabel('Person Type')
 plt.title('Person Type Counts')
@@ -459,13 +459,6 @@ plt.show()
 person_injury = crash.groupby('PERSONTYPE').agg({'FATALMAJORINJURIES': 'sum', 'MINORINJURY': 'count'})
 print("Injury counts by person type: ")
 print(person_injury)
-
-# Creating bar graph to show injury type counts by person. 5/5 written by Arianna
-#person_injury_bar = crash.plot.bar(x='PERSONTYPE', y=['FATALMAJORINJURIES', 'MINORINJURY'],figsize=(20, 10), color=teal)
-#plt.ylabel('Count')
-#plt.xlabel('Person Type')
-#plt.title('Injury by Person Type')
-#plt.show()
 
 
 # Getting counts for accidents involving speeding. 3/3 written by Arianna
@@ -478,11 +471,6 @@ impaired = crash.groupby('IMPAIRED').agg({'FATALMAJORINJURIES': 'sum', 'MINORINJ
 print('Injury counts for accidents involving speeding: ')
 print(impaired)
 
-# Creating bar chart to show count of accidents with injuries/fatalities based on
-# impairment, speeding, and neither
-#speed_impaired =
-#speed_impaired_bar = crash.plot(x=['SPEEDING', 'IMPAIRED', 'NONE'])
-# df.plot(x="X", y=["A", "B", "C"], kind="bar")
 
 # Getting counts for accidents where ticket was issued. 3/3 written by Arianna
 ticket = crash.groupby('TICKETISSUED').agg({'FATALMAJORINJURIES': 'sum', 'MINORINJURY': 'count'})
@@ -497,7 +485,9 @@ print(vehicle)
 
 # Getting pie chart to show vehicle type break down
 vehicle_counts = crash.groupby('INVEHICLETYPE').agg({'INVEHICLETYPE': 'count'})
-vehicle_chart = vehicle_counts.plot.pie(y='INVEHICLETYPE', figsize=(20,20))
+vehicle_chart = vehicle_counts.plot.pie(y='INVEHICLETYPE', labeldistance=None, figsize=(20,20))
 plt.ylabel('Vehicle Type')
 plt.title('Types of Vehicles Involved in Accidents')
+plt.legend(bbox_to_anchor=(0.85,1.025),loc="upper left")
 plt.show()
+
