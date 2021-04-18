@@ -1,6 +1,6 @@
 # RR
 import webbrowser
-from pydotplus import graph_from_dot_data
+
 from sklearn.tree import export_graphviz
 
 import Preprocessing
@@ -14,9 +14,13 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.metrics import roc_auc_score
-import xgboost as xgb
+#import xgboost as xgb
 
-
+#%%-----------------------------------------------------------------------
+import os
+os.environ["PATH"] += os.pathsep + 'C:\Program Files (x86)\Graphviz\bin'
+#%%-----------------------------------------------------------------------
+from pydotplus import graph_from_dot_data
 model = Preprocessing.crash_model
 
 

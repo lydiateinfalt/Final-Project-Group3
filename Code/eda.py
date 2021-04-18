@@ -375,6 +375,29 @@ print(crash['INJURYTYPE'])
 #age_injury_bar.set_title('Age and Injury Type')
 #plt.show()
 
+
+# Overlaying two histograms - Lydia
+sns.set_palette('icefire')
+#mf_filter1 = crash[crash.FATALMAJORINJURIES.eq(0.0)]
+#age_hist = sns.histplot(data=mf_filter1, x='AGE', binwidth=5, alpha = 0.5)
+#age_hist.set_ylabel('Count')
+#age_hist.set_xlabel('Age')
+#age_hist.set_title('Age of People Involved in Traffic Accidents')
+#plt.show()
+
+# Getting a histogram of age and accidents with fatality/major injury. 7/7 lines written by Arianna
+#mf_filter = crash[crash.FATALMAJORINJURIES.eq(1.0)]
+#age_mf_hist = sns.histplot(data=mf_filter, x='AGE', binwidth=5,alpha = 0.5)
+#age_mf_hist.set_ylabel('Count')
+#age_mf_hist.set_xlabel('Age')
+#age_mf_hist.set_title('Age of People Involved in Traffic Accidents with Fatalities or Major Injuries')
+#sns.countplot(x="AGE", col="FATALMAJORINJURIES", col_wrap=4,
+#                data=crash[crash.AGE.notnull()],
+#                kind="count")
+
+sns.countplot(data=crash,x="AGE", hue="FATALMAJORINJURIES")
+plt.show()
+
 # Getting the count of crashes with major/fatal per state. 2/2 by Arianna
 states = crash.groupby('LICENSEPLATESTATE').agg({'FATALMAJORINJURIES':'sum'})
 print("Crashes per License Plate State:")
