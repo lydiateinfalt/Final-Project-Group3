@@ -6,7 +6,7 @@ import readdata
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
-import geopandas as gpd
+#import geopandas as gpd
 #from shapely.geometry import Point, Polygon
 #from scipy import stats
 #import researchpy as rp
