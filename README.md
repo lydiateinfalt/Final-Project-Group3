@@ -2,18 +2,14 @@
 Group project for DATS 6103 Data Mining, Spring 2021 with Prof. Jafari in George Washington University (Washington DC).
 Included is the work on the class project with fellow teammates Arianna Dunham (adunham@gwmail.gwu.edu) and RyeAnne Ricker (ryeannericker@gwu.edu)
 
-Project relies on two csv files Crashes_in_DC.csv and Crash_Details_Table.csv to be in the \code directory.  Datasets can be downloaded from the following locations:
+Project is based on OpenData DC's Crash_Details_Table.csv which has been downloaded to the \code directory.
+District Department of Transportation, Metropolitan Police Department, Crashes Details Table, Open Data DC, (District of Columbia): Vision Zero Data Planning Work Group, 2020. Accessed on: Mar. 14, 2020. [online]. 
+Available: https://opendata.dc.gov/datasets/crash-details-table
 
-District Department of Transportation, Metropolitan Police Department, Crashes in DC, Open Data DC, (District of Columbia): Vision Zero Data Planning Work Group, 2020. Accessed on: Mar. 11, 2020. [online]. Available: https://opendata.dc.gov/datasets/crashes-in-dc?geometry=-126.111%2C2.895%2C128.420%2C88.515
+1. readdata.py - reads the data csv file and creates crash dataframe, adds a target "FATALMAJORINJURIES" = 1 if "FATAL" or "MAJORINJURY" column is "Y"
+2. eda.py - exploratory data analysis dataset 
+3. stats.py - statistical analysis to determine whether features are independent of crash having a fatality/major injury
+4. preprocessing.py - Clean up invalid data, fill missing data and filter out certain conditions
 
-District Department of Transportation, Metropolitan Police Department, Crashes Details Table, Open Data DC, (District of Columbia): Vision Zero Data Planning Work Group, 2020. Accessed on: Mar. 14, 2020. [online]. Available: https://opendata.dc.gov/datasets/crash-details-table
 
-Packages required to run this project: numpy, pandas, geopandas.
-To install geopandas on Windows machine:
-  1. Open Anaconda CMD.exe prompt
-  2. Type the following to create a new environment geo_env:
-  3. conda create -n geo_env
-  4. conda activate geo_env
-  5. conda config --env --add channels conda-forge
-  6. conda config --env --set channel_priority strict
-  7. conda install python=3 geopandas
+
