@@ -46,7 +46,6 @@ import webbrowser
 import warnings
 warnings.filterwarnings("ignore")
 import matplotlib.pyplot as plt
-
 import random
 import seaborn as sns
 
@@ -193,6 +192,11 @@ class App(QMainWindow):
         EDA1Button.triggered.connect(self.EDA1)
         EDAMenu.addAction(EDA1Button)
 
+        EDA2Button = QAction(QIcon(),'Bar chart', self)
+        EDA2Button.setStatusTip('Person type')
+        EDA2Button.triggered.connect(self.EDA2)
+        EDAMenu.addAction(EDA2Button)
+
         #::--------------------------------------------------
         # ML Models for prediction
         # There are three models
@@ -250,7 +254,6 @@ class App(QMainWindow):
         dialog.t.verticalHeader().setStretchLastSection(True)
         dialog.t.show()
 
-
     def EDA1(self):
         #::------------------------------------------------------
         # Creates the histogram
@@ -272,11 +275,15 @@ class App(QMainWindow):
 
     def EDA2(self):
         #::---------------------------------------------------------
-        # This function creates an instance of HappinessGraphs class
-        # This class creates a graph using the features in the dataset
-        # happiness vrs the score of happiness
+        # This function create bar plot of persons injured by transportation mode
         #::---------------------------------------------------------
-        dialog = ()
+        dialog = CanvasWindow(self)
+        dialog.m.plot()
+        df = fatal_mode
+        dialog.m.ax.bar(df.COUNT, df.index)
+        dialog.m.ax.set_title('Persons in Fatal/Major Injury DC Crashes by Mode')
+        dialog.m.ax.set_ylabel("")
+        dialog.m.draw()
         self.dialogs.append(dialog)
         dialog.show()
 
@@ -328,6 +335,7 @@ def crash_data():
     global features_list
     global class_names
     global top_10
+    global fatal_mode
     crash = pd.read_csv('crash.csv')
     fatal_crash =crash[crash.FATALMAJORINJURIES.eq(1.0)]
     fatal_crash.dropna(inplace=True)
@@ -335,6 +343,10 @@ def crash_data():
     X.dropna(inplace=True)
     top_10=fatal_crash.head()
     y = crash["FATALMAJORINJURIES"]
+    fatal_mode = fatal_crash.groupby('PERSONTYPE').agg({'PERSONTYPE': 'count'})
+    fatal_mode = pd.DataFrame(data=fatal_mode)
+    fatal_mode.rename(columns={'PERSONTYPE': 'COUNT'}, inplace=True)
+    fatal_mode.sort_values(by=['COUNT'], inplace=True)
     features_list = ['PERSONID', 'PERSONTYPE', 'AGE', 'FATAL', 'MAJORINJURY', 'MINORINJURY', 'INVEHICLETYPE', 'TICKETISSUED', 'LICENSEPLATESTATE', 'IMPAIRED', 'SPEEDING']
     class_names = ['FATAL', 'NOT FATAL']
 

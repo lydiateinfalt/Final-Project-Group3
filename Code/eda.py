@@ -18,6 +18,17 @@ import seaborn as sns
 # may use the following line to call it from class instead
 crash = readdata.crash
 print(crash.columns)
+fatal_crash = crash[crash.FATALMAJORINJURIES.eq(1.0)]
+
+#Lydia
+fatal_mode = fatal_crash.groupby('PERSONTYPE').agg({'PERSONTYPE': 'count'})
+fatal_mode = pd.DataFrame(data=fatal_mode)
+fatal_mode.rename(columns={'PERSONTYPE': 'COUNT'}, inplace=True)
+fatal_mode.sort_values(by=['COUNT'],inplace=True)
+ax = sns.barplot(x="COUNT", y=fatal_mode.index, data=fatal_mode)
+plt.title("Persons in Fatal/Major Injury DC Crashes by Mode")
+plt.ylabel("")
+plt.show()
 
 ### ------------------------------------------------------------------------------------------
 ###
@@ -376,27 +387,6 @@ print(crash['INJURYTYPE'])
 #plt.show()
 
 
-# Overlaying two histograms - Lydia
-sns.set_palette('icefire')
-#mf_filter1 = crash[crash.FATALMAJORINJURIES.eq(0.0)]
-#age_hist = sns.histplot(data=mf_filter1, x='AGE', binwidth=5, alpha = 0.5)
-#age_hist.set_ylabel('Count')
-#age_hist.set_xlabel('Age')
-#age_hist.set_title('Age of People Involved in Traffic Accidents')
-#plt.show()
-
-# Getting a histogram of age and accidents with fatality/major injury. 7/7 lines written by Arianna
-#mf_filter = crash[crash.FATALMAJORINJURIES.eq(1.0)]
-#age_mf_hist = sns.histplot(data=mf_filter, x='AGE', binwidth=5,alpha = 0.5)
-#age_mf_hist.set_ylabel('Count')
-#age_mf_hist.set_xlabel('Age')
-#age_mf_hist.set_title('Age of People Involved in Traffic Accidents with Fatalities or Major Injuries')
-#sns.countplot(x="AGE", col="FATALMAJORINJURIES", col_wrap=4,
-#                data=crash[crash.AGE.notnull()],
-#                kind="count")
-
-sns.countplot(data=crash,x="AGE", hue="FATALMAJORINJURIES")
-plt.show()
 
 # Getting the count of crashes with major/fatal per state. 2/2 by Arianna
 states = crash.groupby('LICENSEPLATESTATE').agg({'FATALMAJORINJURIES':'sum'})
@@ -526,6 +516,7 @@ plt.ylabel('Vehicle Type')
 plt.title('Types of Vehicles Involved in Accidents')
 plt.legend(bbox_to_anchor=(0.85,1.025),loc="upper left")
 plt.show()
+
 
 # Getting a list of the top 10 most dangerous vehicles
 # (Vehicles with most fatalities and major injuries). 4/4 written by Arianna
