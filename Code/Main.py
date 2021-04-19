@@ -88,7 +88,7 @@ class CanvasWindow(QMainWindow):
 
         self.left = 200
         self.top = 200
-        self.Title = 'DC Fatal/Major Injuries Histogram'
+        self.Title = 'DC Crashes Fatal/Major Injuries'
         self.width = 500
         self.height = 500
         self.initUI()
@@ -102,6 +102,30 @@ class CanvasWindow(QMainWindow):
 
         self.m = PlotCanvas(self, width=5, height=4)
         self.m.move(0, 30)
+
+class Canvas(QMainWindow):
+    #::----------------------------------
+    # Creates a canvas containing the plot for the initial analysis
+    #;;----------------------------------
+    def __init__(self, parent=None):
+        super(Canvas, self).__init__(parent)
+
+        self.left = 200
+        self.top = 200
+        self.Title = 'DC Crashes Fatal/Major Injuries'
+        self.width = 500
+        self.height = 500
+        self.initUI()
+
+    def initUI(self):
+
+        self.setWindowTitle(self.Title)
+        self.setStyleSheet(font_size_window)
+
+        self.setGeometry(self.left, self.top, self.width, self.height)
+
+        self.s = PlotCanvas(self, width=5, height=4)
+        self.s.move(0, 30)
 
 class DataTable(QMainWindow):
         def __init__(self, parent=None):
@@ -277,15 +301,16 @@ class App(QMainWindow):
         #::---------------------------------------------------------
         # This function create bar plot of persons injured by transportation mode
         #::---------------------------------------------------------
-        dialog = CanvasWindow(self)
-        dialog.m.plot()
-        df = fatal_mode
-        dialog.m.ax.bar(df.COUNT, df.index)
-        dialog.m.ax.set_title('Persons in Fatal/Major Injury DC Crashes by Mode')
-        dialog.m.ax.set_ylabel("")
-        dialog.m.draw()
-        self.dialogs.append(dialog)
-        dialog.show()
+        dialog1 = Canvas(self)
+        dialog1.s.plot()
+        x=fatal_mode.COUNT.tolist()
+        y=fatal_mode.index.tolist()
+        dialog1.s.ax.bar(y,x, color=['b', 'g', 'm', 'r'])
+        dialog1.s.ax.set_title('Persons in Fatal/Major Injury DC Crashes by Mode')
+        dialog1.s.ax.set_ylabel("")
+        dialog1.s.draw()
+        self.dialogs.append(dialog1)
+        dialog1.show()
 
     def EDA4(self):
         #::----------------------------------------------------------
