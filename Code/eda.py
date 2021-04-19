@@ -476,9 +476,9 @@ print(person_type)
 # Creating pie chart of person type counts.  6/6 written by Arianna
 person_counts = crash.groupby('PERSONTYPE').agg({'PERSONTYPE': 'count'})
 person_chart = person_counts.plot.pie(y='PERSONTYPE', labeldistance=None, figsize=(20,20))
-plt.ylabel('Count')
-plt.xlabel('Person Type')
-plt.title('Person Type Counts')
+plt.ylabel('Count', fontsize=20 )
+plt.title('Person Type Counts', fontsize=30)
+plt.legend(bbox_to_anchor=(0.85,1.025),loc="upper left", fontsize=12)
 plt.show()
 
 # Getting inury counts of person type. 3/3 written by Arianna
@@ -512,9 +512,9 @@ print(vehicle)
 # Getting pie chart to show vehicle type break down. 6/6 written by Arianna
 vehicle_counts = crash.groupby('INVEHICLETYPE').agg({'INVEHICLETYPE': 'count'})
 vehicle_chart = vehicle_counts.plot.pie(y='INVEHICLETYPE', labeldistance=None, figsize=(20,20))
-plt.ylabel('Vehicle Type')
-plt.title('Types of Vehicles Involved in Accidents')
-plt.legend(bbox_to_anchor=(0.85,1.025),loc="upper left")
+plt.ylabel('Vehicle Type', fontsize=20)
+plt.title('Types of Vehicles Involved in Accidents', fontsize=30)
+plt.legend(bbox_to_anchor=(0.85,1.025),loc="upper left", fontsize=12)
 plt.show()
 
 
