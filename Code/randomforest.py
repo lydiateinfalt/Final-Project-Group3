@@ -1,6 +1,6 @@
-# Arianna - random forrest
+# Arianna - random forest
 
-# Importing
+# Importing necessary libraries
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -8,9 +8,12 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import accuracy_score
-from sklearn.metrics import classification_report
 from sklearn.metrics import roc_auc_score
-import jinja2
+from sklearn import tree
+import pydotplus
+import collections
+import os
+os.environ["PATH"] += os.pathsep + 'C:/Program Files (x86)/Graphviz2.38/bin/'
 
 # Getting preprocessed data
 import Preprocessing
@@ -39,11 +42,12 @@ class randforest:  # class
         f_importances.sort_values(ascending=False, inplace=True)
 
         # make the bar Plot from f_importances
-        f_importances.plot(x='Features', y='Importance', kind='bar', figsize=(16, 9), rot=90, fontsize=15)
+        f_importances.plot(x='Features', y='Importance', kind='bar', figsize=(20, 10), rot=90, fontsize=15)
 
         # show the plot
-        plt.tight_layout()
-        plt.title("Important Features: ")
+        plt.title("Important Features", fontsize=30)
+        plt.xlabel("Feature Names", fontsize=20)
+        plt.gcf().subplots_adjust(bottom=0.35)
         plt.show()
 
         # Generating model with important features
@@ -125,6 +129,16 @@ class randforest:  # class
         plt.title('Random Forest Confusion Matrix Entropy Model')
         # Show heat map
         plt.tight_layout()
+        plt.show()
+
+        # Getting number of trees. 2/2 written by Arianna
+        print("Number of Trees: ")
+        print(len(clf.estimators_)) # 100 trees
+
+        # Printing the tree. 4/4 written by Arianna
+        plt.figure(figsize=(15,20))
+        plt.title("Group Three Random Forest Tree No.1")
+        tree.plot_tree(clf.estimators_[1], filled=True)
         plt.show()
 
 
