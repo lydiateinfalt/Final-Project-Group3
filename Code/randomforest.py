@@ -131,17 +131,16 @@ class randforest:  # class
         plt.tight_layout()
         plt.show()
 
-        # Getting number of trees. 4/4 written by Arianna
-        print("Number of Trees with all features: ")
-        print(len(clf.estimators_)) # 100 trees
+        # Printing first tree from all features. 4/4 written by Arianna
+        plt.figure(figsize=(15, 10))
+        plt.title("All Features Random Forest Tree No.1")
+        tree.plot_tree(clf.estimators_[0], filled=True, max_depth=3)
+        plt.show()
 
-        print("Number of Trees with important features: ")
-        print(len(clf_k_features.estimators_)) # 100 trees
-
-        # Printing the tree. 4/4 written by Arianna
-        plt.figure(figsize=(30,20))
-        plt.title("Random Forest Tree No.1")
-        tree.plot_tree(clf_k_features.estimators_[0], filled=True)
+        # Printing first tree from important features. 4/4 written by Arianna
+        plt.figure(figsize=(15,10))
+        plt.title("Important Features Random Forest Tree No.1")
+        tree.plot_tree(clf_k_features.estimators_[0], filled=True, max_depth=3)
         plt.show()
 
 
