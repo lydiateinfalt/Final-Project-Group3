@@ -1,6 +1,6 @@
-# Arianna - random forrest
+# Arianna - random forest
 
-# Importing
+# Importing necessary libraries
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -8,9 +8,12 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import accuracy_score
-from sklearn.metrics import classification_report
 from sklearn.metrics import roc_auc_score
-import jinja2
+from sklearn import tree
+import pydotplus
+import collections
+import os
+os.environ["PATH"] += os.pathsep + 'C:/Program Files (x86)/Graphviz2.38/bin/'
 
 # Getting preprocessed data
 import Preprocessing
@@ -39,10 +42,12 @@ class randforest:  # class
         f_importances.sort_values(ascending=False, inplace=True)
 
         # make the bar Plot from f_importances
-        f_importances.plot(x='Features', y='Importance', kind='bar', figsize=(16, 9), rot=90, fontsize=15)
+        f_importances.plot(x='Features', y='Importance', kind='bar', figsize=(20, 10), rot=90, fontsize=15)
 
         # show the plot
-        plt.tight_layout()
+        plt.title("Important Features", fontsize=30)
+        plt.xlabel("Feature Names", fontsize=20)
+        plt.gcf().subplots_adjust(bottom=0.35)
         plt.show()
 
         # Generating model with important features
@@ -70,11 +75,13 @@ class randforest:  # class
         # Testing accuracy. Lines 71-79 were from Reyanne's code and were updated accordingly
         self.roc = roc_auc_score(y_test, y_pred_score[:, 1] * 100) # get AUC value
         self.acc = accuracy_score(y_test, y_pred) * 100  # get the accuracy of the model
+        print("Results using all features: ")
         print('The AUC of the model is:', self.roc)
         print('The classification accuracy is:', self.acc)
 
         self.roc = roc_auc_score(y_test, y_pred_k_features_score[:, 1]) * 100  # get AUC value
         self.acc = accuracy_score(y_test, y_pred_k_features) * 100  # get the accuracy of the model
+        print("Results using important features: ")
         print('The AUC of the important features model is:', self.roc)
         print('The classification accuracy for the important features is:', self.acc)
 
@@ -122,6 +129,18 @@ class randforest:  # class
         plt.title('Random Forest Confusion Matrix Entropy Model')
         # Show heat map
         plt.tight_layout()
+        plt.show()
+
+        # Printing first tree from all features. 4/4 written by Arianna
+        plt.figure(figsize=(15, 10))
+        plt.title("All Features Random Forest Tree No.1")
+        tree.plot_tree(clf.estimators_[0], filled=True, max_depth=3)
+        plt.show()
+
+        # Printing first tree from important features. 4/4 written by Arianna
+        plt.figure(figsize=(15,10))
+        plt.title("Important Features Random Forest Tree No.1")
+        tree.plot_tree(clf_k_features.estimators_[0], filled=True, max_depth=3)
         plt.show()
 
 
