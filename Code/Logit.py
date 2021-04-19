@@ -6,7 +6,6 @@ from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
-from sklearn.metrics import classification_report
 from sklearn.metrics import roc_auc_score
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -58,6 +57,7 @@ class logit:  # class
         hm.xaxis.set_ticklabels(hm.xaxis.get_ticklabels(), rotation=0, ha='right', fontsize=20)
         plt.ylabel('True label', fontsize=20)
         plt.xlabel('Predicted label', fontsize=20)
+        plt.title("Logistic Regression Confussion Matrix")
         plt.tight_layout()
         plt.show()
 

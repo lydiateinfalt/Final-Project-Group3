@@ -43,6 +43,7 @@ class randforest:  # class
 
         # show the plot
         plt.tight_layout()
+        plt.title("Important Features: ")
         plt.show()
 
         # Generating model with important features
@@ -70,11 +71,13 @@ class randforest:  # class
         # Testing accuracy. Lines 71-79 were from Reyanne's code and were updated accordingly
         self.roc = roc_auc_score(y_test, y_pred_score[:, 1] * 100) # get AUC value
         self.acc = accuracy_score(y_test, y_pred) * 100  # get the accuracy of the model
+        print("Results using all features: ")
         print('The AUC of the model is:', self.roc)
         print('The classification accuracy is:', self.acc)
 
         self.roc = roc_auc_score(y_test, y_pred_k_features_score[:, 1]) * 100  # get AUC value
         self.acc = accuracy_score(y_test, y_pred_k_features) * 100  # get the accuracy of the model
+        print("Results using important features: ")
         print('The AUC of the important features model is:', self.roc)
         print('The classification accuracy for the important features is:', self.acc)
 
