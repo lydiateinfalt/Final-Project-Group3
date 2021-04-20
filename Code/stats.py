@@ -6,6 +6,7 @@ import seaborn as sns
 from scipy import stats
 import matplotlib.pyplot as plt
 import numpy as np
+import statsmodels
 
 # Arianna Code Start:
 crash = readdata.crash
@@ -80,10 +81,14 @@ minor.dropna(subset = ["AGE"], inplace=True) # drop rows with nan for stats anal
 #print('The proportion of individuals in a DC crash that ends up dead or with a major injury is', fmi.shape[0]/crash.shape[0])
 
 # calculate p-value
-t,p = stats.ttest_ind(fmi.AGE, minor.AGE)
+t,p = stats.ttest_ind(fmi.AGE, minor.AGE, equal_var=False) # run t-test, do not assume equal variance
 print('The p-value of the t-test is:', p)
 print('The mean age of those who have a fatality or major injury is', np.mean(fmi.AGE))
 print('The standard deviation of fatal/major injury is', np.std(fmi.AGE))
 print('The mean age of those who have a minor injury is', np.mean(minor.AGE))
 print('The standard deviation of minor injury is', np.std(minor.AGE))
+
+pz = statsmodels.stats.weightstats.ztest( fmi.AGE, minor.AGE)
+print('The p value from z test is:',pz) # compare ztest to ttest - 0.014 to 0.015 very similar t distribution tends towards normal at high n
+
 

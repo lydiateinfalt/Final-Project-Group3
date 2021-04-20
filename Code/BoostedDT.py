@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.metrics import roc_auc_score
-#import xgboost as xgb
+import xgboost as xgb
 
 #%%-----------------------------------------------------------------------
 import os
@@ -24,7 +24,7 @@ from pydotplus import graph_from_dot_data
 model = Preprocessing.crash_model
 
 
-class gboost:  # class
+class xgboost:  # class
     def __init__(self, data):  # to call self
         # data is the entire data matrix
         self.xtrain = data.iloc[:,:-1]
@@ -34,21 +34,34 @@ class gboost:  # class
     def accuracy(self):  # this makes the model and finds the accuracy, confusion matrix, and prints the decision tree
         # 13 lines of code - 4 copied, 1 modified, 9 myself
         clf = xgb.XGBClassifier(n_estimators=500, # these are the parameters - were adjusted
-                                learning_rate=0.01,
-                                max_depth=10,
+                                learning_rate=0.01, # tried 0.01,0.05,0.1,0.2
+                                max_depth=50, # tried 10, 25, 50
                                 min_samples_split=2,
                                 min_samples_leaf=1,
                                 #warm_start=True,
-                                reg_lambda = 10,
-                                reg_alpha = 10
+                                reg_lambda = 10, # tried 1, 10, 100
+                                reg_alpha = 10 # tried 1, 10, 100
                                        )
-        X_train, X_test, y_train, y_test = train_test_split(self.xtrain, self.ytrain, test_size=0.3, random_state=100) # split data up
+        X_train, X_test, y_train, y_test = train_test_split(self.xtrain, self.ytrain, test_size=0.3, random_state=10) # split data up
         clf.fit(X_train, y_train) # fit model to training data
         y_pred = clf.predict(X_test)  # predict testing data
         self.roc = roc_auc_score(y_test, clf.predict_proba(X_test)[:, 1]) # get AUC value
         self.acc = accuracy_score(y_test, y_pred) * 100  # get the accuracy of the model
         print('The AUC of the model is:', self.roc)
         print('The classification accuracy is:', self.acc)
+
+        # Dr. Jafari code - 6 copied, not modified
+        # Selecting important features. Lines 33-68 are from Dr. Jafari's code and were updated accordingly
+        importances = clf.feature_importances_
+        # convert the importances into one-dimensional 1darray with corresponding df column names as axis labels
+        f_importances = pd.Series(importances, self.xtrain.columns)
+        # sort the array in descending order of the importances
+        f_importances.sort_values(ascending=False, inplace=True)
+        f_importances.plot(x='Features', y='Importance', kind='bar', figsize=(16, 9), rot=90, fontsize=15, color='r')
+        plt.tight_layout()
+        #plt.title('Feature Importance', fontsize=20)
+        plt.show()
+
 
         # Dr. Jafari code - 3 copied, not modified
         conf_matrix = confusion_matrix(y_test, y_pred) # make confusion matrix
@@ -85,5 +98,5 @@ class gboost:  # class
         return self.roc  # return the accuracy
 
 # 2 lines myself
-m = gboost(model) # put model into class
+m = xgboost(model) # put model into class
 m.accuracy() # run
