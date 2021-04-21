@@ -9,6 +9,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import roc_auc_score
+from sklearn.model_selection import cross_val_score
 from sklearn import tree
 import pydotplus
 import collections
@@ -84,6 +85,10 @@ class randforest:  # class
         print("Results using important features: ")
         print('The AUC of the important features model is:', self.roc)
         print('The classification accuracy for the important features is:', self.acc)
+
+        # Cross validation
+        scores = cross_val_score(clf, self.xtrain, self.ytrain, cv=5)
+        print("Cross-Validation Accuracy Scores: ", scores)
 
         # %%-----------------------------------------------------------------------
         # confusion matrix for gini model. Lines 83-125 are from Dr. Jafari's code & were updated accordingly
