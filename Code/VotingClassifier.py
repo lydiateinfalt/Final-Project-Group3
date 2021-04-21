@@ -27,8 +27,10 @@ class votingclassifier:  # class
 
     # 23 lines - 11 myself, 12 copied w 6 modified
     def accuracy(self):  # this makes the model and finds the accuracy, and confusion matrix
+        X_train, X_test, y_train, y_test = train_test_split(self.xtrain, self.ytrain, test_size=0.3,
+                                                            random_state=100)  # split data
         clf1 = GaussianNB()  # model
-        clf2 = xgb.XGBClassifier(n_estimators=50, # -I cut the forest because it had little impact on accuracy but saved a lot of time
+        clf2 = xgb.XGBClassifier(n_estimators=250, # -I cut the forest because it had little impact on accuracy but saved a lot of time
                                 learning_rate=0.01, # tried 0.01,0.05,0.1,0.2
                                 max_depth=10, # tried 10, 25, 50
                                 min_samples_split=2,
@@ -40,16 +42,21 @@ class votingclassifier:  # class
                                        )
         clf3 = RandomForestClassifier(n_estimators=100, class_weight='balanced_subsample')
         eclf = VotingClassifier(estimators = [('GNB', clf1), ('XGB', clf2), ('RF', clf3)],voting = 'hard') # voting classifier
-        for clf, label in zip([clf1, clf2, clf3, eclf], ['Naive Bayes', 'XGBoost', 'Random Forest', 'Ensemble']):
-                              scores = cross_val_score(clf, self.xtrain, self.ytrain, scoring='accuracy', cv=5)
-        print("5-Fold CV AUC: %0.2f (+/- %0.2f) [%s]" % (scores.mean(), scores.std(), label))
-        X_train, X_test, y_train, y_test = train_test_split(self.xtrain, self.ytrain, test_size=0.3, random_state=100)  # split data
-        eclf.fit(X_train, y_train) # fit the model to the training data
-        y_pred = eclf.predict(X_test)  # predict the testing data
-        self.roc = roc_auc_score(y_test, eclf.predict_proba(X_test)[:, 1]) # get AUC value
-        self.acc = accuracy_score(y_test, y_pred) * 100  # get the accuracy of the model
-        print('The AUC of the Testing Data is:', self.roc)
-        print('The classification accuracy is:', self.acc)
+        #for clf, label in zip([clf1, clf2, clf3, eclf], ['Naive Bayes', 'XGBoost', 'Random Forest', 'Ensemble']):
+        #                      scores = cross_val_score(clf, self.xtrain, self.ytrain, scoring='', cv=5)
+        #print("5-Fold CV AUC: %0.2f (+/- %0.2f) [%s]" % (scores.mean(), scores.std(), label))
+
+        eclf.fit(X_train, y_train)
+        y_pred = eclf.predict(X_test)
+        score = accuracy_score(y_test, y_pred)
+        print("Hard Voting Score % d" % score)
+
+        # eclf.fit(X_train, y_train) # fit the model to the training data
+        # y_pred = eclf.predict(X_test)  # predict the testing data
+        # self.roc = roc_auc_score(y_test, eclf.predict_proba(X_test)[:, 1]) # get AUC value
+        # self.acc = accuracy_score(y_test, y_pred) * 100  # get the accuracy of the model
+        # print('The AUC of the Testing Data is:', self.roc)
+        # print('The classification accuracy is:', self.acc)
 
         # take from dr. jafari - 3 copied, not modified
         conf_matrix = confusion_matrix(y_test, y_pred)  # make confusion matrix
@@ -75,7 +82,7 @@ class votingclassifier:  # class
         plt.show()
 
         # 1 added myself
-        return self.roc  # return the accuracy
+        # return self.roc  # return the accuracy
 
 # 2 added myself
 m = votingclassifier(model)  # put model into class

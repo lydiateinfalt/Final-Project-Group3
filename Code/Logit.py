@@ -27,7 +27,7 @@ class logit:  # class
 
                                                             random_state=100)  # split data up
         # creating the classifier object. Lines 31-40 are from Dr. Jafari's code & were updated accordingly
-        clf = LogisticRegression()
+        clf = LogisticRegression(class_weight='balanced')
 
         # performing training
         clf.fit(X_train, y_train)
@@ -47,6 +47,12 @@ class logit:  # class
         # confusion matrix. Lines 54-67 were from Dr.Jafari's code & were updated accordingly
         conf_matrix = confusion_matrix(y_test, y_pred)
         class_names = self.ytrain.unique()
+
+        # sensitivity and specificity - 4 copied and modified RR
+        sensitivity = conf_matrix[0, 0] / (conf_matrix[0, 0] + conf_matrix[0, 1])  # calculate sensitivity
+        print('Sensitivity : ', sensitivity)
+        specificity = conf_matrix[1, 1] / (conf_matrix[1, 0] + conf_matrix[1, 1])  # calculate specificity
+        print('Specificity : ', specificity)
 
         df_cm = pd.DataFrame(conf_matrix, index=class_names, columns=class_names)
 
