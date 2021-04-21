@@ -7,6 +7,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import roc_auc_score
+from sklearn.model_selection import cross_val_score
 import seaborn as sns
 import matplotlib.pyplot as plt
 import warnings
@@ -54,6 +55,10 @@ class logit:  # class
         print('Sensitivity : ', sensitivity)
         specificity = conf_matrix[1, 1] / (conf_matrix[1, 0] + conf_matrix[1, 1])  # calculate specificity
         print('Specificity : ', specificity)
+
+        # Cross validation
+        scores = cross_val_score(clf, self.xtrain, self.ytrain, cv=10)
+        print("Cross-Validation Accuracy Scores: ", scores)
 
         df_cm = pd.DataFrame(conf_matrix, index=class_names, columns=class_names)
 
