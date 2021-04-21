@@ -10,6 +10,9 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import pandas as pd
 from sklearn.metrics import roc_auc_score
+from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import RepeatedStratifiedKFold
+from numpy import mean
 
 # 1 myself
 model = Preprocessing.crash_model  # call the preprocessed data
@@ -32,6 +35,11 @@ class naivebayes:  # class
         self.acc = accuracy_score(y_test, y_pred) * 100  # get the accuracy of the model
         print('The AUC of the model is:', self.roc)
         print('The classification accuracy is:', self.acc)
+
+        # # cross validate results - 3 copied, 2 modified
+        cv = RepeatedStratifiedKFold(n_splits=5, n_repeats=2, random_state=1)
+        scores = cross_val_score(clf, self.xtrain, self.ytrain, scoring='roc_auc', cv=cv, n_jobs=-1)
+        print('Mean ROC AUC of cross-validated scores is: %.5f' % mean(scores))
 
         # take from dr. jafari - 3 copied, not modified
         conf_matrix = confusion_matrix(y_test, y_pred)  # make confusion matrix
