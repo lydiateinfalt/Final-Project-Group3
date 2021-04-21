@@ -57,7 +57,7 @@ class logit:  # class
         print('Specificity : ', specificity)
 
         # Cross validation
-        scores = cross_val_score(clf, self.xtrain, self.ytrain, cv=10)
+        scores = cross_val_score(clf, self.xtrain, self.ytrain, cv=5)
         print("Cross-Validation Accuracy Scores: ", scores)
 
         df_cm = pd.DataFrame(conf_matrix, index=class_names, columns=class_names)
