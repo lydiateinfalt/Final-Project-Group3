@@ -183,9 +183,9 @@ class App(QMainWindow):
         # Creates the actions for the fileMenu item
         #::--------------------------------------
 
-        exitButton = QAction(QIcon('enter.png'), 'Exit', self)
+        exitButton = QAction(QIcon('enter.png'), '&Quit', self)
         exitButton.setShortcut('Ctrl+Q')
-        exitButton.setStatusTip('Exit application')
+        exitButton.setStatusTip('Quit application')
         exitButton.triggered.connect(self.close)
 
         fileMenu.addAction(exitButton)

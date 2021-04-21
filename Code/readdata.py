@@ -18,6 +18,9 @@ crash['FATALMAJORINJURIES'] = np.where((crash['FATAL'].eq('Y') | crash['MAJORINJ
 print("Adding new column FATALMAJORINJURIES")
 print("Total number of rows in data set: ", crash.shape[0])
 print("Total number of columns in data set:", crash.shape[1])
+fatal_crash=crash[crash.FATALMAJORINJURIES.eq(1.0)]
+print("Total number observations with FATALMAJORINJURES", fatal_crash.shape[0])
+print("Percentage of FATAL crashes", (fatal_crash.shape[0]/crash.shape[0]*100))
 
 
 print("Dataset first few rows:\n ")
