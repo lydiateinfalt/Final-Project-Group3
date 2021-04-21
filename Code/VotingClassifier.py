@@ -31,7 +31,7 @@ class votingclassifier:  # class
                                                             random_state=100)  # split data
         clf1 = LogisticRegression(class_weight='balanced', penalty='l2',C=.0001)
         # clf2 = GaussianNB()  # model
-        clf2 = xgb.XGBClassifier(n_estimators=100, # -I cut the forest because it had little impact on accuracy but saved a lot of time
+        clf2 = xgb.XGBClassifier(n_estimators=250, # -I cut the forest because it had little impact on accuracy but saved a lot of time
                                  learning_rate=0.01, # tried 0.01,0.05,0.1,0.2
                                  max_depth=10, # tried 10, 25, 50
                                  min_samples_split=2,
@@ -43,6 +43,8 @@ class votingclassifier:  # class
                                         )
         clf3 = RandomForestClassifier(n_estimators=100, class_weight='balanced_subsample')
         eclf = VotingClassifier(estimators = [('Logit', clf1), ('XGB', clf2), ('RF', clf3)],voting = 'hard') # voting classifier
+
+        # Run below for 5-fold Cross Validation - THese 3 lines can be commented out if you don't want to run CV
         for clf, label in zip([clf1, clf2, clf3, eclf], ['Naive Bayes', 'XGBoost', 'Random Forest', 'Ensemble']):
                               scores = cross_val_score(clf, self.xtrain, self.ytrain, scoring='accuracy', cv=5)
         print("5-Fold CV AUC: %0.2f (+/- %0.2f) [%s]" % (scores.mean(), scores.std(), label))

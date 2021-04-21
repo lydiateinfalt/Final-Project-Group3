@@ -37,7 +37,7 @@ class xgboost:  # class
 
     def accuracy(self):  # this makes the model and finds the accuracy, confusion matrix, and prints the decision tree
         # 13 lines of code - 4 copied, 1 modified, 9 myself
-        clf = xgb.XGBClassifier(n_estimators=100, # these are the parameters - were adjusted
+        clf = xgb.XGBClassifier(n_estimators=250, # these are the parameters - were adjusted
                                 learning_rate=0.01, # tried 0.01,0.05,0.1,0.2
                                 max_depth=10, # tried 10, 25, 50
                                 min_samples_split=2,
@@ -55,10 +55,10 @@ class xgboost:  # class
         print('The AUC of the model is:', self.roc)
         print('The classification accuracy is:', self.acc)
 
-        # # # cross validate results - 3 copied, 2 modified
-        # cv = RepeatedStratifiedKFold(n_splits=5, n_repeats=2, random_state=1)
-        # scores = cross_val_score(clf, self.xtrain, self.ytrain, scoring='roc_auc', cv=cv, n_jobs=-1)
-        # print('Mean ROC AUC of cross-validated scores is: %.5f' % mean(scores))
+        # # # cross validate results - 3 copied, 2 modified -these 3 lines can be commented out if you don't want to run CV
+        cv = RepeatedStratifiedKFold(n_splits=5, n_repeats=2, random_state=1)
+        scores = cross_val_score(clf, self.xtrain, self.ytrain, scoring='roc_auc', cv=cv, n_jobs=-1)
+        print('Mean ROC AUC of cross-validated scores is: %.5f' % mean(scores))
 
         # Dr. Jafari code - 6 copied, not modified
         # Selecting important features. Lines 33-68 are from Dr. Jafari's code and were updated accordingly
