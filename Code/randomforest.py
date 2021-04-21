@@ -26,7 +26,7 @@ class randforest:  # class
         self.xtrain = data.iloc[:,:-1]
         self.ytrain = data.iloc[:,-1]
 
-        clf = RandomForestClassifier(n_estimators=100)
+        clf = RandomForestClassifier(n_estimators=100, class_weight='balanced_subsample')
 
         X_train, X_test, y_train, y_test = train_test_split(self.xtrain, self.ytrain, test_size=0.3,
                                                             random_state=100)  # split data up
@@ -58,7 +58,7 @@ class randforest:  # class
         # %%-----------------------------------------------------------------------
         # perform training with random forest with k columns
         # specify random forest classifier
-        clf_k_features = RandomForestClassifier(n_estimators=100)
+        clf_k_features = RandomForestClassifier(n_estimators=100, class_weight = 'balanced_subsample')
 
         # train the model
         clf_k_features.fit(newX_train, y_train)

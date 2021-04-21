@@ -14,7 +14,7 @@ from sklearn.metrics import roc_auc_score
 # 1 myself
 model = Preprocessing.crash_model  # call the preprocessed data
 
-
+# 4 myself
 class naivebayes:  # class
     def __init__(self, data):  # to call self
         # data is the entire data matrix

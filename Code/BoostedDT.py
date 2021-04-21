@@ -12,9 +12,13 @@ from sklearn.metrics import confusion_matrix
 import seaborn as sns
 import matplotlib.pyplot as plt
 import pandas as pd
-from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.metrics import roc_auc_score
 import xgboost as xgb
+from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import RepeatedStratifiedKFold
+from numpy import mean
+from sklearn import tree
+
 
 #%%-----------------------------------------------------------------------
 import os
@@ -40,15 +44,21 @@ class xgboost:  # class
                                 min_samples_leaf=1,
                                 #warm_start=True,
                                 reg_lambda = 10, # tried 1, 10, 100
-                                reg_alpha = 10 # tried 1, 10, 100
+                                reg_alpha = 10, # tried 1, 10, 100
+                                scale_pos_weight=25 # IMPORTANT! - there is a class imbalance so change the weight on the positives
                                        )
         X_train, X_test, y_train, y_test = train_test_split(self.xtrain, self.ytrain, test_size=0.3, random_state=10) # split data up
-        clf.fit(X_train, y_train) # fit model to training data
-        y_pred = clf.predict(X_test)  # predict testing data
+        clf.fit(X_train, y_train) # fit model to training data - non cross-validated results are used for making the confusion matrix
+        y_pred = clf.predict(X_test)  # predict testing data - for confusion matrix
         self.roc = roc_auc_score(y_test, clf.predict_proba(X_test)[:, 1]) # get AUC value
         self.acc = accuracy_score(y_test, y_pred) * 100  # get the accuracy of the model
         print('The AUC of the model is:', self.roc)
         print('The classification accuracy is:', self.acc)
+
+        # # cross validate results - 3 copied, 2 modified
+        # cv = RepeatedStratifiedKFold(n_splits=5, n_repeats=2, random_state=1)
+        # scores = cross_val_score(clf, self.xtrain, self.ytrain, scoring='roc_auc', cv=cv, n_jobs=-1)
+        # print('Mean ROC AUC of cross-validated scores is: %.5f' % mean(scores))
 
         # Dr. Jafari code - 6 copied, not modified
         # Selecting important features. Lines 33-68 are from Dr. Jafari's code and were updated accordingly
@@ -86,13 +96,11 @@ class xgboost:  # class
         plt.tight_layout()
         plt.show()
 
-        # Dr. Jafari - 5 lines copied not modified
-        # dot_data = export_graphviz(clf, filled=True, rounded=True, class_names=class_names,
-        #                            feature_names=self.xtrain.iloc[:, :].columns, out_file=None)
-        #
-        # graph = graph_from_dot_data(dot_data)
-        # graph.write_pdf("GBoost Decision Tree")
-        # webbrowser.open_new(r'GBoost Decision Tree')
+        # Printing first tree from all features. 4 copied from arianna
+        plt.figure(figsize=(15, 10))
+        plt.title("All Features Random Forest Tree No.1")
+        tree.plot_tree(clf.estimators_[0], filled=True, max_depth=3)
+        plt.show()
 
         # 1 line myself
         return self.roc  # return the accuracy
