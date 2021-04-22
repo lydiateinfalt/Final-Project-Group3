@@ -141,7 +141,6 @@ class Crash_Graphs(QMainWindow):
         self.ax1.set_xlabel("DC Crash")
         self.ax1.set_ylabel(cat1)
         self.ax1.grid(True)
-
         self.fig.tight_layout()
         self.fig.canvas.draw_idle()
 
