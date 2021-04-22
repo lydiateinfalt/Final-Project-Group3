@@ -20,11 +20,12 @@ from xgboost import plot_tree
 from numpy import mean
 
 
+
 #%%-----------------------------------------------------------------------
 import os
-os.environ["PATH"] += os.pathsep + 'C:\Program Files (x86)\Graphviz\bin'
+os.environ["PATH"] += os.pathsep + "C:\Program Files (x86)\Graphviz\bin"
 #%%-----------------------------------------------------------------------
-from pydotplus import graph_from_dot_data
+#from graphviz.pydotplus import graph_from_dot_data
 model = Preprocessing.crash_model
 
 

@@ -47,18 +47,104 @@ import warnings
 warnings.filterwarnings("ignore")
 import matplotlib.pyplot as plt
 import random
-import seaborn as sns
+
 
 #%%-----------------------------------------------------------------------
 import os
 os.environ["PATH"] += os.pathsep + 'C:\\Program Files (x86)\\graphviz-2.38\\release\\bin'
 #%%-----------------------------------------------------------------------
 
-
 #::--------------------------------
-# Deafault font size for all the windows
+# Default font size for all the windows
 #::--------------------------------
 font_size_window = 'font-size:15px'
+
+
+class Crash_Graphs(QMainWindow):
+    #::---------------------------------------------------------
+    # This class crates a canvas with a plot to show the relation
+    # from each feature in the dataset with the happiness score
+    # methods
+    #    _init_
+    #   update
+    #::---------------------------------------------------------
+    send_fig = pyqtSignal(str)
+
+    def __init__(self):
+        #::--------------------------------------------------------
+        # Crate a canvas with the layout to draw a dotplot
+        # The layout sets all the elements and manage the changes
+        # made on the canvas
+        #::--------------------------------------------------------
+        super(Crash_Graphs, self).__init__()
+
+        self.Title = "Crash DC Features"
+        self.main_widget = QWidget(self)
+
+        self.setWindowTitle(self.Title)
+        self.setStyleSheet(font_size_window)
+
+        self.fig = Figure()
+        self.ax1 = self.fig.add_subplot(111)
+        self.axes = [self.ax1]
+        self.canvas = FigureCanvas(self.fig)
+
+        self.canvas.setSizePolicy(QSizePolicy.Expanding,
+                                  QSizePolicy.Expanding)
+
+        self.canvas.updateGeometry()
+
+        self.dropdown1 = QComboBox()
+        self.dropdown1.addItems(["IMPAIRED", "SPEEDING", "TICKETISSUED", "PERSONTYPE"])
+
+        self.dropdown1.currentIndexChanged.connect(self.update)
+        self.label = QLabel("A plot:")
+
+        self.checkbox1 = QCheckBox('Fatal/MajorInjuries', self)
+        self.checkbox1.stateChanged.connect(self.update)
+
+        self.layout = QGridLayout(self.main_widget)
+        self.layout.addWidget(QLabel("Select Index for subplots"))
+        self.layout.addWidget(self.dropdown1)
+        self.layout.addWidget(self.checkbox1)
+        self.layout.addWidget(self.canvas)
+
+        self.setCentralWidget(self.main_widget)
+        self.show()
+        self.update()
+
+    def update(self):
+        #::--------------------------------------------------------
+        # This method executes each time a change is made on the canvas
+        # containing the elements of the graph
+        # The purpose of the method es to draw a dot graph using the
+        # score of happiness and the feature chosen the canvas
+        #::--------------------------------------------------------
+        colors = ["b", "r", "g", "y", "k", "c"]
+        self.ax1.clear()
+        cat1 = self.dropdown1.currentText()
+
+        if self.checkbox1.isChecked():
+            df = fatal_crash
+        else:
+            df = crash
+
+        df1 = df.groupby(cat1).agg({cat1: 'count'})
+        df = pd.DataFrame(data=df1)
+
+        x = df.index.tolist()
+        y = df.iloc[:, 0].tolist()
+        self.ax1.bar(x,y)
+
+        vtitle = "DC Crash vrs " + cat1
+        self.ax1.set_title(vtitle)
+        self.ax1.set_xlabel("DC Crash")
+        self.ax1.set_ylabel(cat1)
+        self.ax1.grid(True)
+
+        self.fig.tight_layout()
+        self.fig.canvas.draw_idle()
+
 
 class PlotCanvas(FigureCanvas):
     #::----------------------------------------------------------
@@ -191,11 +277,11 @@ class App(QMainWindow):
         fileMenu.addAction(exitButton)
 
         #::----------------------------------------
-        # EDA analysis
-        # Creates the actions for the EDA Analysis item
-        # Initial Assesment : Histogram about the level of happiness in 2017
-        # Happiness Final : Presents the correlation between the index of happiness and a feature from the datasets.
-        # Correlation Plot : Correlation plot using all the dims in the datasets
+        # Dataset
+        #
+        #
+        #
+        #
         #::----------------------------------------
 
         DataButton = QAction(QIcon(),'Sample ', self)
@@ -206,20 +292,25 @@ class App(QMainWindow):
         #::----------------------------------------
         # EDA analysis
         # Creates the actions for the EDA Analysis item
-        # Initial Assesment : Histogram about the level of happiness in 2017
-        # Happiness Final : Presents the correlation between the index of happiness and a feature from the datasets.
-        # Correlation Plot : Correlation plot using all the dims in the datasets
+        #
+        #
+        #
         #::----------------------------------------
 
-        EDA1Button = QAction(QIcon(),'Histogram', self)
+        EDA1Button = QAction(QIcon(),'Age Histogram', self)
         EDA1Button.setStatusTip('Presents the initial datasets')
         EDA1Button.triggered.connect(self.EDA1)
         EDAMenu.addAction(EDA1Button)
 
-        EDA2Button = QAction(QIcon(),'Bar chart', self)
-        EDA2Button.setStatusTip('Person type')
+        EDA2Button = QAction(QIcon(),'Age Scatter', self)
+        EDA2Button.setStatusTip('Person Type')
         EDA2Button.triggered.connect(self.EDA2)
         EDAMenu.addAction(EDA2Button)
+
+        EDA3Button = QAction(QIcon(),'Crash graphs', self)
+        EDA3Button.setStatusTip('Person Type')
+        EDA3Button.triggered.connect(self.EDA3)
+        EDAMenu.addAction(EDA3Button)
 
         #::--------------------------------------------------
         # ML Models for prediction
@@ -303,20 +394,31 @@ class App(QMainWindow):
         #::---------------------------------------------------------
         dialog1 = Canvas(self)
         dialog1.s.plot()
-        x=fatal_mode.COUNT.tolist()
-        y=fatal_mode.index.tolist()
-        dialog1.s.ax.bar(y,x, color=['b', 'g', 'm', 'r'])
-        dialog1.s.ax.set_title('Persons in Fatal/Major Injury DC Crashes by Mode')
-        dialog1.s.ax.set_ylabel("")
+        #x=fatal_mode.COUNT.tolist()
+        #y=fatal_mode.index.tolist()
+
+        dialog1.s.ax.scatter(crash['FATALMAJORINJURIES'],crash['AGE'], alpha=0.01)
+        #dialog1.s.ax.set_title('Fatal/Major Injuries by Transportation Mode')
+        #dialog1.s.ax.set_ylabel("")
+        #fatal_mode = fatal_crash.groupby('PERSONTYPE').agg({'PERSONTYPE': 'count'})
+        #fatal_mode = pd.DataFrame(data=fatal_mode)
+        #fatal_mode.rename(columns={'PERSONTYPE': 'COUNT'}, inplace=True)
+        #fatal_mode.sort_values(by=['COUNT'], inplace=True)
+        dialog1.s.ax.axis([-0.25, 1.25, -5, 110])
+        dialog1.s.ax.set_ylabel("Age of Person(s) Involved")
+        dialog1.s.ax.set_xlabel("Minor Injuries (0) versus Major Injuries/Fatal (1)")
+        dialog1.s.ax.set_title('Age x Minor Major Injuries/Fatal')
+        dialog1.s.ax.set_yticks([0,10,20,30,40,50,60,70,80,90,100])
+        dialog1.s.ax.grid(True)
         dialog1.s.draw()
         self.dialogs.append(dialog1)
         dialog1.show()
 
-    def EDA4(self):
+    def EDA3(self):
         #::----------------------------------------------------------
-        # This function creates an instance of the CorrelationPlot class
+        # This function creates an instance of the Crash_Graphsclass
         #::----------------------------------------------------------
-        dialog = ()
+        dialog = Crash_Graphs()
         self.dialogs.append(dialog)
         dialog.show()
 
@@ -359,19 +461,16 @@ def crash_data():
     global y
     global features_list
     global class_names
+    global fatal_crash
+    global crash
     global top_10
-    global fatal_mode
     crash = pd.read_csv('crash.csv')
     fatal_crash =crash[crash.FATALMAJORINJURIES.eq(1.0)]
     fatal_crash.dropna(inplace=True)
+    top_10 = fatal_crash.head()
     X=pd.Series(fatal_crash['AGE'])
     X.dropna(inplace=True)
-    top_10=fatal_crash.head()
     y = crash["FATALMAJORINJURIES"]
-    fatal_mode = fatal_crash.groupby('PERSONTYPE').agg({'PERSONTYPE': 'count'})
-    fatal_mode = pd.DataFrame(data=fatal_mode)
-    fatal_mode.rename(columns={'PERSONTYPE': 'COUNT'}, inplace=True)
-    fatal_mode.sort_values(by=['COUNT'], inplace=True)
     features_list = ['PERSONID', 'PERSONTYPE', 'AGE', 'FATAL', 'MAJORINJURY', 'MINORINJURY', 'INVEHICLETYPE', 'TICKETISSUED', 'LICENSEPLATESTATE', 'IMPAIRED', 'SPEEDING']
     class_names = ['FATAL', 'NOT FATAL']
 
