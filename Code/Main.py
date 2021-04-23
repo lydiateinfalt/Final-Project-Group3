@@ -429,7 +429,7 @@ class RandomForest(QMainWindow):
 
         self.canvas4.updateGeometry()
 
-        self.groupBoxG4 = QGroupBox('ROC Curve by Class')
+        self.groupBoxG4 = QGroupBox('PR Curve')
         self.groupBoxG4Layout = QVBoxLayout()
         self.groupBoxG4.setLayout(self.groupBoxG4Layout)
         self.groupBoxG4Layout.addWidget(self.canvas4)
@@ -620,25 +620,29 @@ class RandomForest(QMainWindow):
         self.fig3.canvas.draw_idle()
 
         #::-----------------------------------------------------
-        # Graph 4 - ROC Curve by Class
+        # Graph 4 - PR Curve
         #::-----------------------------------------------------
         # Reference: https://scikit-learn.org/stable/auto_examples/model_selection/plot_precision_recall.html
         #precision, recall,thresholds = precision_recall_curve(y_test, probs)
         y_test_bin = label_binarize(y_test, classes=[0, 1])
         n_classes = y_test_bin.shape[1]
-        str_classes = ['0', '1']
-        colors = cycle(['magenta', 'darkorange', 'green', 'blue'])
-        self.ax4.plot(fpr, tpr, color='darkorange', lw=lw,
-                          label='{0} (area = {1:0.2f})'
-                                ''.format(str_classes[i], roc_auc))
+        #probs = self.clf_rf.predict_proba(X_test)
+        #preds = probs[:, 1]
+        precision, recall, _ = precision_recall_curve(y_test, preds)
+        #str_classes = ['0', '1']
+        #colors = cycle(['magenta', 'darkorange', 'green', 'blue'])
+        #self.ax4.plot(fpr, tpr, color='darkorange', lw=lw,
+          #                label='{0} (area = {1:0.2f})'
+          #                      ''.format(str_classes[i], roc_auc))
 
-        self.ax4.plot([0, 1], [0, 1], 'k--', lw=lw)
-        self.ax4.set_xlim([0.0, 1.0])
-        self.ax4.set_ylim([0.0, 1.05])
-        self.ax4.set_xlabel('False Positive Rate')
-        self.ax4.set_ylabel('True Positive Rate')
-        self.ax4.set_title('ROC Curve by Class')
-        self.ax4.legend(loc="lower right")
+        self.ax4.plot(recall, precision,marker="o" )
+        #self.ax4.plot([0, 1], [0, 1], 'k--', lw=lw)
+        #self.ax4.set_xlim([0.0, 1.0])
+        #self.ax4.set_ylim([0.0, 1.05])
+        self.ax4.set_xlabel('Recall')
+        self.ax4.set_ylabel('Precision')
+        self.ax4.set_title('Precision Recall Curve')
+        #self.ax4.legend(loc="lower right")
 
         # show the plot
         self.fig4.tight_layout()
