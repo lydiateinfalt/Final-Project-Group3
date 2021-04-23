@@ -626,10 +626,9 @@ class RandomForest(QMainWindow):
         #precision, recall,thresholds = precision_recall_curve(y_test, probs)
         y_test_bin = label_binarize(y_test, classes=[0, 1])
         n_classes = y_test_bin.shape[1]
-        str_classes = ['HP', 'MEH', 'LOH', 'NH']
+        str_classes = ['0', '1']
         colors = cycle(['magenta', 'darkorange', 'green', 'blue'])
-        for i, color in zip(range(n_classes), colors):
-            self.ax4.plot(fpr, tpr, color=color, lw=lw,
+        self.ax4.plot(fpr, tpr, color='darkorange', lw=lw,
                           label='{0} (area = {1:0.2f})'
                                 ''.format(str_classes[i], roc_auc))
 
