@@ -1,6 +1,6 @@
 # Arianna
 
-# NOTE: This takes several hours to run.
+# NOTE: This takes several hours to run. The output has been commented at the end of the script
 
 # Importing libraries
 import numpy as np
@@ -8,6 +8,19 @@ from sklearn import linear_model, decomposition, datasets
 from sklearn.pipeline import Pipeline
 from sklearn.model_selection import GridSearchCV
 from sklearn.preprocessing import StandardScaler
+
+# Getting preprocessed data. 2/2 written by Arianna
+import Preprocessing
+model = Preprocessing.crash_model
+
+# Setting features/target 2/2 written by Arianna
+xtrain = data.iloc[:,:-1]
+ytrain = data.iloc[:,-1]
+
+# Splitting the data
+X_train, X_test, y_train, y_test = train_test_split(self.xtrain, self.ytrain, test_size=0.3,
+
+                                                            random_state=100)
 
 # Finding optimal hyperparameters. Code is from the following source:
 # https: // www.dezyre.com / recipes / optimize - hyper - parameters - of - logistic - regression - model - using - grid - search - in -python

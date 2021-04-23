@@ -13,11 +13,11 @@ import matplotlib.pyplot as plt
 import warnings
 warnings.filterwarnings("ignore")
 
-# Getting preprocessed data
+# Getting preprocessed data. 2/2 written by Arianna
 import Preprocessing
 model = Preprocessing.crash_model
 
-#  Defining random forest algorithm as a class. Lines 21-28 are from Ryeanne's code & were updated accordingly
+#  Defining random forest algorithm as a class. Lines 21-28 are from RyeAnne's code & were updated accordingly
 class logit:  # class
     def __init__(self, data):  # to call self
         # data is the entire data matrix
@@ -27,7 +27,7 @@ class logit:  # class
         X_train, X_test, y_train, y_test = train_test_split(self.xtrain, self.ytrain, test_size=0.3,
 
                                                             random_state=100)  # split data up
-        # creating the classifier object. Lines 31-40 are from Dr. Jafari's code & were updated accordingly
+        # creating the classifier object. Lines 31-41 are from Dr. Jafari's code & were updated accordingly
         clf = LogisticRegression(class_weight='balanced', penalty='l2',C=.0001, random_state=100) # Hyperparameters set based on results from Logit_HyperParameter file
 
 
@@ -40,13 +40,13 @@ class logit:  # class
 
         y_pred_score = clf.predict_proba(X_test)
 
-        # Testing accuracy. Lines 43-51 were from Reyanne's code and were updated accordingly
+        # Testing accuracy. Lines 43-51 are from ReyAnne's code and were updated accordingly
         self.roc = roc_auc_score(y_test, y_pred_score[:, 1] * 100)  # get AUC value
         self.acc = accuracy_score(y_test, y_pred) * 100  # get the accuracy of the model
         print('The AUC of the model is:', self.roc)
         print('The classification accuracy is:', self.acc)
 
-        # confusion matrix. Lines 54-67 were from Dr.Jafari's code & were updated accordingly
+        # confusion matrix. Lines 50-74 are from Dr.Jafari's code & were updated accordingly
         conf_matrix = confusion_matrix(y_test, y_pred)
         class_names = self.ytrain.unique()
 
