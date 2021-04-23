@@ -30,6 +30,7 @@ from numpy.polynomial.polynomial import polyfit
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import classification_report
 from sklearn.metrics import confusion_matrix
@@ -59,13 +60,222 @@ os.environ["PATH"] += os.pathsep + 'C:\\Program Files (x86)\\graphviz-2.38\\rele
 #::--------------------------------
 font_size_window = 'font-size:15px'
 
+
+class Logit(QMainWindow):
+    send_fig = pyqtSignal(str)
+
+    def __init__(self):
+        super(Logit, self).__init__()
+        self.Title = "Logit"
+        self.initUi()
+
+    def initUi(self):
+        #::-----------------------------------------------------------------
+        #  Create the canvas and all the element to create a dashboard with
+        #  all the necessary elements to present the results from the algorithm
+        #  The canvas is divided using a  grid loyout to facilitate the drawing
+        #  of the elements
+        #::-----------------------------------------------------------------
+
+        self.setWindowTitle(self.Title)
+        self.setStyleSheet(font_size_window)
+
+        self.main_widget = QWidget(self)
+
+        self.layout = QGridLayout(self.main_widget)
+
+        self.groupBox1 = QGroupBox('Logit Features')
+        self.groupBox1Layout = QGridLayout()  # Grid
+        self.groupBox1.setLayout(self.groupBox1Layout)
+
+        # We create a checkbox of each Features
+        self.feature0 = QCheckBox(features_list[0], self)
+        self.feature1 = QCheckBox(features_list[1], self)
+        self.feature2 = QCheckBox(features_list[2], self)
+        self.feature3 = QCheckBox(features_list[3], self)
+        self.feature4 = QCheckBox(features_list[4], self)
+        self.feature5 = QCheckBox(features_list[5], self)
+        self.feature6 = QCheckBox(features_list[6], self)
+        self.feature0.setChecked(True)
+        self.feature1.setChecked(True)
+        self.feature2.setChecked(True)
+        self.feature3.setChecked(True)
+        self.feature4.setChecked(True)
+        self.feature5.setChecked(True)
+        self.feature6.setChecked(True)
+
+        self.btnExecute = QPushButton("Execute Logit")
+        self.btnExecute.clicked.connect(self.update)
+
+        self.groupBox1Layout.addWidget(self.feature0, 0, 0)
+        self.groupBox1Layout.addWidget(self.feature1, 0, 1)
+        self.groupBox1Layout.addWidget(self.feature2, 1, 0)
+        self.groupBox1Layout.addWidget(self.feature3, 1, 1)
+        self.groupBox1Layout.addWidget(self.feature4, 2, 0)
+        self.groupBox1Layout.addWidget(self.feature5, 2, 1)
+        self.groupBox1Layout.addWidget(self.feature6, 3, 0)
+        self.groupBox1Layout.addWidget(self.btnExecute, 5, 0)
+
+        self.groupBox2 = QGroupBox('Results from the model')
+        self.groupBox2Layout = QVBoxLayout()
+        self.groupBox2.setLayout(self.groupBox2Layout)
+
+        self.lblResults = QLabel('Results:')
+        self.lblResults.adjustSize()
+        self.txtResults = QPlainTextEdit()
+        self.lblAccuracy = QLabel('Accuracy:')
+        self.txtAccuracy = QLineEdit()
+
+        self.groupBox2Layout.addWidget(self.lblResults)
+        self.groupBox2Layout.addWidget(self.txtResults)
+        self.groupBox2Layout.addWidget(self.lblAccuracy)
+        self.groupBox2Layout.addWidget(self.txtAccuracy)
+
+        #::--------------------------------------
+        # Graphic 1 : Confusion Matrix
+        #::--------------------------------------
+
+        self.fig = Figure()
+        self.ax1 = self.fig.add_subplot(111)
+        self.axes = [self.ax1]
+        self.canvas = FigureCanvas(self.fig)
+
+        self.canvas.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+
+        self.canvas.updateGeometry()
+
+        self.groupBoxG1 = QGroupBox('Confusion Matrix')
+        self.groupBoxG1Layout = QVBoxLayout()
+        self.groupBoxG1.setLayout(self.groupBoxG1Layout)
+
+        self.groupBoxG1Layout.addWidget(self.canvas)
+
+        self.layout.addWidget(self.groupBox1, 0, 0)
+        self.layout.addWidget(self.groupBoxG1, 0, 1)
+
+        self.setCentralWidget(self.main_widget)
+        self.resize(1100, 700)
+        self.show()
+
+    def update(self):
+        '''
+        Logit
+        We populate the dashboard using the parameters chosen by the user
+        The parameters are processed to execute in the logit algorithm
+          then the results are presented in graphics and reports in the canvas
+        :return:None
+        '''
+
+        # processing the parameters
+
+        self.list_corr_features = pd.DataFrame([])
+        if self.feature0.isChecked():
+            if len(self.list_corr_features)==0:
+                self.list_corr_features = crash_model[features_list[0]]
+            else:
+                self.list_corr_features = pd.concat([self.list_corr_features, crash_model[features_list[0]]],axis=1)
+
+        if self.feature1.isChecked():
+            if len(self.list_corr_features) == 0:
+                self.list_corr_features = crash_model[features_list[1]]
+            else:
+                self.list_corr_features = pd.concat([self.list_corr_features, crash_model[features_list[1]]],axis=1)
+
+        if self.feature2.isChecked():
+            if len(self.list_corr_features) == 0:
+                self.list_corr_features = crash_model[features_list[2]]
+            else:
+                self.list_corr_features = pd.concat([self.list_corr_features, crash_model[features_list[2]]],axis=1)
+
+        if self.feature3.isChecked():
+            if len(self.list_corr_features) == 0:
+                self.list_corr_features = crash_model[features_list[3]]
+            else:
+                self.list_corr_features = pd.concat([self.list_corr_features, crash_model[features_list[3]]],axis=1)
+
+        if self.feature4.isChecked():
+            if len(self.list_corr_features) == 0:
+                self.list_corr_features = crash_model[features_list[4]]
+            else:
+                self.list_corr_features = pd.concat([self.list_corr_features, crash_model[features_list[4]]],axis=1)
+
+        if self.feature5.isChecked():
+            if len(self.list_corr_features) == 0:
+                self.list_corr_features = crash_model[features_list[5]]
+            else:
+                self.list_corr_features = pd.concat([self.list_corr_features, crash_model[features_list[5]]],axis=1)
+
+        if self.feature6.isChecked():
+            if len(self.list_corr_features) == 0:
+                self.list_corr_features = crash_model[features_list[6]]
+            else:
+                self.list_corr_features = pd.concat([self.list_corr_features, crash_model[features_list[6]]],axis=1)
+        # Clear the graphs to populate them with the new information
+
+        self.ax1.clear()
+        #self.ax2.clear()
+        #self.ax3.clear()
+        #self.ax4.clear()
+        self.txtResults.clear()
+        self.txtResults.setUndoRedoEnabled(False)
+
+        X_dt =  self.list_corr_features
+        y_dt = crash_model["FATALMAJORINJURIES"]
+
+        class_le = LabelEncoder()
+
+        # fit and transform the class
+        y_dt = class_le.fit_transform(y_dt)
+
+        # split the dataset into train and test
+        X_train, X_test, y_train, y_test = train_test_split(X_dt, y_dt, test_size=0.3, random_state=100)
+        self.clf = LogisticRegression(class_weight='balanced', penalty='l2',
+                                 C=.0001)  # Hyperparameters set based on results from Logit_HyperParameter file
+
+        # performing training
+        self.clf.fit(X_train, y_train)
+
+        # make predictions
+        # prediction on test
+        y_pred = self.clf.predict(X_test)
+
+        y_pred_score = self.clf.predict_proba(X_test)
+
+        # Testing accuracy. Lines 43-51 were from Reyanne's code and were updated accordingly
+        roc = roc_auc_score(y_test, y_pred_score[:, 1] * 100)  # get AUC value
+        acc = accuracy_score(y_test, y_pred) * 100  # get the accuracy of the model
+
+        # confusion matrix. Lines 54-67 were from Dr.Jafari's code & were updated accordingly
+        conf_matrix = confusion_matrix(y_test, y_pred)
+        class_names = np.unique(y_train)
+
+        #::------------------------------------
+        ##  Graph1 :
+        ##  Confusion Matrix
+        #::------------------------------------
+        #class_names1 = ['FATAL', 'NOT FATAL']
+
+        self.ax1.matshow(conf_matrix, cmap=plt.cm.get_cmap('Blues', 14))
+        self.ax1.set_yticklabels(class_names)
+        self.ax1.set_xticklabels(class_names, rotation=90)
+        self.ax1.set_xlabel('Predicted label')
+        self.ax1.set_ylabel('True label')
+
+        for i in range(len(class_names)):
+            for j in range(len(class_names)):
+                y_pred_score = self.clf.predict_proba(X_test)
+                self.ax1.text(j, i, str(conf_matrix[i][j]))
+
+        self.fig.tight_layout()
+        self.fig.canvas.draw_idle()
+
 class RandomForest(QMainWindow):
     #::--------------------------------------------------------------------------------
-    # Implementation of Random Forest Classifier using the happiness dataset
+    # Implementation of Random Forest Classifier using the crash dataset
     # the methods in this class are
     #       _init_ : initialize the class
     #       initUi : creates the canvas and all the elements in the canvas
-    #       update : populates the elements of the canvas base on the parametes
+    #       update : populates the elements of the canvas base on the parameters
     #               chosen by the user
     #::---------------------------------------------------------------------------------
     send_fig = pyqtSignal(str)
@@ -95,12 +305,12 @@ class RandomForest(QMainWindow):
         self.groupBox1.setLayout(self.groupBox1Layout)
 
         # We create a checkbox of each Features
-        self.feature0 = QCheckBox(features_list[0],self)
-        self.feature1 = QCheckBox(features_list[1],self)
+        self.feature0 = QCheckBox(features_list[0], self)
+        self.feature1 = QCheckBox(features_list[1], self)
         self.feature2 = QCheckBox(features_list[2], self)
         self.feature3 = QCheckBox(features_list[3], self)
-        self.feature4 = QCheckBox(features_list[4],self)
-        self.feature5 = QCheckBox(features_list[5],self)
+        self.feature4 = QCheckBox(features_list[4], self)
+        self.feature5 = QCheckBox(features_list[5], self)
         self.feature6 = QCheckBox(features_list[6], self)
         self.feature0.setChecked(True)
         self.feature1.setChecked(True)
@@ -119,16 +329,16 @@ class RandomForest(QMainWindow):
         self.btnExecute = QPushButton("Execute RF")
         self.btnExecute.clicked.connect(self.update)
 
-        self.groupBox1Layout.addWidget(self.feature0,0,0)
-        self.groupBox1Layout.addWidget(self.feature1,0,1)
-        self.groupBox1Layout.addWidget(self.feature2,1,0)
-        self.groupBox1Layout.addWidget(self.feature3,1,1)
-        self.groupBox1Layout.addWidget(self.feature4,2,0)
-        self.groupBox1Layout.addWidget(self.feature5,2,1)
-        self.groupBox1Layout.addWidget(self.feature6,3,0)
-        self.groupBox1Layout.addWidget(self.lblPercentTest,4,0)
-        self.groupBox1Layout.addWidget(self.txtPercentTest,4,1)
-        self.groupBox1Layout.addWidget(self.btnExecute,5,0)
+        self.groupBox1Layout.addWidget(self.feature0, 0, 0)
+        self.groupBox1Layout.addWidget(self.feature1, 0, 1)
+        self.groupBox1Layout.addWidget(self.feature2, 1, 0)
+        self.groupBox1Layout.addWidget(self.feature3, 1, 1)
+        self.groupBox1Layout.addWidget(self.feature4, 2, 0)
+        self.groupBox1Layout.addWidget(self.feature5, 2, 1)
+        self.groupBox1Layout.addWidget(self.feature6, 3, 0)
+        self.groupBox1Layout.addWidget(self.lblPercentTest, 4, 0)
+        self.groupBox1Layout.addWidget(self.txtPercentTest, 4, 1)
+        self.groupBox1Layout.addWidget(self.btnExecute, 5, 0)
 
         self.groupBox2 = QGroupBox('Results from the model')
         self.groupBox2Layout = QVBoxLayout()
@@ -144,7 +354,6 @@ class RandomForest(QMainWindow):
         self.groupBox2Layout.addWidget(self.txtResults)
         self.groupBox2Layout.addWidget(self.lblAccuracy)
         self.groupBox2Layout.addWidget(self.txtAccuracy)
-
         #::--------------------------------------
         # Graphic 1 : Confusion Matrix
         #::--------------------------------------
@@ -327,7 +536,7 @@ class RandomForest(QMainWindow):
 
         #-----------------------------------------------------------------------
 
-        # predicton on test using all features
+        # prediction on test using all features
         y_pred = self.clf_rf.predict(X_test)
         y_pred_score = self.clf_rf.predict_proba(X_test)
 
@@ -341,12 +550,11 @@ class RandomForest(QMainWindow):
         self.txtResults.appendPlainText(self.ff_class_rep)
 
         # accuracy score
-
         self.ff_accuracy_score = accuracy_score(y_test, y_pred) * 100
         self.txtAccuracy.setText(str(self.ff_accuracy_score))
 
         #::------------------------------------
-        ##  Ghaph1 :
+        ##  Graph1 :
         ##  Confusion Matrix
         #::------------------------------------
         class_names1 = ['FATAL','NOT FATAL']
@@ -525,7 +733,7 @@ class Crash_Graphs(QMainWindow):
         y = df.iloc[:, 0].tolist()
         self.ax1.bar(x,y)
 
-        vtitle = "DC Crash vrs " + cat1
+        vtitle = "DC Crash " + cat1
         self.ax1.set_title(vtitle)
         self.ax1.set_xlabel("DC Crash")
         self.ax1.set_ylabel(cat1)
@@ -680,7 +888,7 @@ class App(QMainWindow):
         #::----------------------------------------
         # EDA analysis
         # Creates the actions for the EDA Analysis item
-        #
+        # 1. Histogram of Age
         #
         #
         #::----------------------------------------
@@ -703,15 +911,16 @@ class App(QMainWindow):
         #::--------------------------------------------------
         # ML Models for prediction
         # There are three models
-        #       SVM
-        #       XGBoost
+        #       Logit
         #       Random Forest
+        #       XGBoost
+        #
         #::--------------------------------------------------
         # Decision Tree Model
         #::--------------------------------------------------
-        MLModel1Button =  QAction(QIcon(), 'SVM', self)
-        MLModel1Button.setStatusTip('SVM')
-        MLModel1Button.triggered.connect(self.SVM)
+        MLModel1Button =  QAction(QIcon(), 'Logit', self)
+        MLModel1Button.setStatusTip('Logit')
+        MLModel1Button.triggered.connect(self.LG)
 
         #::------------------------------------------------------
         # Random Forest Classifier
@@ -799,13 +1008,13 @@ class App(QMainWindow):
         self.dialogs.append(dialog)
         dialog.show()
 
-    def SVM(self):
+    def LG(self):
         #::-----------------------------------------------------------
         # This function creates an instance of the DecisionTree class
         # This class presents a dashboard for a Decision Tree Algorithm
         # using the happiness dataset
         #::-----------------------------------------------------------
-        dialog = ()
+        dialog = Logit()
         self.dialogs.append(dialog)
         dialog.show()
 
