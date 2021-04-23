@@ -516,17 +516,11 @@ class RandomForest(QMainWindow):
         y_dt = crash_model["FATALMAJORINJURIES"]
 
         class_le = LabelEncoder()
-
         # fit and transform the class
-
         y_dt = class_le.fit_transform(y_dt)
 
         # split the dataset into train and test
-
         X_train, X_test, y_train, y_test = train_test_split(X_dt, y_dt, test_size=vtest_per, random_state=100)
-
-        # perform training with entropy.
-        # Decision tree with entropy
 
         #specify random forest classifier
         self.clf_rf = RandomForestClassifier(n_estimators=100, class_weight = 'balanced_subsample')
