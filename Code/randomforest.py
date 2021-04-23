@@ -27,7 +27,7 @@ class randforest:  # class
         self.xtrain = data.iloc[:,:-1]
         self.ytrain = data.iloc[:,-1]
 
-        clf = RandomForestClassifier(n_estimators=100, class_weight='balanced_subsample')
+        clf = RandomForestClassifier(n_estimators=100, class_weight='balanced_subsample', random_state=100)
 
         X_train, X_test, y_train, y_test = train_test_split(self.xtrain, self.ytrain, test_size=0.3,
                                                             random_state=100)  # split data up

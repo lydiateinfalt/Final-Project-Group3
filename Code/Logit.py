@@ -28,7 +28,7 @@ class logit:  # class
 
                                                             random_state=100)  # split data up
         # creating the classifier object. Lines 31-40 are from Dr. Jafari's code & were updated accordingly
-        clf = LogisticRegression(class_weight='balanced', penalty='l2',C=.0001) # Hyperparameters set based on results from Logit_HyperParameter file
+        clf = LogisticRegression(class_weight='balanced', penalty='l2',C=.0001, random_state=100) # Hyperparameters set based on results from Logit_HyperParameter file
 
 
         # performing training
