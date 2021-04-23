@@ -152,8 +152,8 @@ class Logit(QMainWindow):
 
         self.groupBoxG1 = QGroupBox('Confusion Matrix')
         self.groupBoxG1Layout = QVBoxLayout()
-        self.groupBoxG1.setLayout(self.groupBoxG1Layout)
 
+        self.groupBoxG1.setLayout(self.groupBoxG1Layout)
         self.groupBoxG1Layout.addWidget(self.canvas)
         self.layout.addWidget(self.groupBox2, 1, 0)
         self.layout.addWidget(self.groupBox1, 0, 0)
@@ -162,6 +162,28 @@ class Logit(QMainWindow):
         self.setCentralWidget(self.main_widget)
         self.resize(1100, 700)
         self.show()
+
+
+
+
+        #::---------------------------------------
+        # Graphic 2 : ROC Curve
+        #::---------------------------------------
+
+        self.fig2 = Figure()
+        self.ax2 = self.fig2.add_subplot(111)
+        self.axes2 = [self.ax2]
+        self.canvas2 = FigureCanvas(self.fig2)
+
+        self.canvas2.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+
+        self.canvas2.updateGeometry()
+
+        self.groupBoxG2 = QGroupBox('ROC Curve')
+        self.groupBoxG2Layout = QVBoxLayout()
+        self.groupBoxG2.setLayout(self.groupBoxG2Layout)
+
+        self.groupBoxG2Layout.addWidget(self.canvas2)
 
     def update(self):
         '''
@@ -630,26 +652,14 @@ class RandomForest(QMainWindow):
         # Graph 4 - PR Curve
         #::-----------------------------------------------------
         # Reference: https://scikit-learn.org/stable/auto_examples/model_selection/plot_precision_recall.html
-        #precision, recall,thresholds = precision_recall_curve(y_test, probs)
-        y_test_bin = label_binarize(y_test, classes=[0, 1])
-        n_classes = y_test_bin.shape[1]
-        #probs = self.clf_rf.predict_proba(X_test)
-        #preds = probs[:, 1]
+
         precision, recall, _ = precision_recall_curve(y_test, preds)
-        #str_classes = ['0', '1']
-        #colors = cycle(['magenta', 'darkorange', 'green', 'blue'])
-        #self.ax4.plot(fpr, tpr, color='darkorange', lw=lw,
-          #                label='{0} (area = {1:0.2f})'
-          #                      ''.format(str_classes[i], roc_auc))
 
         self.ax4.plot(recall, precision,marker="o" )
-        #self.ax4.plot([0, 1], [0, 1], 'k--', lw=lw)
-        #self.ax4.set_xlim([0.0, 1.0])
-        #self.ax4.set_ylim([0.0, 1.05])
         self.ax4.set_xlabel('Recall')
         self.ax4.set_ylabel('Precision')
         self.ax4.set_title('Precision Recall Curve')
-        #self.ax4.legend(loc="lower right")
+
 
         # show the plot
         self.fig4.tight_layout()
