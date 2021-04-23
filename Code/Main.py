@@ -38,6 +38,12 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import roc_auc_score
 from sklearn.metrics import roc_curve, auc
 from sklearn.preprocessing import label_binarize
+from sklearn.metrics import precision_recall_curve
+from sklearn.metrics import precision_score
+from sklearn.metrics import recall_score
+from sklearn.metrics import f1_score
+from sklearn.metrics import average_precision_score
+from sklearn.metrics import plot_precision_recall_curve
 
 # Libraries to display decision tree
 #from pydotplus import graph_from_dot_data
@@ -538,20 +544,19 @@ class RandomForest(QMainWindow):
         # confusion matrix for RandomForest
         conf_matrix = confusion_matrix(y_test, y_pred)
 
-        # clasification report
-
-        self.ff_class_rep = classification_report(y_test, y_pred)
-        self.txtResults.appendPlainText(self.ff_class_rep)
-
+        # classification report
+        self.class_rep = classification_report(y_test, y_pred)
+        self.txtResults.appendPlainText(self.class_rep)
+        self.roc = roc_auc_score(y_test, y_pred_score[:, 1] * 100) # get AUC value
         # accuracy score
-        self.ff_accuracy_score = accuracy_score(y_test, y_pred) * 100
-        self.txtAccuracy.setText(str(self.ff_accuracy_score))
+        self.acc = accuracy_score(y_test, y_pred) * 100  # get the accuracy of the model
+        self.txtAccuracy.setText(str(self.acc))
 
         #::------------------------------------
         ##  Graph1 :
         ##  Confusion Matrix
         #::------------------------------------
-        class_names1 = ['FATAL','NOT FATAL']
+        class_names1 = np.unique(y_train)
 
         self.ax1.matshow(conf_matrix, cmap= plt.cm.get_cmap('Blues', 14))
         self.ax1.set_yticklabels(class_names1)
@@ -572,26 +577,16 @@ class RandomForest(QMainWindow):
         #::----------------------------------------
         ## Graph 2 - ROC Curve
         #::----------------------------------------
-        y_test_bin = label_binarize(y_test, classes=[0, 1])
-        n_classes = y_test_bin.shape[1]
 
-        #From the sckict learn site
-        #https://scikit-learn.org/stable/auto_examples/model_selection/plot_roc.html
-        fpr = dict()
-        tpr = dict()
-        roc_auc = dict()
-        for i in range(n_classes):
-            fpr[i], tpr[i], _ = roc_curve(y_test_bin[:, i], y_pred_score[:, i])
-            roc_auc[i] = auc(fpr[i], tpr[i])
+        probs = self.clf_rf.predict_proba(X_test)
+        preds = probs[:, 1]
+        fpr, tpr, threshold = roc_curve(y_test, preds)
+        roc_auc = auc(fpr, tpr)
 
-        # Compute micro-average ROC curve and ROC area
-        #fpr["micro"], tpr["micro"], _ = roc_curve(y_test_bin.ravel(), y_pred_score.ravel())
-
-        #roc_auc["micro"] = auc(fpr["micro"], tpr["micro"])
 
         lw = 2
-        self.ax2.plot(fpr[0], tpr[0], color='darkorange',
-                      lw=lw, label='ROC curve (area = %0.2f)' % roc_auc[0])
+        self.ax2.plot(fpr, tpr, color='darkorange',
+                      lw=lw, label='ROC curve (area = %0.2f)' % roc_auc)
         self.ax2.plot([0, 1], [0, 1], color='navy', lw=lw, linestyle='--')
         self.ax2.set_xlim([0.0, 1.0])
         self.ax2.set_ylim([0.0, 1.05])
@@ -627,12 +622,16 @@ class RandomForest(QMainWindow):
         #::-----------------------------------------------------
         # Graph 4 - ROC Curve by Class
         #::-----------------------------------------------------
-        str_classes= ['HP','MEH','LOH','NH']
+        # Reference: https://scikit-learn.org/stable/auto_examples/model_selection/plot_precision_recall.html
+        #precision, recall,thresholds = precision_recall_curve(y_test, probs)
+        y_test_bin = label_binarize(y_test, classes=[0, 1])
+        n_classes = y_test_bin.shape[1]
+        str_classes = ['HP', 'MEH', 'LOH', 'NH']
         colors = cycle(['magenta', 'darkorange', 'green', 'blue'])
         for i, color in zip(range(n_classes), colors):
-            self.ax4.plot(fpr[i], tpr[i], color=color, lw=lw,
-                     label='{0} (area = {1:0.2f})'
-                           ''.format(str_classes[i], roc_auc[i]))
+            self.ax4.plot(fpr, tpr, color=color, lw=lw,
+                          label='{0} (area = {1:0.2f})'
+                                ''.format(str_classes[i], roc_auc))
 
         self.ax4.plot([0, 1], [0, 1], 'k--', lw=lw)
         self.ax4.set_xlim([0.0, 1.0])
@@ -649,6 +648,7 @@ class RandomForest(QMainWindow):
         #::-----------------------------
         # End of graph 4  - ROC curve by class
         #::-----------------------------
+
 
 
 class Crash_Graphs(QMainWindow):
@@ -933,12 +933,12 @@ class App(QMainWindow):
         #dialog.t.setWindowTitle('DC Crash Data')
         # Set number of rows
         dialog.t.setRowCount(top_10.shape[0])
-        num_cols = len(features_list)
+        num_cols = len(columns_list)
         dialog.t.setColumnCount(num_cols)
 
         # Set column headings
         for i in range(0,num_cols):
-            dialog.t.setItem(0, i, QTableWidgetItem(features_list[i]))
+            dialog.t.setItem(0, i, QTableWidgetItem(columns_list[i]))
 
         # Read in data
         for i in range(0,5):
@@ -1040,6 +1040,7 @@ def crash_data():
     global X
     global y
     global features_list
+    global columns_list
     global class_names
     global fatal_crash
     global crash
@@ -1049,6 +1050,7 @@ def crash_data():
     fatal_crash =crash[crash.FATALMAJORINJURIES.eq(1.0)]
     fatal_crash.dropna(inplace=True)
     top_10 = fatal_crash.head()
+    columns_list = ['PERSONID', 'PERSONTYPE', 'AGE', 'FATAL', 'MAJORINJURY', 'MINORINJURY', 'INVEHICLETYPE', 'TICKETISSUED', 'LICENSEPLATESTATE', 'IMPAIRED', 'SPEEDING', 'FATALMAJORINJURIES']
     X=pd.Series(fatal_crash['AGE'])
     X.dropna(inplace=True)
     y = crash["FATALMAJORINJURIES"]
