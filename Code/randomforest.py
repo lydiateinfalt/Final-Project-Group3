@@ -16,11 +16,11 @@ import collections
 import os
 os.environ["PATH"] += os.pathsep + 'C:/Program Files (x86)/Graphviz2.38/bin/'
 
-# Getting preprocessed data
+# Getting preprocessed data. 2/2 written by Arianna
 import Preprocessing
 model = Preprocessing.crash_model
 
-#  Defining random forest algorithm as a class. Lines 20-30 are from Ryeanne's code & were updated accordingly
+#  Defining random forest algorithm as a class. Lines 25-34 are from RyeAnne's code & were updated by Arianna accordingly
 class randforest:  # class
     def __init__(self, data):  # to call self
         # data is the entire data matrix
@@ -33,7 +33,7 @@ class randforest:  # class
                                                             random_state=100)  # split data up
         clf.fit(X_train, y_train)  # fit model to training data
 
-        # Selecting important features. Lines 33-68 are from Dr. Jafari's code and were updated accordingly
+        # Selecting important features. Lines 37-74 are from Dr. Jafari's code and were updated by Arianna accordingly
         importances = clf.feature_importances_
 
         # convert the importances into one-dimensional 1darray with corresponding df column names as axis labels
@@ -73,7 +73,7 @@ class randforest:  # class
         y_pred_k_features = clf_k_features.predict(newX_test)
         y_pred_k_features_score = clf_k_features.predict_proba(newX_test)
 
-        # Testing accuracy. Lines 71-79 were from Reyanne's code and were updated accordingly
+        # Testing accuracy. Lines 77-87 were from ReyAnne's code and were updated by Arianna accordingly
         self.roc = roc_auc_score(y_test, y_pred_score[:, 1] * 100) # get AUC value
         self.acc = accuracy_score(y_test, y_pred) * 100  # get the accuracy of the model
         print("Results using all features: ")
@@ -88,13 +88,13 @@ class randforest:  # class
 
         # # # Cross validation - This takes a couple minutes to run and can be commented out to shorten run time
         # Output has been commented below
-        # # 2/2 lines copied and modified by Arianna
+        # # 2/2 lines copied from Internet and modified by Arianna
         scores = cross_val_score(clf, self.xtrain, self.ytrain, cv=5)
         print("Cross-Validation Accuracy Scores: ", scores)
         # Output: Cross-Validation Accuracy Scores:  [0.79232041 0.76155973 0.58281704 0.78264903 0.78118765]
 
         # %%-----------------------------------------------------------------------
-        # confusion matrix for gini model. Lines 83-125 are from Dr. Jafari's code & were updated accordingly
+        # confusion matrix for gini model. Lines 98-152 are from Dr. Jafari's code & were updated by Arianna accordingly
         conf_matrix = confusion_matrix(y_test, y_pred)
         class_names = self.ytrain.unique()
         df_cm = pd.DataFrame(conf_matrix, index=class_names, columns=class_names)

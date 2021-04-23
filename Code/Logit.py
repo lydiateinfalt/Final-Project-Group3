@@ -17,7 +17,7 @@ warnings.filterwarnings("ignore")
 import Preprocessing
 model = Preprocessing.crash_model
 
-#  Defining random forest algorithm as a class. Lines 21-28 are from RyeAnne's code & were updated accordingly
+#  Defining random forest algorithm as a class. Lines 21-28 are from RyeAnne's code & were updated by Arianna accordingly
 class logit:  # class
     def __init__(self, data):  # to call self
         # data is the entire data matrix
@@ -27,7 +27,7 @@ class logit:  # class
         X_train, X_test, y_train, y_test = train_test_split(self.xtrain, self.ytrain, test_size=0.3,
 
                                                             random_state=100)  # split data up
-        # creating the classifier object. Lines 31-41 are from Dr. Jafari's code & were updated accordingly
+        # creating the classifier object. Lines 31-41 are from Dr. Jafari's code & were updated by Arianna accordingly
         clf = LogisticRegression(class_weight='balanced', penalty='l2',C=.0001, random_state=100) # Hyperparameters set based on results from Logit_HyperParameter file
 
 
@@ -40,7 +40,7 @@ class logit:  # class
 
         y_pred_score = clf.predict_proba(X_test)
 
-        # Testing accuracy. Lines 43-51 are from ReyAnne's code and were updated accordingly
+        # Testing accuracy. Lines 43-51 are from ReyAnne's code and were updated by Arianna accordingly
         self.roc = roc_auc_score(y_test, y_pred_score[:, 1] * 100)  # get AUC value
         self.acc = accuracy_score(y_test, y_pred) * 100  # get the accuracy of the model
         print('The AUC of the model is:', self.roc)
@@ -56,7 +56,7 @@ class logit:  # class
         specificity = conf_matrix[1, 1] / (conf_matrix[1, 0] + conf_matrix[1, 1])  # calculate specificity
         print('Specificity : ', specificity)
 
-        # Cross validation
+        # Cross validation. 2/2 lines copied from Internet and modified by Arianna
         scores = cross_val_score(clf, self.xtrain, self.ytrain, cv=5)
         print("Cross-Validation Accuracy Scores: ", scores)
 
