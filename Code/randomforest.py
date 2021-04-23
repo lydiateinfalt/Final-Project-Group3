@@ -86,9 +86,12 @@ class randforest:  # class
         print('The AUC of the important features model is:', self.roc)
         print('The classification accuracy for the important features is:', self.acc)
 
-        # Cross validation
+        # # # Cross validation - This takes a couple minutes to run and can be commented out to shorten run time
+        # Output has been commented below
+        # # 2/2 lines copied and modified by Arianna
         scores = cross_val_score(clf, self.xtrain, self.ytrain, cv=5)
         print("Cross-Validation Accuracy Scores: ", scores)
+        # Output: Cross-Validation Accuracy Scores:  [0.79232041 0.76155973 0.58281704 0.78264903 0.78118765]
 
         # %%-----------------------------------------------------------------------
         # confusion matrix for gini model. Lines 83-125 are from Dr. Jafari's code & were updated accordingly
