@@ -43,7 +43,7 @@ class xgboost:  # class
                                 max_depth=10, # tried 10, 25, 50
                                 min_samples_split=2,
                                 min_samples_leaf=1,
-                                #warm_start=True,
+                                random_state=100,
                                 reg_lambda = 10, # tried 1, 10, 100
                                 reg_alpha = 10, # tried 1, 10, 100
                                 scale_pos_weight=25 # IMPORTANT! - there is a class imbalance so change the weight on the positives

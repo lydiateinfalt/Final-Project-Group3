@@ -23,7 +23,9 @@ print(crash.shape)
 # Checking to see the number of crashes involving someone 100+ to determine if that's a good
 # Age to cap at
 print("Crashes involving someone who is 100 or older:")
-print(crash[crash.AGE >= 100.0].count()) # Result is 271
+print(crash[crash.AGE >= 100.0].count()) # Result is 276
+print("Crashes involving someone who is less than 0 years of age")
+print(crash[crash.AGE< 0.0].count()) # Result is 70
 
 print(crash['AGE'].describe())
 # Dropping all ages below 0 and above 100
@@ -34,6 +36,7 @@ print(crash['AGE'].describe())
 
 
 # Dropping state abbreviations that do not exist (Ot, ou, vi, pu, un)
+print('The number of license plates to drop is:', crash[(crash.LICENSEPLATESTATE == 'Ot') | (crash.LICENSEPLATESTATE == 'Ou') | (crash.LICENSEPLATESTATE == 'Vi') | (crash.LICENSEPLATESTATE == 'Pu') | (crash.LICENSEPLATESTATE == 'Un') | (crash.LICENSEPLATESTATE == 'Am') | (crash.LICENSEPLATESTATE == 'Di')].count())
 crash = crash.drop(crash[(crash.LICENSEPLATESTATE == 'Ot') | (crash.LICENSEPLATESTATE == 'Ou') | (crash.LICENSEPLATESTATE == 'Vi') | (crash.LICENSEPLATESTATE == 'Pu') | (crash.LICENSEPLATESTATE == 'Un') | (crash.LICENSEPLATESTATE == 'Am') | (crash.LICENSEPLATESTATE == 'Di')].index)
 
 
@@ -60,8 +63,8 @@ print('The number of empty values per column is')
 print(crash_fm.isnull().sum()) # get missing values
 crash_fm_age = crash_fm.drop(['AGE'], axis=1) # use to view rows with missing data, except age
 null_data = crash_fm_age[crash_fm_age.isnull().any(axis=1)] # view rows with missing data
-print(null_data.head(50)) # view the null data rows - Weirdly, they are completely empty - delete 328 empty rows
-crash_fm.dropna(subset = ["PERSONTYPE"], inplace=True) # rows missing PERSONTYPE-these will delete all of the empty 328 rows
+print(null_data.head(20)) # view the null data rows - Weirdly, they are completely empty - delete 328 empty rows
+crash_fm.dropna(subset = ["PERSONTYPE"], inplace=True) # rows missing PERSONTYPE-these will delete all of the empty 333 rows
 # crash_fm.dropna(subset = ["AGE"], inplace = True) # Use if Dr Jafari says 28% of missing values is too much and tells us to delet ethem
 crash_fm.AGE.fillna(crash_fm.AGE.mean(), inplace=True)  # impute empty age cells with the average value
 print('The number of empty values per column after imputation is:')
