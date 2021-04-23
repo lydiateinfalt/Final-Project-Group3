@@ -17,12 +17,12 @@ model = Preprocessing.crash_model
 xtrain = data.iloc[:,:-1]
 ytrain = data.iloc[:,-1]
 
-# Splitting the data
+# Splitting the data. 2/2 written by Arianna.
 X_train, X_test, y_train, y_test = train_test_split(self.xtrain, self.ytrain, test_size=0.3,
 
                                                             random_state=100)
 
-# Finding optimal hyperparameters. Code is from the following source:
+# Finding optimal hyperparameters. All of the code below is from the following source:
 # https: // www.dezyre.com / recipes / optimize - hyper - parameters - of - logistic - regression - model - using - grid - search - in -python
 std_slc = StandardScaler()
 pca = decomposition.PCA()
