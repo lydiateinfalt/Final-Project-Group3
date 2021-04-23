@@ -43,7 +43,7 @@ class xgboost:  # class
                                 max_depth=10, # tried 10, 25, 50
                                 min_samples_split=2,
                                 min_samples_leaf=1,
-                                #warm_start=True,
+                                random_state=100,
                                 reg_lambda = 10, # tried 1, 10, 100
                                 reg_alpha = 10, # tried 1, 10, 100
                                 scale_pos_weight=25 # IMPORTANT! - there is a class imbalance so change the weight on the positives
@@ -57,9 +57,9 @@ class xgboost:  # class
         print('The classification accuracy is:', self.acc)
 
         # # # cross validate results - 3 copied, 2 modified -these 3 lines can be commented out if you don't want to run CV
-        cv = RepeatedStratifiedKFold(n_splits=5, n_repeats=2, random_state=1)
-        scores = cross_val_score(clf, self.xtrain, self.ytrain, scoring='roc_auc', cv=cv, n_jobs=-1)
-        print('Mean ROC AUC of cross-validated scores is: %.5f' % mean(scores))
+        #cv = RepeatedStratifiedKFold(n_splits=5, n_repeats=2, random_state=1)
+        #scores = cross_val_score(clf, self.xtrain, self.ytrain, scoring='roc_auc', cv=cv, n_jobs=-1)
+        #print('Mean ROC AUC of cross-validated scores is: %.5f' % mean(scores))
 
         # Dr. Jafari code - 6 copied, not modified
         # Selecting important features. Lines 33-68 are from Dr. Jafari's code and were updated accordingly
