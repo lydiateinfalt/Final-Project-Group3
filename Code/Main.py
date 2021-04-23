@@ -155,7 +155,7 @@ class Logit(QMainWindow):
         self.groupBoxG1.setLayout(self.groupBoxG1Layout)
 
         self.groupBoxG1Layout.addWidget(self.canvas)
-
+        self.layout.addWidget(self.groupBox2, 1, 0)
         self.layout.addWidget(self.groupBox1, 0, 0)
         self.layout.addWidget(self.groupBoxG1, 0, 1)
 
@@ -247,19 +247,26 @@ class Logit(QMainWindow):
 
         y_pred_score = self.clf.predict_proba(X_test)
 
-        # Testing accuracy. Lines 43-51 were from Reyanne's code and were updated accordingly
-        roc = roc_auc_score(y_test, y_pred_score[:, 1] * 100)  # get AUC value
-        acc = accuracy_score(y_test, y_pred) * 100  # get the accuracy of the model
+        # Testing accuracy.
+#        roc = roc_auc_score(y_test, y_pred_score[:, 1] * 100)  # get AUC value
+#        acc = accuracy_score(y_test, y_pred) * 100  # get the accuracy of the model
 
-        # confusion matrix. Lines 54-67 were from Dr.Jafari's code & were updated accordingly
+        # confusion matrix.
         conf_matrix = confusion_matrix(y_test, y_pred)
         class_names = np.unique(y_train)
+
+        # classification report
+        self.class_rep = classification_report(y_test, y_pred)
+        self.txtResults.appendPlainText(self.class_rep)
+        self.roc = roc_auc_score(y_test, y_pred_score[:, 1] * 100)  # get AUC value
+        # accuracy score
+        self.acc = accuracy_score(y_test, y_pred) * 100  # get the accuracy of the model
+        self.txtAccuracy.setText(str(self.acc))
 
         #::------------------------------------
         ##  Graph1 :
         ##  Confusion Matrix
         #::------------------------------------
-        #class_names1 = ['FATAL', 'NOT FATAL']
 
         self.ax1.matshow(conf_matrix, cmap=plt.cm.get_cmap('Blues', 14))
         self.ax1.set_yticklabels(class_names)
