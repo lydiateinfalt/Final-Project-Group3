@@ -3,7 +3,8 @@ import numpy as np
 
 # Crashes reported in DC
 # Reference: https://opendata.dc.gov/datasets/crash-details-table
-crash = pd.read_csv("Crash_Details_Table.csv")
+crash = pd.read_csv('https://opendata.arcgis.com/datasets/70248b73c20f46b0a5ee895fc91d6222_25.csv')
+#crash = pd.read_csv("Crash_Details_Table.csv")
 # Analysis of each data set
 print("Original data set")
 print("Total number of rows in data set: ", crash.shape[0])
