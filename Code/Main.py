@@ -163,9 +163,6 @@ class Logit(QMainWindow):
         self.resize(1100, 700)
         self.show()
 
-
-
-
         #::---------------------------------------
         # Graphic 2 : ROC Curve
         #::---------------------------------------
