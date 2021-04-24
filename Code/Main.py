@@ -155,13 +155,6 @@ class Logit(QMainWindow):
 
         self.groupBoxG1.setLayout(self.groupBoxG1Layout)
         self.groupBoxG1Layout.addWidget(self.canvas)
-        self.layout.addWidget(self.groupBox2, 1, 0)
-        self.layout.addWidget(self.groupBox1, 0, 0)
-        self.layout.addWidget(self.groupBoxG1, 0, 1)
-
-        self.setCentralWidget(self.main_widget)
-        self.resize(1100, 700)
-        self.show()
 
         #::---------------------------------------
         # Graphic 2 : ROC Curve
@@ -181,6 +174,23 @@ class Logit(QMainWindow):
         self.groupBoxG2.setLayout(self.groupBoxG2Layout)
 
         self.groupBoxG2Layout.addWidget(self.canvas2)
+        #::-------------------------------------------------
+        # End of graphs
+        #::-------------------------------------------------
+        #self.layout.addWidget(self.groupBox2, 1, 0)
+        #self.layout.addWidget(self.groupBox1, 0, 0)
+        #self.layout.addWidget(self.groupBoxG1, 0, 1)
+
+        self.layout.addWidget(self.groupBox1,0,0)
+        self.layout.addWidget(self.groupBoxG1,0,1)
+        self.layout.addWidget(self.groupBox2,1,0)
+        self.layout.addWidget(self.groupBoxG2,1,1)
+        #self.layout.addWidget(self.groupBoxG3,0,2)
+        #self.layout.addWidget(self.groupBoxG4,1,2)
+
+        self.setCentralWidget(self.main_widget)
+        self.resize(1100, 700)
+        self.show()
 
     def update(self):
         '''
@@ -300,6 +310,28 @@ class Logit(QMainWindow):
 
         self.fig.tight_layout()
         self.fig.canvas.draw_idle()
+
+        #::----------------------------------------
+        ## Graph 2 - ROC Curve
+        #::----------------------------------------
+
+        probs = self.clf.predict_proba(X_test)
+        preds = probs[:, 1]
+        fpr, tpr, threshold = roc_curve(y_test, preds)
+        roc_auc = auc(fpr, tpr)
+        lw = 2
+        self.ax2.plot(fpr, tpr, color='darkorange',
+                      lw=lw, label='ROC curve (area = %0.2f)' % roc_auc)
+        self.ax2.plot([0, 1], [0, 1], color='navy', lw=lw, linestyle='--')
+        self.ax2.set_xlim([0.0, 1.0])
+        self.ax2.set_ylim([0.0, 1.05])
+        self.ax2.set_xlabel('False Positive Rate')
+        self.ax2.set_ylabel('True Positive Rate')
+        self.ax2.set_title('ROC Curve Random Forest')
+        self.ax2.legend(loc="lower right")
+
+        self.fig2.tight_layout()
+        self.fig2.canvas.draw_idle()
 
 class RandomForest(QMainWindow):
     #::--------------------------------------------------------------------------------
@@ -443,7 +475,7 @@ class RandomForest(QMainWindow):
         self.groupBoxG3Layout.addWidget(self.canvas3)
 
         #::--------------------------------------------
-        # Graphic 4 : ROC Curve by class
+        # Graphic 4 : PR Curve
         #::--------------------------------------------
 
         self.fig4 = Figure()
@@ -608,8 +640,6 @@ class RandomForest(QMainWindow):
         preds = probs[:, 1]
         fpr, tpr, threshold = roc_curve(y_test, preds)
         roc_auc = auc(fpr, tpr)
-
-
         lw = 2
         self.ax2.plot(fpr, tpr, color='darkorange',
                       lw=lw, label='ROC curve (area = %0.2f)' % roc_auc)
@@ -651,19 +681,20 @@ class RandomForest(QMainWindow):
         # Reference: https://scikit-learn.org/stable/auto_examples/model_selection/plot_precision_recall.html
 
         precision, recall, _ = precision_recall_curve(y_test, preds)
-
-        self.ax4.plot(recall, precision,marker="o" )
+        auc1 = auc(recall, precision)
+        self.ax4.plot(recall, precision, color='darkorange',
+                      lw=lw, label='PR auc (area = %0.2f)' % auc1 )
         self.ax4.set_xlabel('Recall')
         self.ax4.set_ylabel('Precision')
         self.ax4.set_title('Precision Recall Curve')
-
+        self.ax4.legend(loc="lower right")
 
         # show the plot
         self.fig4.tight_layout()
         self.fig4.canvas.draw_idle()
 
         #::-----------------------------
-        # End of graph 4  - ROC curve by class
+        # End of graph  4 - PR Curve
         #::-----------------------------
 
 class Boosted(QMainWindow):
@@ -1024,12 +1055,13 @@ class Boosted(QMainWindow):
         # Reference: https://scikit-learn.org/stable/auto_examples/model_selection/plot_precision_recall.html
 
         precision, recall, _ = precision_recall_curve(y_test, preds)
-
-        self.ax4.plot(recall, precision,marker="o" )
+        auc1 = auc(recall, precision)
+        self.ax4.plot(recall, precision, color='darkorange',
+                      lw=lw, label='PR auc (area = %0.2f)' % auc1)
         self.ax4.set_xlabel('Recall')
         self.ax4.set_ylabel('Precision')
         self.ax4.set_title('Precision Recall Curve')
-        #self.ax4.legend(loc="lower right")
+        self.ax4.legend(loc="lower right")
 
         # show the plot
         self.fig4.tight_layout()
