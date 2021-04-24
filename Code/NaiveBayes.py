@@ -48,9 +48,9 @@ class naivebayes:  # class
 
         # sensitivity and specificity - 4 copied and modified RR
         specificity = conf_matrix[0, 0] / (conf_matrix[0, 0] + conf_matrix[0, 1])  # calculate sensitivity
-        print('Sensitivity : ', specificity)
+        print('Specificity : ', specificity)
         sensitivity = conf_matrix[1, 1] / (conf_matrix[1, 0] + conf_matrix[1, 1])  # calculate specificity
-        print('Specificity : ', sensitivity)
+        print('Sensitivity : ', sensitivity)
 
         # taken from Dr. Jafari - 9 copied, not modified, 1 added myself
         plt.figure(figsize=(5, 5))
