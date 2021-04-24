@@ -30,6 +30,7 @@ model = Preprocessing.crash_model
 
 
 class xgboost:  # class
+
     def __init__(self, data):  # to call self
         # data is the entire data matrix
         self.xtrain = data.iloc[:,:-1]
