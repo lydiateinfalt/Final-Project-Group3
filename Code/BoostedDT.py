@@ -80,10 +80,10 @@ class xgboost:  # class
         df_cm = pd.DataFrame(conf_matrix, index=class_names, columns=class_names)
 
         # sensitivity and specificity - 4 copied and modified RR
-        sensitivity = conf_matrix[0, 0] / (conf_matrix[0, 0] + conf_matrix[0, 1])  # calculate sensitivity
-        print('Sensitivity : ', sensitivity)
-        specificity = conf_matrix[1, 1] / (conf_matrix[1, 0] + conf_matrix[1, 1])  # calculate specificity
-        print('Specificity : ', specificity)
+        specificity = conf_matrix[0, 0] / (conf_matrix[0, 0] + conf_matrix[0, 1])  # calculate sensitivity
+        print('Sensitivity : ', specificity)
+        sensitivity = conf_matrix[1, 1] / (conf_matrix[1, 0] + conf_matrix[1, 1])  # calculate specificity
+        print('Specificity : ', sensitivity)
 
         # Dr. Jafari Code - 9 copied, not modified, 1 line myself
         plt.figure(figsize=(5, 5))
