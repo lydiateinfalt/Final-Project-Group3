@@ -10,15 +10,6 @@ from sklearn.preprocessing import StandardScaler
 crash = readdata.crash
 print(crash.shape)
 
-### NOTE: Due to the change in data sets (only using Crash Details now) we no longer have date information
-# # Filter YEAR  < 2008 and YEAR > 2021
-# print("Before dropping data for YEAR < 2008 and YEAR > 2021")
-# print(crash.shape)
-# crash = crash[crash.YEAR >= 2008]
-# print("Data shape after filtering YEAR < 2008")
-# print(crash.shape)
-# crash = crash[crash.YEAR <= 2021]
-# print(crash.shape) #(591121, 37)
 
 # Checking to see the number of crashes involving someone 100+ to determine if that's a good
 # Age to cap at
@@ -41,8 +32,9 @@ crash = crash.drop(crash[(crash.LICENSEPLATESTATE == 'Ot') | (crash.LICENSEPLATE
 
 
 ###
-# RR - Create Feature Matrix and Fill/Drop NANs - 29 lines, 17 I wrote, 12 copied, 12 modified
-###
+# RR Part - 40 lines, 24 myself, 16 copied and modified
+
+
 # Create Matrix with only the feature rows we want and the target
 print('The list of columns before dropping any include:')
 print(crash.columns) # view columns

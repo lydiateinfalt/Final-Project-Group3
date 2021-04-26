@@ -8,11 +8,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 import statsmodels
 
-# Arianna Code Start:
+# RR -45 lines, 30 myself (many are print statements), 15 copied and modified
+
 crash = readdata.crash
 print(crash.shape)
-
-# RR - 30 lines, 15 copied and modified, 15 myself
 
 crash.dropna(subset = ["PERSONTYPE"], inplace=True) # rows missing PERSONTYPE-these will delete all of the empty 328 rows
 print('Columns with missing values include:')

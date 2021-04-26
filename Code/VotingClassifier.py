@@ -15,7 +15,8 @@ from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import RepeatedStratifiedKFold
 from numpy import mean
 
-# 1 myself
+# RR - 56 lines, 9 myself, 47 copied, 10 modified
+
 model = Preprocessing.crash_model  # call the preprocessed data
 
 
@@ -25,11 +26,10 @@ class votingclassifier:  # class
         self.xtrain = data.iloc[:,:-1]  # all the columns but last are features
         self.ytrain = data.iloc[:,-1]  # last column is the label
 
-    # 23 lines - 11 myself, 12 copied w 6 modified
     def accuracy(self):  # this makes the model and finds the accuracy, and confusion matrix
         X_train, X_test, y_train, y_test = train_test_split(self.xtrain, self.ytrain, test_size=0.3,
                                                             random_state=100)  # split data
-        clf1 = LogisticRegression(class_weight='balanced', penalty='l2',C=.0001)
+        clf1 = LogisticRegression(class_weight='balanced', penalty='l2',C=.0001) # taken from Arianna
         # clf2 = GaussianNB()  # model
         clf2 = xgb.XGBClassifier(n_estimators=250, # -I cut the forest because it had little impact on accuracy but saved a lot of time
                                  learning_rate=0.01, # tried 0.01,0.05,0.1,0.2
@@ -41,10 +41,10 @@ class votingclassifier:  # class
                                  reg_alpha = 10, # tried 1, 10, 100
                                  scale_pos_weight=25 # IMPORTANT! - there is a class imbalance so change the weight on the positives
                                         )
-        clf3 = RandomForestClassifier(n_estimators=100, class_weight='balanced_subsample')
+        clf3 = RandomForestClassifier(n_estimators=100, class_weight='balanced_subsample') # taken from Arianna
         eclf = VotingClassifier(estimators = [('Logit', clf1), ('XGB', clf2), ('RF', clf3)],voting = 'hard') # voting classifier
 
-        # Run below for 5-fold Cross Validation - THese 3 lines can be commented out if you don't want to run CV
+        # Run below for 5-fold Cross Validation - These 3 lines can be commented out if you don't want to run CV
         for clf, label in zip([clf1, clf2, clf3, eclf], ['Naive Bayes', 'XGBoost', 'Random Forest', 'Ensemble']):
                               scores = cross_val_score(clf, self.xtrain, self.ytrain, scoring='accuracy', cv=5)
         print("5-Fold CV AUC: %0.2f (+/- %0.2f) [%s]" % (scores.mean(), scores.std(), label))
@@ -55,8 +55,6 @@ class votingclassifier:  # class
         y_pred = eclf.predict(X_test)
         score = accuracy_score(y_test, y_pred)
         print("Hard Voting Accuracy:", score)
-        # self.roc = roc_auc_score(y_test, eclf.predict_proba(X_test)[:, 1])  # get AUC value
-        # print('The AUC of the model is:', self.roc)
 
         # take from dr. jafari - 3 copied, not modified
         conf_matrix = confusion_matrix(y_test, y_pred)  # make confusion matrix
@@ -88,21 +86,19 @@ class votingclassifier:  # class
         y_pred_soft = eclf_soft.predict(X_test)
         score_soft = accuracy_score(y_test, y_pred_soft)
         print("Soft Voting Accuracy:", score_soft)
-        # self.roc = roc_auc_score(y_test, eclf.predict_proba(X_test)[:, 1])  # get AUC value
-        # print('The AUC of the model is:', self.roc)
 
-        # take from dr. jafari - 3 copied, not modified
+        # take from dr. jafari
         conf_matrix_soft = confusion_matrix(y_test, y_pred_soft)  # make confusion matrix
         class_names = self.ytrain.unique()  # get names of the classes
         df_cm_soft = pd.DataFrame(conf_matrix_soft, index=class_names, columns=class_names)
 
-        # sensitivity and specificity - 4 copied and modified RR
+        # sensitivity and specificity
         sensitivity_soft = conf_matrix_soft[0, 0] / (conf_matrix_soft[0, 0] + conf_matrix_soft[0, 1])  # calculate sensitivity
         print('Soft Sensitivity : ', sensitivity_soft)
         specificity_soft = conf_matrix_soft[1, 1] / (conf_matrix_soft[1, 0] + conf_matrix_soft[1, 1])  # calculate specificity
         print('Soft Specificity : ', specificity_soft)
 
-        # taken from Dr. Jafari - 9 copied, not modified, 1 added myself
+        # taken from Dr. Jafari
         plt.figure(figsize=(5, 5))
         hm_soft = sns.heatmap(df_cm_soft, cbar=False, annot=True, square=True, fmt='d', annot_kws={'size': 20},
                          yticklabels=df_cm_soft.columns, xticklabels=df_cm_soft.columns)
@@ -114,10 +110,8 @@ class votingclassifier:  # class
         plt.tight_layout()
         plt.show()
 
-        # 1 added myself
         # return self.roc  # return the accuracy
 
-# 2 added myself
 m = votingclassifier(model)  # put model into class
 m.accuracy()  # call the code
 
