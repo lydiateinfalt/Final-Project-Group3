@@ -1,24 +1,12 @@
-# Group 3 Preprocessing
-
-# Import libraries
 import readdata
 from sklearn.preprocessing import OrdinalEncoder
 from sklearn.preprocessing import StandardScaler
 # import other libraries below:
 
-
-# Checking to see the number of crashes involving someone 100+ to determine if that's a good
-# Age to cap at
-print("Crashes involving someone who is 100 or older:")
-print(crash[crash.AGE >= 100.0].count()) # Result is 276
-print("Crashes involving someone who is less than 0 years of age")
-print(crash[crash.AGE< 0.0].count()) # Result is 70
-
-print(crash['AGE'].describe())
-
 ###
-# RR - Create Feature Matrix and Fill/Drop NANs - 29 lines, 17 I wrote, 12 copied, 12 modified
-###
+# RR Part - 40 lines, 24 myself, 16 copied and modified
+
+
 # Create Matrix with only the feature rows we want and the target
 print('The list of columns before dropping any include:')
 print(crash.columns) # view columns
@@ -96,11 +84,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 import statsmodels
 
-# Arianna Code Start:
+# RR -45 lines, 30 myself (many are print statements), 15 copied and modified
+
 crash = readdata.crash
 print(crash.shape)
-
-# RR - 30 lines, 15 copied and modified, 15 myself
 
 crash.dropna(subset = ["PERSONTYPE"], inplace=True) # rows missing PERSONTYPE-these will delete all of the empty 328 rows
 print('Columns with missing values include:')
@@ -202,12 +189,8 @@ from xgboost import plot_tree
 from numpy import mean
 
 
+## RR - 39 lines, 12 myself, 27 copied, 9 modified
 
-#%%-----------------------------------------------------------------------
-import os
-os.environ["PATH"] += os.pathsep + "C:\Program Files (x86)\Graphviz\bin"
-#%%-----------------------------------------------------------------------
-#from graphviz.pydotplus import graph_from_dot_data
 model = Preprocessing.crash_model
 
 
@@ -220,7 +203,6 @@ class xgboost:  # class
 
 
     def accuracy(self):  # this makes the model and finds the accuracy, confusion matrix, and prints the decision tree
-        # 13 lines of code - 4 copied, 1 modified, 9 myself
         clf = xgb.XGBClassifier(n_estimators=250, # these are the parameters - were adjusted
                                 learning_rate=0.01, # tried 0.01,0.05,0.1,0.2
                                 max_depth=10, # tried 10, 25, 50
@@ -239,12 +221,12 @@ class xgboost:  # class
         print('The AUC of the model is:', self.roc)
         print('The classification accuracy is:', self.acc)
 
-        # # # cross validate results - 3 copied, 2 modified -these 3 lines can be commented out if you don't want to run CV
-        #cv = RepeatedStratifiedKFold(n_splits=5, n_repeats=2, random_state=1)
-        #scores = cross_val_score(clf, self.xtrain, self.ytrain, scoring='roc_auc', cv=cv, n_jobs=-1)
-        #print('Mean ROC AUC of cross-validated scores is: %.5f' % mean(scores))
+        # # # cross validate results - these 3 lines can be commented out if you don't want to run CV
+        cv = RepeatedStratifiedKFold(n_splits=5, n_repeats=2, random_state=1)
+        scores = cross_val_score(clf, self.xtrain, self.ytrain, scoring='roc_auc', cv=cv, n_jobs=-1)
+        print('Mean ROC AUC of cross-validated scores is: %.5f' % mean(scores))
 
-        # Dr. Jafari code - 6 copied, not modified
+        # Dr. Jafari code
         # Selecting important features. Lines 33-68 are from Dr. Jafari's code and were updated accordingly
         importances = clf.feature_importances_
         # convert the importances into one-dimensional 1darray with corresponding df column names as axis labels
@@ -256,18 +238,18 @@ class xgboost:  # class
         #plt.title('Feature Importance', fontsize=20)
         plt.show()
 
-        # Dr. Jafari code - 3 copied, not modified
+        # Dr. Jafari code -
         conf_matrix = confusion_matrix(y_test, y_pred) # make confusion matrix
         class_names = self.ytrain.unique()  # get the class names
         df_cm = pd.DataFrame(conf_matrix, index=class_names, columns=class_names)
 
-        # sensitivity and specificity - 4 copied and modified RR
+        # sensitivity and specificity -
         specificity = conf_matrix[0, 0] / (conf_matrix[0, 0] + conf_matrix[0, 1])  # calculate sensitivity
         print('Specificity : ', specificity)
         sensitivity = conf_matrix[1, 1] / (conf_matrix[1, 0] + conf_matrix[1, 1])  # calculate specificity
         print('Sensitivity : ', sensitivity)
 
-        # Dr. Jafari Code - 9 copied, not modified, 1 line myself
+        # Dr. Jafari Code -
         plt.figure(figsize=(5, 5))
         hm = sns.heatmap(df_cm, cbar=False, annot=True, square=True, fmt='d', annot_kws={'size': 20},
                          yticklabels=df_cm.columns, xticklabels=df_cm.columns)
@@ -279,13 +261,10 @@ class xgboost:  # class
         plt.tight_layout()
         plt.show()
 
-        # 1 line myself
         return self.roc  # return the accuracy
 
-# 2 lines myself
 m = xgboost(model) # put model into class
 m.accuracy() # run
-
 
 
 # RR - Naive Bayes Model
@@ -304,19 +283,19 @@ from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import RepeatedStratifiedKFold
 from numpy import mean
 
-# 1 myself
+# RR - 36 lines, 10 myself, 26 copied,9 modified
+
+
 model = Preprocessing.crash_model  # call the preprocessed data
 
-# 4 myself
+
 class naivebayes:  # class
     def __init__(self, data):  # to call self
         # data is the entire data matrix
         self.xtrain = data.iloc[:,:-1]  # all the columns but last are features
         self.ytrain = data.iloc[:,-1]  # last column is the label
 
-    # 1 line of code myself
     def accuracy(self):  # this makes the model and finds the accuracy, and confusion matrix
-        # 8 lines - 4 copied not modified, 4 written myself
         clf = GaussianNB()  # model
         X_train, X_test, y_train, y_test = train_test_split(self.xtrain, self.ytrain, test_size=0.3, random_state=100)  # split data
         clf.fit(X_train, y_train) # fit the model to the training data
@@ -326,23 +305,23 @@ class naivebayes:  # class
         print('The AUC of the model is:', self.roc)
         print('The classification accuracy is:', self.acc)
 
-        # # cross validate results - 3 copied, 2 modified
+        # # cross validate results -
         cv = RepeatedStratifiedKFold(n_splits=5, n_repeats=2, random_state=1)
         scores = cross_val_score(clf, self.xtrain, self.ytrain, scoring='roc_auc', cv=cv, n_jobs=-1)
         print('Mean ROC AUC of cross-validated scores is: %.5f' % mean(scores))
 
-        # take from dr. jafari - 3 copied, not modified
+        # take from dr. jafari -
         conf_matrix = confusion_matrix(y_test, y_pred)  # make confusion matrix
         class_names = self.ytrain.unique()  # get names of the classes
         df_cm = pd.DataFrame(conf_matrix, index=class_names, columns=class_names)
 
-        # sensitivity and specificity - 4 copied and modified RR
+        # sensitivity and specificity
         specificity = conf_matrix[0, 0] / (conf_matrix[0, 0] + conf_matrix[0, 1])  # calculate sensitivity
         print('Specificity : ', specificity)
         sensitivity = conf_matrix[1, 1] / (conf_matrix[1, 0] + conf_matrix[1, 1])  # calculate specificity
         print('Sensitivity : ', sensitivity)
 
-        # taken from Dr. Jafari - 9 copied, not modified, 1 added myself
+        # taken from Dr. Jafari
         plt.figure(figsize=(5, 5))
         hm = sns.heatmap(df_cm, cbar=False, annot=True, square=True, fmt='d', annot_kws={'size': 20},
                          yticklabels=df_cm.columns, xticklabels=df_cm.columns)
@@ -354,13 +333,10 @@ class naivebayes:  # class
         plt.tight_layout()
         plt.show()
 
-        # 1 added myself
         return self.roc  # return the accuracy
 
-# 2 added myself
 m = naivebayes(model)  # put model into class
 m.accuracy()  # call the code
-
 
 
 import numpy as np
@@ -380,7 +356,8 @@ from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import RepeatedStratifiedKFold
 from numpy import mean
 
-# 1 myself
+# RR - 56 lines, 9 myself, 47 copied, 10 modified
+
 model = Preprocessing.crash_model  # call the preprocessed data
 
 
@@ -390,11 +367,10 @@ class votingclassifier:  # class
         self.xtrain = data.iloc[:,:-1]  # all the columns but last are features
         self.ytrain = data.iloc[:,-1]  # last column is the label
 
-    # 23 lines - 11 myself, 12 copied w 6 modified
     def accuracy(self):  # this makes the model and finds the accuracy, and confusion matrix
         X_train, X_test, y_train, y_test = train_test_split(self.xtrain, self.ytrain, test_size=0.3,
                                                             random_state=100)  # split data
-        clf1 = LogisticRegression(class_weight='balanced', penalty='l2',C=.0001)
+        clf1 = LogisticRegression(class_weight='balanced', penalty='l2',C=.0001) # taken from Arianna
         # clf2 = GaussianNB()  # model
         clf2 = xgb.XGBClassifier(n_estimators=250, # -I cut the forest because it had little impact on accuracy but saved a lot of time
                                  learning_rate=0.01, # tried 0.01,0.05,0.1,0.2
@@ -406,10 +382,10 @@ class votingclassifier:  # class
                                  reg_alpha = 10, # tried 1, 10, 100
                                  scale_pos_weight=25 # IMPORTANT! - there is a class imbalance so change the weight on the positives
                                         )
-        clf3 = RandomForestClassifier(n_estimators=100, class_weight='balanced_subsample')
+        clf3 = RandomForestClassifier(n_estimators=100, class_weight='balanced_subsample') # taken from Arianna
         eclf = VotingClassifier(estimators = [('Logit', clf1), ('XGB', clf2), ('RF', clf3)],voting = 'hard') # voting classifier
 
-        # Run below for 5-fold Cross Validation - THese 3 lines can be commented out if you don't want to run CV
+        # Run below for 5-fold Cross Validation - These 3 lines can be commented out if you don't want to run CV
         for clf, label in zip([clf1, clf2, clf3, eclf], ['Naive Bayes', 'XGBoost', 'Random Forest', 'Ensemble']):
                               scores = cross_val_score(clf, self.xtrain, self.ytrain, scoring='accuracy', cv=5)
         print("5-Fold CV AUC: %0.2f (+/- %0.2f) [%s]" % (scores.mean(), scores.std(), label))
@@ -420,8 +396,6 @@ class votingclassifier:  # class
         y_pred = eclf.predict(X_test)
         score = accuracy_score(y_test, y_pred)
         print("Hard Voting Accuracy:", score)
-        # self.roc = roc_auc_score(y_test, eclf.predict_proba(X_test)[:, 1])  # get AUC value
-        # print('The AUC of the model is:', self.roc)
 
         # take from dr. jafari - 3 copied, not modified
         conf_matrix = confusion_matrix(y_test, y_pred)  # make confusion matrix
@@ -453,21 +427,19 @@ class votingclassifier:  # class
         y_pred_soft = eclf_soft.predict(X_test)
         score_soft = accuracy_score(y_test, y_pred_soft)
         print("Soft Voting Accuracy:", score_soft)
-        # self.roc = roc_auc_score(y_test, eclf.predict_proba(X_test)[:, 1])  # get AUC value
-        # print('The AUC of the model is:', self.roc)
 
-        # take from dr. jafari - 3 copied, not modified
+        # take from dr. jafari
         conf_matrix_soft = confusion_matrix(y_test, y_pred_soft)  # make confusion matrix
         class_names = self.ytrain.unique()  # get names of the classes
         df_cm_soft = pd.DataFrame(conf_matrix_soft, index=class_names, columns=class_names)
 
-        # sensitivity and specificity - 4 copied and modified RR
+        # sensitivity and specificity
         sensitivity_soft = conf_matrix_soft[0, 0] / (conf_matrix_soft[0, 0] + conf_matrix_soft[0, 1])  # calculate sensitivity
         print('Soft Sensitivity : ', sensitivity_soft)
         specificity_soft = conf_matrix_soft[1, 1] / (conf_matrix_soft[1, 0] + conf_matrix_soft[1, 1])  # calculate specificity
         print('Soft Specificity : ', specificity_soft)
 
-        # taken from Dr. Jafari - 9 copied, not modified, 1 added myself
+        # taken from Dr. Jafari
         plt.figure(figsize=(5, 5))
         hm_soft = sns.heatmap(df_cm_soft, cbar=False, annot=True, square=True, fmt='d', annot_kws={'size': 20},
                          yticklabels=df_cm_soft.columns, xticklabels=df_cm_soft.columns)
@@ -479,10 +451,8 @@ class votingclassifier:  # class
         plt.tight_layout()
         plt.show()
 
-        # 1 added myself
         # return self.roc  # return the accuracy
 
-# 2 added myself
 m = votingclassifier(model)  # put model into class
 m.accuracy()  # call the code
 
