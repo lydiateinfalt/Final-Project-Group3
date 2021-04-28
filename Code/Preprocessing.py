@@ -46,7 +46,7 @@ print(crash_fm.columns) # check the columns again
 
 # Drop drivers under the age of 10 - as that doesn't make sense to have drivers under 10
 print('Rows prior to dropping young drivers is:',crash_fm.shape[0])
-young_drivers = crash_fm[ (crash_fm['AGE'] < 10) & (crash_fm['PERSONTYPE'] == 'Driver')].index
+young_drivers = crash_fm[(crash_fm['AGE'] < 10) & (crash_fm['PERSONTYPE'] == 'Driver')].index
 crash_fm.drop(young_drivers, inplace = True)
 print('Rows after dropping young drivers is:', crash_fm.shape[0])
 
