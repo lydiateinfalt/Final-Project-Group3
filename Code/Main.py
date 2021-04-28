@@ -25,7 +25,7 @@ from matplotlib.figure import Figure
 import seaborn as sns
 import pandas as pd
 import numpy as np
-from numpy.polynomial.polynomial import polyfit
+#from numpy.polynomial.polynomial import polyfit
 
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
@@ -38,22 +38,13 @@ from sklearn.metrics import confusion_matrix
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import roc_auc_score
 from sklearn.metrics import roc_curve, auc
-from sklearn.preprocessing import label_binarize
 from sklearn.metrics import precision_recall_curve
-from sklearn.metrics import precision_score
-from sklearn.metrics import recall_score
-from sklearn.metrics import average_precision_score
-from sklearn.metrics import plot_precision_recall_curve
 
-# Libraries to display decision tree
-#from pydotplus import graph_from_dot_data
-from sklearn.tree import export_graphviz
-import webbrowser
 
 import warnings
 warnings.filterwarnings("ignore")
 import matplotlib.pyplot as plt
-import random
+
 
 
 #%%-----------------------------------------------------------------------

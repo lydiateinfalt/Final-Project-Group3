@@ -11,7 +11,7 @@ import numpy as np
 #from scipy import stats
 #import researchpy as rp
 import seaborn as sb
-import seaborn as sns
+
 
 # to call from my directory RR 2 lines, 2 myself
 #crash = pd.read_csv('/Users/RyeAnne/Documents/School/Spring2021/DataMining/Group Project/crash_ver1.csv') # load data
@@ -20,12 +20,12 @@ crash = readdata.crash
 print(crash.columns)
 fatal_crash = crash[crash.FATALMAJORINJURIES.eq(1.0)]
 
-#Lydia
+#Lydia - 8 lines
 fatal_mode = fatal_crash.groupby('PERSONTYPE').agg({'PERSONTYPE': 'count'})
 fatal_mode = pd.DataFrame(data=fatal_mode)
 fatal_mode.rename(columns={'PERSONTYPE': 'COUNT'}, inplace=True)
 fatal_mode.sort_values(by=['COUNT'],inplace=True)
-ax = sns.barplot(x="COUNT", y=fatal_mode.index, data=fatal_mode)
+ax = sb.barplot(x="COUNT", y=fatal_mode.index, data=fatal_mode)
 plt.title("Persons in Fatal/Major Injury DC Crashes by Mode")
 plt.ylabel("")
 plt.show()
