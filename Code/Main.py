@@ -327,7 +327,7 @@ class Logit(QMainWindow):
         self.ax2.set_ylim([0.0, 1.05])
         self.ax2.set_xlabel('False Positive Rate')
         self.ax2.set_ylabel('True Positive Rate')
-        self.ax2.set_title('ROC Curve Random Forest')
+        self.ax2.set_title('ROC Curve Logit Model')
         self.ax2.legend(loc="lower right")
 
         self.fig2.tight_layout()
