@@ -690,7 +690,7 @@ class RandomForest(QMainWindow):
 
 class Boosted(QMainWindow):
     #::--------------------------------------------------------------------------------
-    # Implementation of XGBoost using the crash dataset
+    # Implementation of XGBoost DT using the crash dataset
     # the methods in this class are
     #       _init_ : initialize the class
     #       initUi : creates the canvas and all the elements in the canvas
@@ -701,7 +701,7 @@ class Boosted(QMainWindow):
 
     def __init__(self):
         super(Boosted, self).__init__()
-        self.Title = "XGBoost Classifier"
+        self.Title = "XGBoost DT"
         self.initUi()
 
     def initUi(self):
@@ -939,7 +939,7 @@ class Boosted(QMainWindow):
         y_dt = class_le.fit_transform(y_dt)
 
 
-        #specify XGBoost forest classifier - RyeAnne's Code
+        #specify XGBoost forest  - RyeAnne's Code
         self.xgboost = xgb.XGBClassifier(n_estimators=250, # these are the parameters - were adjusted
                                 learning_rate=0.01, # tried 0.01,0.05,0.1,0.2
                                 max_depth=10, # tried 10, 25, 50
@@ -1340,10 +1340,10 @@ class App(QMainWindow):
         self.dialogs = list()
 
         #::------------------------------------------------------
-        # XGBoost Classifier
+        # XGBoost DT
         #::------------------------------------------------------
-        MLModel3Button = QAction(QIcon(), 'XGBoost Classifier', self)
-        MLModel3Button.setStatusTip('XGBoost Classifier ')
+        MLModel3Button = QAction(QIcon(), 'XGBoost DT', self)
+        MLModel3Button.setStatusTip('XGBoost DT ')
         MLModel3Button.triggered.connect(self.XGBoost)
 
         MLModelMenu.addAction(MLModel3Button)
