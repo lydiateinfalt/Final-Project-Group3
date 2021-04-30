@@ -25,7 +25,7 @@ from matplotlib.figure import Figure
 import seaborn as sns
 import pandas as pd
 import numpy as np
-#from numpy.polynomial.polynomial import polyfit
+
 
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
@@ -557,7 +557,7 @@ class RandomForest(QMainWindow):
         # Clear the graphs to populate them with the new information
 
         self.ax1.clear()
-        self.ax2.clear()
+        #self.ax2.clear()
         self.ax3.clear()
         self.ax4.clear()
         self.txtResults.clear()
@@ -921,7 +921,7 @@ class Boosted(QMainWindow):
         # Clear the graphs to populate them with the new information
 
         self.ax1.clear()
-        self.ax2.clear()
+        #self.ax2.clear()
         self.ax3.clear()
         self.ax4.clear()
         self.txtResults.clear()
