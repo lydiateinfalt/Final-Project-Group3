@@ -13,6 +13,7 @@ Available: https://opendata.dc.gov/datasets/crash-details-table
 5. BoostedDT.py - Extreme Gradient Boosted Decision Tree model
 6. NaiveBayes.py - Naive Bayes Classifier model
 7. VotingClassifier.py - Voting Classifier model
+8. Main.py - Crash data desktop application/GUI using PyQt5
 
 When running eda.py, stats.py, or preprocessing.py, the data will be imported from readdata, the file that downloads the data from the internet and does some preliminary cleaning. 
 
